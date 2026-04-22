@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Party Perilingües</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+
+body { background:#fdf6f0; min-height:100vh; }
+
+/* LOGIN ADMIN */
+#login-admin {
+  display:flex; align-items:center; justify-content:center; height:100vh;
+}
+.login-box {
+  background:white; padding:40px; border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.15); width:300px; text-align:center;
+}
+.login-box h2 { margin-bottom:20px; color:#ff4d6d; }
+.login-box input {
+  width:100%; padding:12px; margin:8px 0; border-radius:10px;
+  border:2px solid #eee; outline:none; font-size:14px;
+}
+.login-box input:focus { border-color:#ff66c4; }
+.login-box button {
+  width:100%; padding:12px; margin-top:10px; border:none;
+  border-radius:10px; background:linear-gradient(45deg,#ff66c4,#ff8c42);
+  color:white; font-weight:700; font-size:15px; cursor:pointer;
+}
+#login-error { color:red; font-size:13px; margin-top:8px; display:none; }
+
+/* PANEL ADMIN */
+#panel { display:none; }
+
+.topbar {
+  background:linear-gradient(45deg,#ff66c4,#ff8c42);
+  color:white; padding:16px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.topbar h1 { font-size:1.2rem; }
+.topbar button {
+  background:rgba(255,255,255,0.25); border:none; color:white;
+  padding:8px 16px; border-radius:20px; cursor:pointer; font-weight:600;
+}
+
+.stats {
+  display:flex; gap:16px; flex-wrap:wrap;
+  padding:20px 24px;
+}
+.stat-card {
+  background:white; border-radius:16px; padding:16px 24px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.08); flex:1; min-width:120px; text-align:center;
+}
+.stat-card span { font-size:2rem; font-weight:700; color:#ff4d6d; display:block; }
+.stat-card p { color:#888; font-size:0.8rem; margin-top:4px; }
+
+.section { padding:0 24px 30px; }
+.section h2 { font-size:1.1rem; color:#333; margin-bottom:14px; }
+
+/* Tarjetas de pedido */
+.pedido-card {
+  background:white; border-radius:16px; padding:16px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.08); margin-bottom:12px;
+}
+.pedido-header {
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:8px; margin-bottom:10px;
+}
+.pedido-nombre { font-weight:700; color:#333; font-size:0.95rem; }
+.pedido-grado  { font-size:0.78rem; color:#aaa; }
+.pedido-fecha  { font-size:0.75rem; color:#bbb; }
+.pedido-items  { font-size:0.82rem; color:#555; margin-bottom:10px; line-height:1.8; }
+.pedido-total  { font-weight:700; color:#ff4d6d; font-size:1rem; margin-bottom:12px; }
+.pedido-puntos { font-size:0.82rem; color:#888; margin-bottom:12px; }
+
+.pedido-btns { display:flex; gap:8px; }
+.btn-aprobar {
+  flex:1; padding:10px; border:none; border-radius:10px;
+  background:linear-gradient(45deg,#3ddc97,#00b894);
+  color:white; font-weight:700; cursor:pointer; font-size:0.9rem;
+}
+.btn-rechazar {
+  flex:1; padding:10px; border:none; border-radius:10px;
+  background:linear-gradient(45deg,#ff4d6d,#ff6b6b);
+  color:white; font-weight:700; cursor:pointer; font-size:0.9rem;
+}
+.btn-aprobar:hover { opacity:0.9; }
+.btn-rechazar:hover { opacity:0.9; }
+
+.badge-aprobado {
+  display:inline-block; padding:4px 12px; border-radius:999px;
+  background:#3ddc9720; color:#00b894; font-weight:700; font-size:0.8rem;
+}
+.badge-rechazado {
+  display:inline-block; padding:4px 12px; border-radius:999px;
+  background:#ff4d6d20; color:#ff4d6d; font-weight:700; font-size:0.8rem;
+}
+
+.empty { text-align:center; color:#aaa; padding:40px 0; font-size:0.9rem; }
+
+/* Tabs */
+.tabs-admin { display:flex; gap:8px; margin-bottom:16px; }
+.tab-admin {
+  padding:8px 20px; border:none; border-radius:20px; cursor:pointer;
+  background:#f0f0f0; color:#888; font-weight:600; font-size:0.85rem;
+}
+.tab-admin.active { background:linear-gradient(45deg,#ff66c4,#ff8c42); color:white; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-admin">
+  <div class="login-box">
+    <h2>🍬 Admin Panel</h2>
+    <input type="password" id="admin-pass" placeholder="Contraseña">
+    <button onclick="verificarAdmin()">Entrar</button>
+    <p id="login-error">Contraseña incorrecta</p>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div id="panel">
+
+  <div class="topbar">
+    <h1>🍬 Party Perilingües — Admin</h1>
+    <button onclick="cerrarAdmin()">Salir</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card"><span id="stat-pendientes">0</span><p>Pendientes</p></div>
+    <div class="stat-card"><span id="stat-aprobados">0</span><p>Aprobados</p></div>
+    <div class="stat-card"><span id="stat-rechazados">0</span><p>Rechazados</p></div>
+    <div class="stat-card"><span id="stat-total">Q0</span><p>Total vendido</p></div>
+  </div>
+
+  <div class="section">
+    <div class="tabs-admin">
+      <button class="tab-admin active" onclick="filtrar('pendiente', this)">⏳ Pendientes</button>
+      <button class="tab-admin" onclick="filtrar('aprobado', this)">✅ Aprobados</button>
+      <button class="tab-admin" onclick="filtrar('rechazado', this)">❌ Rechazados</button>
+      <button class="tab-admin" onclick="filtrar('todos', this)">📋 Todos</button>
+    </div>
+    <div id="pedidos-lista"></div>
+  </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD7HAFjgYC_9Ly4BcosgUpPP2wYk7ZJubY",
+  authDomain: "gomas-2530d.firebaseapp.com",
+  databaseURL: "https://gomas-2530d-default-rtdb.firebaseio.com",
+  projectId: "gomas-2530d",
+  storageBucket: "gomas-2530d.appspot.com",
+  messagingSenderId: "856600921569",
+  appId: "1:856600921569:web:3e57244a3f29db5a35fea0"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// 🔑 CAMBIA ESTA CONTRASEÑA POR LA TUYA
+const ADMIN_PASSWORD = "perilingues2024";
+
+let todosPedidos = {};
+let filtroActual = "pendiente";
+
+// Si ya estaba logueado en esta sesión, entrar directo
+if (sessionStorage.getItem("adminOk") === "true") {
+  document.getElementById("login-admin").style.display = "none";
+  document.getElementById("panel").style.display = "block";
+  cargarPedidos();
+}
+
+window.verificarAdmin = function() {
+  const pass = document.getElementById("admin-pass").value;
+  if (pass === ADMIN_PASSWORD) {
+    sessionStorage.setItem("adminOk", "true");
+    document.getElementById("login-admin").style.display = "none";
+    document.getElementById("panel").style.display = "block";
+    cargarPedidos();
+  } else {
+    document.getElementById("login-error").style.display = "block";
+  }
+};
+
+window.cerrarAdmin = function() {
+  document.getElementById("panel").style.display = "none";
+  document.getElementById("login-admin").style.display = "flex";
+  document.getElementById("admin-pass").value = "";
+};
+
+async function cargarPedidos() {
+  const snap = await get(ref(db, 'pedidos'));
+  todosPedidos = snap.exists() ? snap.val() : {};
+  actualizarStats();
+  renderPedidos(filtroActual);
+}
+
+function actualizarStats() {
+  const lista = Object.values(todosPedidos);
+  document.getElementById("stat-pendientes").textContent  = lista.filter(p => p.estado === "pendiente").length;
+  document.getElementById("stat-aprobados").textContent   = lista.filter(p => p.estado === "aprobado").length;
+  document.getElementById("stat-rechazados").textContent  = lista.filter(p => p.estado === "rechazado").length;
+  const totalVendido = lista.filter(p => p.estado === "aprobado").reduce((s, p) => s + (p.total || 0), 0);
+  document.getElementById("stat-total").textContent = `Q${totalVendido.toFixed(2)}`;
+}
+
+function renderPedidos(filtro) {
+  const lista  = document.getElementById("pedidos-lista");
+  const entries = Object.entries(todosPedidos)
+    .filter(([, p]) => filtro === "todos" || p.estado === filtro)
+    .sort(([a], [b]) => b - a); // más recientes primero
+
+  if (entries.length === 0) {
+    lista.innerHTML = `<p class="empty">No hay pedidos ${filtro === "todos" ? "" : filtro + "s"} 🍬</p>`;
+    return;
+  }
+
+  lista.innerHTML = entries.map(([id, p]) => {
+    const itemsHTML = (p.items || []).map(i => `• ${i.name} x${i.quantity} — Q${(i.price * i.quantity).toFixed(2)}`).join("<br>");
+    const botonesHTML = p.estado === "pendiente" ? `
+      <div class="pedido-btns">
+        <button class="btn-aprobar"  onclick="aprobar('${id}', '${p.uid}', ${p.puntos})">✅ Aprobar (+${p.puntos} pts)</button>
+        <button class="btn-rechazar" onclick="rechazar('${id}')">❌ Rechazar</button>
+      </div>` :
+      `<span class="${p.estado === 'aprobado' ? 'badge-aprobado' : 'badge-rechazado'}">
+        ${p.estado === 'aprobado' ? '✅ Aprobado' : '❌ Rechazado'}
+      </span>`;
+
+    return `
+      <div class="pedido-card">
+        <div class="pedido-header">
+          <div>
+            <div class="pedido-nombre">${p.nombre}</div>
+            <div class="pedido-grado">${p.grado}</div>
+          </div>
+          <div class="pedido-fecha">${p.fecha || ""}</div>
+        </div>
+        <div class="pedido-items">${itemsHTML}</div>
+        <div class="pedido-total">💰 Total: Q${parseFloat(p.total || 0).toFixed(2)}</div>
+        <div class="pedido-puntos">⭐ Puntos a otorgar: ${p.puntos}</div>
+        ${botonesHTML}
+      </div>`;
+  }).join("");
+}
+
+window.aprobar = async function(pedidoId, uid, puntos) {
+  // Marcar pedido como aprobado
+  await update(ref(db, 'pedidos/' + pedidoId), { estado: "aprobado" });
+
+  // Sumar puntos al usuario
+  const userSnap = await get(ref(db, 'usuarios/' + uid));
+  if (userSnap.exists()) {
+    const puntosActuales = userSnap.val().puntos || 0;
+    await update(ref(db, 'usuarios/' + uid), { puntos: puntosActuales + puntos });
+  }
+
+  todosPedidos[pedidoId].estado = "aprobado";
+
+  // ⭐ Contar gomitas compradas por este usuario en pedidos aprobados
+  const totalGomitas = Object.values(todosPedidos)
+    .filter(p => p.uid === uid && p.estado === "aprobado")
+    .reduce((sum, p) => sum + (p.items || []).reduce((s, i) => s + i.quantity, 0), 0);
+
+
+  actualizarStats();
+  renderPedidos(filtroActual);
+};
+
+window.rechazar = async function(pedidoId) {
+  await update(ref(db, 'pedidos/' + pedidoId), { estado: "rechazado" });
+  todosPedidos[pedidoId].estado = "rechazado";
+  actualizarStats();
+  renderPedidos(filtroActual);
+};
+
+window.filtrar = function(filtro, btn) {
+  filtroActual = filtro;
+  document.querySelectorAll(".tab-admin").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  renderPedidos(filtro);
+};
+</script>
+</body>
+</html>

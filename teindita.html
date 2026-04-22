@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Party Perilingües</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="menu container" style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;">
+    <img class="logo-2" src="images/otro 2 .png" alt="logo">
+    <nav class="navbar"><ul></ul></nav>
+  </div>
+  <div class="header-content container">
+    <div class="swiper mySwiper-1">
+      <div class="swiper-wrapper">
+
+        <div class="swiper-slide">
+          <div class="slider">
+            <div class="slider-txt">
+              <h1>Gomitas de Gusano</h1>
+              <p>Colores vibrantes y un toque ácido que despierta tus sentidos.</p>
+              <a href="#" class="btn-1" onclick="agregarDesdeSlider('Gusanos');return false;">Comprar</a>
+            </div>
+            <div class="slider-img"><img src="images/image-removebg-preview.png"></div>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="slider">
+            <div class="slider-txt">
+              <h1>Gomitas de Osito</h1>
+              <p>Pequeñas, suaves y llenas de sabor.</p>
+              <a href="#" class="btn-1" onclick="agregarDesdeSlider('Ositos');return false;">Comprar</a>
+            </div>
+            <div class="slider-img"><img src="images/osos.png"></div>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="slider">
+            <div class="slider-txt">
+              <h1>Chocolates granada</h1>
+              <p>Calidad y sabor en su máxima expresión.</p>
+              <a href="#" class="btn-1" onclick="agregarDesdeSlider('Chocolate');return false;">Comprar</a>
+            </div>
+            <div class="slider-img"><img src="images/d.png"></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</header>
+
+<!-- TICKER COMPRAS -->
+<div id="ranking-ticker">
+  <span id="ticker-contenido">🏆 Cargando ranking...</span>
+</div>
+
+<!-- TICKER JUEGO -->
+<div id="ranking-ticker-juego">
+  <span id="ticker-juego-contenido">🎮 Cargando ranking juego...</span>
+</div>
+
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="🔎 Buscar productos...">
+</div>
+
+<!-- 3 BOTONES FLOTANTES -->
+ <button id="music-btn">🔇</button>
+<button id="ranking-btn">🏆</button>
+<button id="ranking-juego-btn">🕹️</button>
+<button id="game-btn">🎮</button>
+
+<section class="container">
+  <h2>Nuestros productos</h2>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="gomitas">Gomitas</button>
+    <button class="tab-btn" data-tab="dulces">Dulces</button>
+  </div>
+
+  <div class="products tab-content active" id="gomitas">
+    <div class="product"><img src="images/osos.png"><h4>Ositos</h4><span>Q2</span><button class="add-to-cart" data-name="Ositos" data-price="2" data-img="images/osos.png">Agregar</button></div>
+    <div class="product"><img src="images/aros.png"><h4>Aros</h4><span>Q2</span><button class="add-to-cart" data-name="Aros" data-price="2" data-img="images/aros.png">Agregar</button></div>
+    <div class="product"><img src="images/image-removebg-preview.png"><h4>Gusanos</h4><span>Q3</span><button class="add-to-cart" data-name="Gusanos" data-price="3" data-img="images/image-removebg-preview.png">Agregar</button></div>
+    <div class="product"><img src="images/sandais.png"><h4>Sandías</h4><span>Q4</span><button class="add-to-cart" data-name="Sandías" data-price="4" data-img="images/sandais.png">Agregar</button></div>
+    <div class="product"><img src="images/coca.png"><h4>Cocas</h4><span>Q2</span><button class="add-to-cart" data-name="cocas" data-price="2" data-img="images/coca.png">Agregar</button></div>
+  </div>
+
+  <div class="products tab-content" id="dulces">
+    <div class="product"><img src="images/1.png"><h4>Chicle</h4><span>Q2</span><button class="add-to-cart" data-name="Chicle" data-price="2" data-img="images/1.png">Agregar</button></div>
+    <div class="product"><img src="images/image-removebg-preview (2).png"><h4>Chocolate</h4><span>Q2</span><button class="add-to-cart" data-name="Chocolate" data-price="2" data-img="images/image-removebg-preview (2).png">Agregar</button></div>
+    <div class="product"><img src="images/ca.png"><h4>Caramelo</h4><span>Q3</span><button class="add-to-cart" data-name="Caramelo" data-price="3" data-img="images/ca.png">Agregar</button></div>
+    <div class="product"><img src="images/image-removebg-preview (4).png"><h4>Paleta</h4><span>Q3</span><button class="add-to-cart" data-name="Paleta" data-price="3" data-img="images/image-removebg-preview (4).png">Agregar</button></div>
+    <div class="product"><img src="images/image-removebg-preview (3).png"><h4>Bonbon</h4><span>Q4</span><button class="add-to-cart" data-name="Bonbon" data-price="4" data-img="images/image-removebg-preview (3).png">Agregar</button></div>
+  </div>
+</section>
+
+   
+<div style="text-align:center;margin:10px auto 50px;width:100%;max-width:1200px;padding:0 20px;">
+  <a href="#" class="btn-1 btn-soon-anim">Secretarias a tu servicio — Próximamente...</a>
+</div>
+
+
+
+<!-- MODAL RESULTADO -->
+<div id="resultModal">
+  <div class="resultBox">
+    <h2 id="resultTitle"></h2>
+    <p id="resultText"></p>
+    <button id="closeResult">Aceptar</button>
+  </div>
+</div>
+
+<!-- MODAL RANKING COMPRAS -->
+<div id="rankingModal">
+  <div id="rankingBox">
+    <button id="closeRanking">✖</button>
+    <h2>🏆 Ranking Compras</h2>
+    <p class="sub">1 punto por cada Q1 comprado — ¡sube de nivel!</p>
+    <div id="ranking-lista"><p style="text-align:center;color:#aaa;">Cargando...</p></div>
+  </div>
+</div>
+
+<!-- MODAL RANKING JUEGO -->
+<div id="rankingJuegoModal">
+  <div id="rankingJuegoBox">
+    <button id="closeRankingJuego">✖</button>
+    <h2>🕹️ Ranking Juego</h2>
+    <p class="sub">Puntos acumulados jugando — ¡compite!</p>
+    <div id="ranking-juego-lista"><p style="text-align:center;color:#aaa;">Cargando...</p></div>
+  </div>
+</div>
+
+<!-- MODAL JUEGO -->
+<div id="gameModal">
+  <div id="gameBox">
+    <button id="closeGame">✖</button>
+    <div id="game-hud">
+      <div class="ghc"><div class="ghl">Puntos</div><div class="ghv" id="g-sc">0</div></div>
+      <div class="ghc"><div class="ghl">Mejor</div><div class="ghv" id="g-hi">0</div></div>
+      <div class="ghc"><div class="ghl">Nivel</div><div class="ghv" id="g-lv">1</div></div>
+      <div class="ghc"><div class="ghl">Vidas</div><div class="ghv" id="g-lives">❤️❤️❤️</div></div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="game-msg">Toca para empezar</div>
+  </div>
+</div>
+
+<!-- CARRITO -->
+<div class="cart-icon" id="cart-toggle">🛒 <span id="cart-count">0</span></div>
+<div class="cart-dropdown" id="cart-dropdown">
+  <h3>Carrito</h3>
+  <div class="user-info">
+    <label for="cliente-nombre">Nombre:</label>
+    <input id="cliente-nombre" readonly>
+    <label for="cliente-grado">Grado/Carrera:</label>
+    <input id="cliente-grado" readonly>
+  </div>
+  <ul id="cart-items"></ul>
+  <p>Total: Q<span id="cart-total">0.00</span></p>
+  <button id="clear-cart">Vaciar carrito</button>
+  <button id="buy-cart">Comprar</button>
+</div>
+
+<footer class="footer container">
+  <p>🍬 Party Perilingüe — Dylan</p>
+</footer>
+
+<div id="puntos-badge"></div>
+
+<div id="adModal">
+  <div class="ad-box">
+    <span id="closeAd">✖</span>
+    <img src="images/wassaaa.jpeg" alt="Publicidad">
+  </div>
+</div>
+
+<img src="images/cole-modified.png" class="logo-escuela" alt="Logo Escuela" onclick="document.getElementById('modalEscuela').style.display='flex'">
+
+<div id="modalEscuela" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:999999;" onclick="this.style.display='none'">
+  <img src="images/cole-modified.png" style="max-width:85vw;max-height:85vh;border-radius:20px;object-fit:contain;">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script type="module" src="firebase.js"></script>
+<script defer src="script.js"></script>
+<script defer src="game.js"></script>
+
+<script>
+/* Función global para botones del slider — busca el botón en la lista de productos y lo clickea */
+function agregarDesdeSlider(name) {
+  const btn = document.querySelector(`.add-to-cart[data-name="${name}"]`);
+  if (btn) btn.click();
+  const dropdown = document.getElementById('cart-dropdown');
+  if (dropdown) dropdown.style.display = 'block';
+}
+</script>
+
+ <audio id="bg-music" autoplay loop muted>
+  <source src="musica/Mandy's Candy's Theme  Brawl Stars.mp3" type="audio/mpeg">
+</audio>
+
+
+<script>
+const music = document.getElementById("bg-music");
+const btn = document.getElementById("music-btn");
+
+// Estado inicial
+btn.classList.add("muted");
+
+// Activar sonido con primer click (excepto botón)
+document.addEventListener("click", (e) => {
+  if (e.target.id !== "music-btn") {
+    music.muted = false;
+    music.play();
+    btn.textContent = "🔊";
+    btn.classList.remove("muted");
+    btn.classList.add("playing");
+  }
+}, { once: true });
+
+// Botón toggle
+btn.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  if (music.muted) {
+    music.muted = false;
+    music.play();
+    btn.textContent = "🔊";
+    btn.classList.remove("muted");
+    btn.classList.add("playing");
+  } else {
+    music.muted = true;
+    btn.textContent = "🔇";
+    btn.classList.remove("playing");
+    btn.classList.add("muted");
+  }
+});
+</script>
+
+</body>
+</html>
