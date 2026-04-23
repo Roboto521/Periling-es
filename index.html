@@ -13,48 +13,30 @@ body{ min-height:100vh; display:flex; align-items:center; justify-content:center
 .card::before{ content:""; position:absolute; top:-60px; right:-60px; width:160px; height:160px; border-radius:50%; background:linear-gradient(135deg,rgba(255,102,196,0.12),rgba(157,107,255,0.12)); }
 .card::after{ content:""; position:absolute; bottom:-50px; left:-50px; width:130px; height:130px; border-radius:50%; background:linear-gradient(135deg,rgba(255,217,61,0.12),rgba(61,220,151,0.12)); }
 .card *{ position:relative; z-index:1; }
-
 .logo-emoji{ font-size:48px; margin-bottom:8px; display:block; }
 h2{ font-size:22px; font-weight:600; background:linear-gradient(90deg,#ff4d6d,#9d6bff); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:4px; }
 .subtitle{ font-size:13px; color:#bbb; margin-bottom:22px; }
-
-input, select{
-  width:100%; padding:13px 16px; margin:6px 0; border-radius:14px;
-  border:2px solid #f0f0f0; font-size:14px; font-family:'Poppins',sans-serif;
-  transition:0.2s; background:#fafafa; color:#333; appearance:none;
-}
+input, select{ width:100%; padding:13px 16px; margin:6px 0; border-radius:14px; border:2px solid #f0f0f0; font-size:14px; font-family:'Poppins',sans-serif; transition:0.2s; background:#fafafa; color:#333; appearance:none; }
 input:focus, select:focus{ outline:none; border-color:#ff66c4; background:white; box-shadow:0 0 0 4px rgba(255,102,196,0.1); }
 select{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ff66c4' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; cursor:pointer; }
-select option{ color:#333; }
-
-.select-row{ display:flex; gap:8px; }
-.select-row select{ flex:1; }
-
 .pass-wrap{ position:relative; }
 .pass-wrap input{ padding-right:46px; }
 .ojo{ position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:17px; color:#ccc; user-select:none; transition:0.2s; }
 .ojo:hover{ color:#ff66c4; }
-
 .btn-main{ width:100%; padding:14px; border:none; border-radius:14px; background:linear-gradient(45deg,#ff66c4,#ff8c42); color:white; font-weight:600; font-size:15px; cursor:pointer; margin-top:10px; transition:0.2s; box-shadow:0 6px 20px rgba(255,102,196,0.3); }
 .btn-main:hover{ transform:translateY(-1px); box-shadow:0 8px 24px rgba(255,102,196,0.45); }
 .btn-main:active{ transform:scale(0.98); }
-
 .btn-google{ width:100%; padding:13px; border:2px solid #ebebeb; border-radius:14px; background:white; color:#444; font-weight:600; font-size:14px; cursor:pointer; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:10px; transition:0.2s; }
 .btn-google:hover{ background:#fafafa; border-color:#ddd; }
 .btn-google img{ width:20px; height:20px; }
-
 .sep{ display:flex; align-items:center; gap:10px; margin:14px 0; color:#ccc; font-size:13px; }
 .sep::before,.sep::after{ content:""; flex:1; height:1px; background:#f0f0f0; }
-
 .error{ color:#ff4d6d; font-size:12px; display:none; margin-top:6px; text-align:left; padding:0 4px; }
 .field-label{ font-size:12px; color:#aaa; text-align:left; margin:8px 0 2px 4px; }
-
 .toggle-msg{ margin-top:18px; font-size:13px; color:#aaa; }
 .toggle-msg span{ color:#ff66c4; font-weight:600; cursor:pointer; }
 .toggle-msg span:hover{ text-decoration:underline; }
 .hidden{ display:none; }
-
-/* POPUP */
 #popup-grado{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:9999; align-items:center; justify-content:center; padding:20px; }
 #popup-grado.show{ display:flex; }
 .popup-box{ background:white; padding:32px 28px; border-radius:24px; width:100%; max-width:340px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.25); }
@@ -71,19 +53,16 @@ select option{ color:#333; }
     <span class="logo-emoji">🍬</span>
     <h2>Party Perilingüe</h2>
     <p class="subtitle">Inicia sesión para continuar</p>
-
     <button class="btn-google" id="googleLoginBtn">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
       Continuar con Google
     </button>
     <div class="sep">o</div>
-
     <input type="email" id="loginEmail" placeholder="Correo electrónico">
     <div class="pass-wrap">
       <input type="password" id="loginPassword" placeholder="Contraseña">
       <span class="ojo" onclick="togglePass('loginPassword',this)">👁</span>
     </div>
-
     <button class="btn-main" id="loginBtn">Entrar</button>
     <p id="loginError" class="error">Correo o contraseña incorrectos</p>
     <p class="toggle-msg">¿No tienes cuenta? <span id="showRegister">Crea una</span></p>
@@ -94,16 +73,13 @@ select option{ color:#333; }
     <span class="logo-emoji">🍬</span>
     <h2>Crear cuenta</h2>
     <p class="subtitle">Completa todos los campos</p>
-
     <button class="btn-google" id="googleRegisterBtn">
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
       Registrarse con Google
     </button>
     <div class="sep">o</div>
-
     <input type="text"  id="regNombre" placeholder="Nombre completo *">
     <input type="email" id="regEmail"  placeholder="Correo electrónico *">
-
     <p class="field-label">Carrera *</p>
     <select id="regCarrera" onchange="actualizarGrados('regCarrera','regGrado')">
       <option value="">— Selecciona tu carrera —</option>
@@ -115,17 +91,14 @@ select option{ color:#333; }
       <option value="Dibujo">Dibujo</option>
       <option value="Mecánica">Mecánica</option>
     </select>
-
     <p class="field-label">Grado *</p>
     <select id="regGrado">
       <option value="">— Primero elige tu carrera —</option>
     </select>
-
     <div class="pass-wrap">
       <input type="password" id="regPassword" placeholder="Contraseña (mínimo 5 caracteres) *">
       <span class="ojo" onclick="togglePass('regPassword',this)">👁</span>
     </div>
-
     <button class="btn-main" id="registerBtn">Registrarse</button>
     <p id="regError" class="error"></p>
     <p class="toggle-msg">¿Ya tienes cuenta? <span id="showLogin">Inicia sesión</span></p>
@@ -133,12 +106,11 @@ select option{ color:#333; }
 
 </div>
 
-<!-- POPUP GOOGLE nuevos usuarios -->
+<!-- POPUP GOOGLE -->
 <div id="popup-grado">
   <div class="popup-box">
     <h3>¡Bienvenido! 🍬</h3>
     <p class="sub-popup">Cuéntanos un poco más sobre ti</p>
-
     <p class="field-label" style="text-align:left;">Carrera *</p>
     <select id="popCarrera" onchange="actualizarGrados('popCarrera','popGrado')">
       <option value="">— Selecciona tu carrera —</option>
@@ -150,13 +122,11 @@ select option{ color:#333; }
       <option value="Dibujo">Dibujo</option>
       <option value="Mecánica">Mecánica</option>
     </select>
-
     <p class="field-label" style="text-align:left;margin-top:10px;">Grado *</p>
     <select id="popGrado">
       <option value="">— Primero elige tu carrera —</option>
     </select>
-
-    <p id="popError" class="error" style="display:none;margin-bottom:6px;">Selecciona carrera y grado</p>
+    <p id="popError" class="error" style="margin-bottom:6px;">Selecciona carrera y grado</p>
     <button class="btn-main" id="guardar-grado" style="margin-top:16px;">Guardar y entrar</button>
   </div>
 </div>
@@ -168,37 +138,42 @@ function togglePass(id, ojo) {
   ojo.textContent = input.type === 'password' ? '👁' : '🙈';
 }
 
-/* Grados disponibles por carrera */
 const GRADOS = {
-  'Básico'              : ['1ro Básico','2do Básico','3ro Básico'],
-  'Bachillerato'        : ['4to Bachillerato','5to Bachillerato'],
-  'Perito Contador'     : ['4to Perito','5to Perito','6to Perito'],
+  'Básico'                : ['1ro Básico','2do Básico','3ro Básico'],
+  'Bachillerato'          : ['4to Bachillerato','5to Bachillerato'],
+  'Perito Contador'       : ['4to Perito','5to Perito','6to Perito'],
   'Secretariado Bilingüe' : ['4to Secretariado','5to Secretariado','6to Secretariado'],
   'Secretariado Comercial': ['4to Secretariado','5to Secretariado'],
-  'Dibujo'              : ['4to Dibujo','5to Dibujo'],
-  'Mecánica'            : ['4to Mecánica','5to Mecánica'],
+  'Dibujo'                : ['4to Dibujo','5to Dibujo'],
+  'Mecánica'              : ['4to Mecánica','5to Mecánica'],
 };
 
-function actualizarGrados(selectCarreraId, selectGradoId) {
-  const carrera = document.getElementById(selectCarreraId).value;
-  const gradoEl = document.getElementById(selectGradoId);
-  gradoEl.innerHTML = '';
+function actualizarGrados(carreraId, gradoId) {
+  const carrera = document.getElementById(carreraId).value;
+  const gradoEl = document.getElementById(gradoId);
   if (!carrera || !GRADOS[carrera]) {
     gradoEl.innerHTML = '<option value="">— Primero elige tu carrera —</option>';
     return;
   }
   gradoEl.innerHTML = '<option value="">— Selecciona tu grado —</option>';
   GRADOS[carrera].forEach(g => {
-    const opt = document.createElement('option');
-    opt.value = g; opt.textContent = g;
-    gradoEl.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = g; o.textContent = g;
+    gradoEl.appendChild(o);
   });
+}
+
+/* Genera clave limpia a partir del nombre: "Dylan García" → "dylan_garcia" */
+function nombreAClave(nombre) {
+  return nombre.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quita acentos
+    .replace(/\s+/g, "_")
+    .replace(/[^a-z0-9_]/g, "");
 }
 </script>
 
 <script type="module">
-import { initializeApp }    from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup }
   from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
@@ -234,44 +209,39 @@ async function loginConGoogle() {
   try {
     const res  = await signInWithPopup(auth, gp);
     const user = res.user;
-    const key  = user.uid;
-    const snap = await get(ref(db, "usuarios/" + key));
+    /* Clave = nombre limpio, igual que antes */
+    const nombre = user.displayName || "usuario";
+    const key    = nombreAClave(nombre);
+    const snap   = await get(ref(db, "usuarios/" + key));
 
     if (!snap.exists()) {
-  localStorage.setItem("_tmpUID",    key);
-  localStorage.setItem("_tmpFoto",   user.photoURL    || "");
-  localStorage.setItem("_tmpEmail",  user.email       || "");
-  localStorage.setItem("_tmpNombre", user.displayName || "");
-  document.getElementById("popup-grado").classList.add("show");
-} else {
-  const d = snap.val();
-
-  // 🔥 ACTUALIZA SIN BORRAR NADA
-  await update(ref(db, "usuarios/" + key), {
-    nombre: user.displayName || d.nombre || "Usuario",
-    foto: user.photoURL || d.foto || ""
-  });
-
-  guardarLocal(user.displayName || d.nombre, d.carrera || "", key, user.photoURL || "");
-  window.location.href = "teindita.html";
-}
+      localStorage.setItem("_tmpKey",    key);
+      localStorage.setItem("_tmpFoto",   user.photoURL || "");
+      localStorage.setItem("_tmpEmail",  user.email    || "");
+      localStorage.setItem("_tmpNombre", nombre);
+      document.getElementById("popup-grado").classList.add("show");
+    } else {
+      const d = snap.val();
+      /* Actualiza foto por si cambió */
+      await update(ref(db, "usuarios/" + key), { foto: user.photoURL || d.foto || "" });
+      guardarLocal(d.nombre || nombre, d.carrera || "", key, user.photoURL || d.foto || "");
+      window.location.href = "teindita.html";
+    }
   } catch(e) { alert("Error con Google: " + e.message); }
 }
 document.getElementById("googleLoginBtn").onclick    = loginConGoogle;
 document.getElementById("googleRegisterBtn").onclick = loginConGoogle;
 
-/* ===== GUARDAR POPUP GOOGLE ===== */
+/* ===== POPUP GOOGLE ===== */
 document.getElementById("guardar-grado").onclick = async () => {
   const carrera = document.getElementById("popCarrera").value;
   const grado   = document.getElementById("popGrado").value;
   const errEl   = document.getElementById("popError");
 
-  if (!carrera || !grado) {
-    errEl.style.display = "block"; return;
-  }
+  if (!carrera || !grado) { errEl.style.display = "block"; return; }
   errEl.style.display = "none";
 
-  const key    = localStorage.getItem("_tmpUID");
+  const key    = localStorage.getItem("_tmpKey");
   const foto   = localStorage.getItem("_tmpFoto");
   const email  = localStorage.getItem("_tmpEmail");
   const nombre = localStorage.getItem("_tmpNombre");
@@ -279,7 +249,7 @@ document.getElementById("guardar-grado").onclick = async () => {
 
   await set(ref(db, "usuarios/" + key), { nombre, email, carrera:gc, puntos:0, puntosJuego:0, foto, uid:key });
   guardarLocal(nombre, gc, key, foto);
-  ["_tmpUID","_tmpFoto","_tmpEmail","_tmpNombre"].forEach(k => localStorage.removeItem(k));
+  ["_tmpKey","_tmpFoto","_tmpEmail","_tmpNombre"].forEach(k => localStorage.removeItem(k));
   window.location.href = "teindita.html";
 };
 
@@ -293,7 +263,7 @@ document.getElementById("registerBtn").onclick = () => {
   const errEl   = document.getElementById("regError");
 
   if (!nombre || !email || !carrera || !grado || !pass) {
-    errEl.textContent = !nombre || !email || !pass
+    errEl.textContent = (!nombre || !email || !pass)
       ? "Nombre, correo y contraseña son obligatorios"
       : "Selecciona tu carrera y grado";
     errEl.style.display = "block"; return;
@@ -303,19 +273,26 @@ document.getElementById("registerBtn").onclick = () => {
     errEl.style.display = "block"; return;
   }
 
-  const gc = grado + " — " + carrera;
+  const key = nombreAClave(nombre);
+  const gc  = grado + " — " + carrera;
 
-  createUserWithEmailAndPassword(auth, email, pass)
-    .then(uc => {
-      const key = uc.user.uid;
-      set(ref(db, "usuarios/" + key), { nombre, email, carrera:gc, puntos:0, puntosJuego:0, foto:"", uid:key });
-      guardarLocal(nombre, gc, key, "");
-      window.location.href = "teindita.html";
-    })
-    .catch(e => {
-      errEl.textContent = e.code === "auth/email-already-in-use" ? "Ese correo ya está registrado" : e.message;
-      errEl.style.display = "block";
-    });
+  /* Verificar que el nombre no esté ya en uso */
+  get(ref(db, "usuarios/" + key)).then(snap => {
+    if (snap.exists()) {
+      errEl.textContent = "Ese nombre ya está en uso, elige otro";
+      errEl.style.display = "block"; return;
+    }
+    createUserWithEmailAndPassword(auth, email, pass)
+      .then(uc => {
+        set(ref(db, "usuarios/" + key), { nombre, email, carrera:gc, puntos:0, puntosJuego:0, foto:"", uid:key });
+        guardarLocal(nombre, gc, key, "");
+        window.location.href = "teindita.html";
+      })
+      .catch(e => {
+        errEl.textContent = e.code === "auth/email-already-in-use" ? "Ese correo ya está registrado" : e.message;
+        errEl.style.display = "block";
+      });
+  });
 };
 
 /* ===== LOGIN EMAIL ===== */
@@ -327,10 +304,13 @@ document.getElementById("loginBtn").onclick = () => {
 
   signInWithEmailAndPassword(auth, email, pass)
     .then(uc => {
-      get(ref(db, "usuarios/" + uc.user.uid)).then(snap => {
-        if (snap.exists()) {
-          const d = snap.val();
-          guardarLocal(d.nombre||"", d.carrera||"", uc.user.uid, d.foto||"");
+      /* Buscar usuario por email ya que la clave es el nombre */
+      get(ref(db, "usuarios")).then(snap => {
+        if (!snap.exists()) return;
+        const entrada = Object.entries(snap.val()).find(([, v]) => v.email === email);
+        if (entrada) {
+          const [key, data] = entrada;
+          guardarLocal(data.nombre||"", data.carrera||"", key, data.foto||"");
           window.location.href = "teindita.html";
         }
       });
