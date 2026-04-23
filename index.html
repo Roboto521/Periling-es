@@ -198,7 +198,8 @@ function actualizarGrados(selectCarreraId, selectGradoId) {
 
 <script type="module">
 import { initializeApp }    from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
+import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup }
   from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
@@ -237,16 +238,23 @@ async function loginConGoogle() {
     const snap = await get(ref(db, "usuarios/" + key));
 
     if (!snap.exists()) {
-      localStorage.setItem("_tmpUID",    key);
-      localStorage.setItem("_tmpFoto",   user.photoURL    || "");
-      localStorage.setItem("_tmpEmail",  user.email       || "");
-      localStorage.setItem("_tmpNombre", user.displayName || "");
-      document.getElementById("popup-grado").classList.add("show");
-    } else {
-      const d = snap.val();
-      guardarLocal(d.nombre || user.displayName, d.carrera || "", key, user.photoURL || "");
-      window.location.href = "teindita.html";
-    }
+  localStorage.setItem("_tmpUID",    key);
+  localStorage.setItem("_tmpFoto",   user.photoURL    || "");
+  localStorage.setItem("_tmpEmail",  user.email       || "");
+  localStorage.setItem("_tmpNombre", user.displayName || "");
+  document.getElementById("popup-grado").classList.add("show");
+} else {
+  const d = snap.val();
+
+  // 🔥 ACTUALIZA SIN BORRAR NADA
+  await update(ref(db, "usuarios/" + key), {
+    nombre: user.displayName || d.nombre || "Usuario",
+    foto: user.photoURL || d.foto || ""
+  });
+
+  guardarLocal(user.displayName || d.nombre, d.carrera || "", key, user.photoURL || "");
+  window.location.href = "teindita.html";
+}
   } catch(e) { alert("Error con Google: " + e.message); }
 }
 document.getElementById("googleLoginBtn").onclick    = loginConGoogle;
