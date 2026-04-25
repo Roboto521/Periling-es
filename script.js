@@ -18,9 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ===== SWIPER ===== */
   if (document.querySelector(".mySwiper-1")) {
     new Swiper(".mySwiper-1", {
-      slidesPerView : 1,
-      spaceBetween  : 30,
-      loop          : true,
+      slidesPerView : 1, spaceBetween: 30, loop: true,
       pagination    : { el:".swiper-pagination", clickable:true },
       navigation    : { nextEl:".swiper-button-next", prevEl:".swiper-button-prev" }
     });
@@ -59,14 +57,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* ===== CERRAR TODOS LOS MODALES ===== */
   function cerrarTodosLosModales() {
-    const modales = ['rankingModal','rankingJuegoModal','gameModal','resultModal'];
-    modales.forEach(id => {
+    ['rankingModal','rankingJuegoModal','gameModal','resultModal','modelosModal','secretariasModal'].forEach(id => {
       const m = document.getElementById(id);
       if (m) m.style.display = 'none';
     });
-    // Cancelar juego si estaba corriendo
     if (window._cerrarJuego) window._cerrarJuego();
   }
+
+  /* ===== SLIDER — agregar desde header ===== */
+  window.agregarDesdeSlider = function(name) {
+    const btn = document.querySelector(`.add-to-cart[data-name="${name}"]`);
+    if (btn) btn.click();
+    const dropdown = document.getElementById('cart-dropdown');
+    if (dropdown) dropdown.style.display = 'block';
+  };
 
   /* ===== CARRITO ===== */
   let cart = [];
@@ -113,7 +117,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     cartTotal.textContent = total.toFixed(2);
     cartCount.textContent = count;
-
     document.querySelectorAll(".minus").forEach(btn => {
       btn.addEventListener("click", () => {
         const i = parseInt(btn.dataset.index);
@@ -123,10 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
     document.querySelectorAll(".remove").forEach(btn => {
-      btn.addEventListener("click", () => {
-        cart.splice(parseInt(btn.dataset.index), 1);
-        updateCart();
-      });
+      btn.addEventListener("click", () => { cart.splice(parseInt(btn.dataset.index), 1); updateCart(); });
     });
   }
 
@@ -167,6 +167,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.target.id === "rankingModal") e.target.style.display = "none";
   });
 
+  // Ver más / menos compras
+  document.getElementById("ranking-ver-mas")?.addEventListener("click", () => {
+    const resto = document.getElementById("ranking-resto");
+    const btn   = document.getElementById("ranking-ver-mas");
+    const abierto = resto.style.display !== "none";
+    resto.style.display = abierto ? "none" : "block";
+    btn.textContent = abierto ? "Ver ranking completo ▼" : "Ver menos ▲";
+  });
+
   /* ===== RANKING JUEGO ===== */
   document.getElementById("ranking-juego-btn")?.addEventListener("click", () => {
     cerrarTodosLosModales();
@@ -180,12 +189,65 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.target.id === "rankingJuegoModal") e.target.style.display = "none";
   });
 
-  /* ===== PUBLICIDAD ===== */
-  const ad = document.getElementById("adModal");
-  const closeBtn = document.getElementById("closeAd");
-  if (ad && closeBtn) {
+  // Ver más / menos juego
+  document.getElementById("ranking-juego-ver-mas")?.addEventListener("click", () => {
+    const resto = document.getElementById("ranking-juego-resto");
+    const btn   = document.getElementById("ranking-juego-ver-mas");
+    const abierto = resto.style.display !== "none";
+    resto.style.display = abierto ? "none" : "block";
+    btn.textContent = abierto ? "Ver ranking completo ▼" : "Ver menos ▲";
+  });
+
+  /* ===== BOTÓN PUBLICISTAS (📸) ===== */
+  document.getElementById("publicistas-btn")?.addEventListener("click", () => {
+    cerrarTodosLosModales();
+    document.getElementById("modelosModal").style.display = "flex";
+  });
+  document.getElementById("modelosModal")?.addEventListener("click", e => {
+    if (e.target.id === "modelosModal") e.target.style.display = "none";
+  });
+
+  /* ===== BOTÓN SECRETARIAS (en footer) ===== */
+  document.getElementById("secretarias-btn")?.addEventListener("click", () => {
+    cerrarTodosLosModales();
+    document.getElementById("secretariasModal").style.display = "flex";
+  });
+  document.getElementById("secretariasModal")?.addEventListener("click", e => {
+    if (e.target.id === "secretariasModal") e.target.style.display = "none";
+  });
+
+  /* ===== MÚSICA ===== */
+  const music    = document.getElementById("bg-music");
+  const musicBtn = document.getElementById("music-btn");
+  if (music && musicBtn) {
+    musicBtn.classList.add("muted");
+    document.addEventListener("click", (e) => {
+      if (e.target.id !== "music-btn") {
+        music.muted = false; music.play().catch(()=>{});
+        musicBtn.textContent = "🔊";
+        musicBtn.classList.remove("muted"); musicBtn.classList.add("playing");
+      }
+    }, { once: true });
+    musicBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (music.muted || music.paused) {
+        music.muted = false; music.play().catch(()=>{});
+        musicBtn.textContent = "🔊";
+        musicBtn.classList.remove("muted"); musicBtn.classList.add("playing");
+      } else {
+        music.muted = true;
+        musicBtn.textContent = "🔇";
+        musicBtn.classList.remove("playing"); musicBtn.classList.add("muted");
+      }
+    });
+  }
+
+  /* ===== PUBLICIDAD AUTO ===== */
+  const ad      = document.getElementById("adModal");
+  const closeAd = document.getElementById("closeAd");
+  if (ad && closeAd) {
     setTimeout(() => { ad.style.display = "flex"; ad.classList.add("show-ad"); }, 500);
-    closeBtn.onclick = () => {
+    closeAd.onclick = () => {
       ad.classList.remove("show-ad");
       setTimeout(() => { ad.style.display = "none"; }, 300);
     };
