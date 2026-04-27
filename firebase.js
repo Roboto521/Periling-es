@@ -16,17 +16,19 @@ window._db = db;
 
 /* ===== NIVELES ===== */
 function calcularNivel(puntos) {
-  if (puntos >= 36) return { nombre:"💎 Platino", clase:"nivel-platino" };
-  if (puntos >= 26) return { nombre:"🥇 Oro",     clase:"nivel-oro"     };
-  if (puntos >= 16) return { nombre:"🥈 Plata",   clase:"nivel-plata"   };
-  return                   { nombre:"🥉 Bronce",  clase:"nivel-bronce"  };
+ if (puntos >= 500) return { nombre:"⚡ Elite", clase:"nivel-elite" };
+  if (puntos >= 61)  return { nombre:"💎 Platino", clase:"nivel-platino" };
+  if (puntos >= 41)  return { nombre:"🥇 Oro",     clase:"nivel-oro"     };
+  if (puntos >= 21)  return { nombre:"🥈 Plata",   clase:"nivel-plata"   };
+  return                    { nombre:"🥉 Bronce",  clase:"nivel-bronce"  };
 }
 
 function calcularNivelJuego(pts) {
-  if (pts >= 500) return { nombre:"👑 Leyenda", clase:"nivel-platino" };
-  if (pts >= 200) return { nombre:"🔥 Pro",     clase:"nivel-oro"     };
-  if (pts >= 80)  return { nombre:"⚡ Bueno",   clase:"nivel-plata"   };
-  return                 { nombre:"🌱 Nuevo",   clase:"nivel-bronce"  };
+  if (pts >= 5000) return { nombre:"🚀 Galáctico", clase:"nivel-galactico" };
+  if (pts >= 2500) return { nombre:"👑 Leyenda", clase:"nivel-oro"     };
+  if (pts >= 800)  return { nombre:"🔥 Pro",     clase:"nivel-plata"   };
+  if (pts >= 200)  return { nombre:"⚡ Bueno",   clase:"nivel-bronce"  };
+  return                  { nombre:"🌱 Nuevo",   clase:"nivel-bronce"  };
 }
 
 /* ===== AVATAR ===== */
@@ -40,10 +42,10 @@ function avatarHTML(nombre, foto) {
 /* ===== FILAS RANKING ===== */
 const MEDALLAS = ["🥇","🥈","🥉"];
 
-function buildRow(u, i, uidActual, icono, nivel) {
+function buildRow(u, i, uidActual, icono, nivel, campo) {
   const esYo = u.uid === uidActual;
   const med  = i < 3 ? MEDALLAS[i] : `#${i + 1}`;
-  const pts  = u.puntos ?? u.puntosJuego;
+  const pts  = u[campo];
   return `<div class="ranking-row ${esYo ? "ranking-yo" : ""} ${i < 3 ? "ranking-top" : ""}">
     <span class="rank-pos">${med}</span>
     ${avatarHTML(u.nombre, u.foto)}
@@ -57,28 +59,24 @@ function buildRow(u, i, uidActual, icono, nivel) {
 }
 
 /* ===== HELPERS RANKING ===== */
-function renderRanking({ lista, tablaEl, restoEl, verMasBtn, uidActual, icono, calcNivel }) {
+function renderRanking({ lista, tablaEl, restoEl, verMasBtn, uidActual, icono, calcNivel, campo }) {
   const top10 = lista.slice(0, 10);
   const resto = lista.slice(10);
 
-  // Todo va dentro del mismo scroll container (tablaEl)
-  // El resto se inyecta dentro de tablaEl en un div oculto
-  tablaEl.innerHTML = top10.map((u, i) => buildRow(u, i, uidActual, icono, calcNivel(u.puntos ?? u.puntosJuego))).join("");
+  tablaEl.innerHTML = top10.map((u, i) => buildRow(u, i, uidActual, icono, calcNivel(u[campo]), campo)).join("");
 
-  // Limpiar restoEl externo (ya no lo usamos para mostrar)
   if (restoEl) restoEl.innerHTML = "";
 
   if (resto.length > 0) {
     const restoDiv = document.createElement("div");
     restoDiv.className = "ranking-resto-inner";
     restoDiv.style.display = "none";
-    restoDiv.innerHTML = resto.map((u, i) => buildRow(u, i + 10, uidActual, icono, calcNivel(u.puntos ?? u.puntosJuego))).join("");
+    restoDiv.innerHTML = resto.map((u, i) => buildRow(u, i + 10, uidActual, icono, calcNivel(u[campo]), campo)).join("");
     tablaEl.appendChild(restoDiv);
 
     verMasBtn.style.display = "block";
     verMasBtn.textContent   = "Ver ranking completo ▼";
 
-    // Reemplazar listener del botón limpiamente
     const nuevoBtn = verMasBtn.cloneNode(true);
     verMasBtn.parentNode.replaceChild(nuevoBtn, verMasBtn);
     nuevoBtn.addEventListener("click", function () {
@@ -149,7 +147,7 @@ window.cargarRanking = function () {
       .map(([uid, d]) => ({ uid, nombre: d.nombre || "Anónimo", carrera: d.carrera || "", puntos: d.puntos || 0, foto: d.foto || "" }))
       .sort((a, b) => b.puntos - a.puntos);
 
-    renderRanking({ lista, tablaEl, restoEl, verMasBtn, uidActual, icono: "⭐", calcNivel: calcularNivel });
+    renderRanking({ lista, tablaEl, restoEl, verMasBtn, uidActual, icono: "⭐", calcNivel: calcularNivel, campo: "puntos" });
   });
 };
 
@@ -176,7 +174,7 @@ window.cargarRankingJuego = function () {
       return;
     }
 
-    renderRanking({ lista, tablaEl, restoEl, verMasBtn, uidActual, icono: "🎮", calcNivel: calcularNivelJuego });
+    renderRanking({ lista, tablaEl, restoEl, verMasBtn, uidActual, icono: "🎮", calcNivel: calcularNivelJuego, campo: "puntosJuego" });
   });
 };
 
@@ -186,13 +184,13 @@ window.cargarTicker = function () {
     if (!snap.exists()) return;
     const usuarios = Object.values(snap.val());
 
-    function iniciarTicker(elementId, prefijo, lista) {
+    function iniciarTicker(elementId, prefijo, lista, campo) {
       const el = document.getElementById(elementId);
       if (!el || lista.length === 0) {
         if (el) el.textContent = prefijo === "🎮" ? "🎮 ¡Juega para aparecer aquí!" : "";
         return;
       }
-      const items = lista.map((u, i) => `${MEDALLAS[i]} ${u.nombre || "Anónimo"} (${u.puntos ?? u.puntosJuego}pts)`);
+      const items = lista.map((u, i) => `${MEDALLAS[i]} ${u.nombre || "Anónimo"} (${u[campo]}pts)`);
       let idx = 0;
       function rotar() {
         el.style.opacity = "0";
@@ -203,10 +201,12 @@ window.cargarTicker = function () {
     }
 
     iniciarTicker("ticker-contenido", "🏆",
-      usuarios.filter(u => (u.puntos || 0) > 0).sort((a, b) => b.puntos - a.puntos).slice(0, 3)
+      usuarios.filter(u => (u.puntos || 0) > 0).sort((a, b) => b.puntos - a.puntos).slice(0, 3),
+      "puntos"
     );
     iniciarTicker("ticker-juego-contenido", "🎮",
-      usuarios.filter(u => (u.puntosJuego || 0) > 0).sort((a, b) => b.puntosJuego - a.puntosJuego).slice(0, 3)
+      usuarios.filter(u => (u.puntosJuego || 0) > 0).sort((a, b) => b.puntosJuego - a.puntosJuego).slice(0, 3),
+      "puntosJuego"
     );
   });
 };
