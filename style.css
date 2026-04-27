@@ -149,8 +149,10 @@ header *{ position:relative; z-index:1; }
 .nivel-plata { background:#c0c0c020; color:#999; }
 .nivel-oro   { background:#ffd70020; color:#e6b800; }
 .nivel-platino{ background:#e5e4e220; color:#9999cc; }
-
+.nivel-elite{ background:linear-gradient(45deg,#ffd93d,#ff66c4); color:white; animation:pulse 5s infinite; }
+.nivel-galactico{ background:linear-gradient(45deg,#9d6bff,#c084fc); color:white; animation:pulse 5s infinite; }
 /* ===== BOTONES FLOTANTES ===== */
+
 #game-btn          { position:fixed; bottom:20px;   right:20px; width:70px; height:70px; background:linear-gradient(45deg,#9d6bff,#ff66c4); color:white; border:none; border-radius:50%; font-size:34px; cursor:pointer; box-shadow:0 0 22px rgba(157,107,255,0.7); z-index:999999; transition:transform 0.2s; display:flex; align-items:center; justify-content:center; animation:pulse 2s infinite; }
 #ranking-juego-btn { position:fixed; bottom:105px;  right:20px; width:70px; height:70px; background:linear-gradient(45deg,#3ddc97,#9d6bff); color:white; border:none; border-radius:50%; font-size:32px; cursor:pointer; box-shadow:0 0 22px rgba(61,220,151,0.6);  z-index:999999; transition:transform 0.2s; display:flex; align-items:center; justify-content:center; }
 #ranking-btn       { position:fixed; bottom:190px;  right:20px; width:70px; height:70px; background:linear-gradient(45deg,var(--rosa),var(--naranja)); color:white; border:none; border-radius:50%; font-size:34px; cursor:pointer; box-shadow:0 0 22px rgba(255,102,196,0.6); z-index:999999; transition:transform 0.2s; display:flex; align-items:center; justify-content:center; }
@@ -299,7 +301,6 @@ header *{ position:relative; z-index:1; }
 .rank-carrera{ font-size:0.72rem; color:#aaa; }
 .rank-nivel{ font-size:0.68rem; padding:2px 7px; border-radius:999px; font-weight:700; align-self:flex-start; margin-top:2px; }
 
-/* ===== RESPONSIVE ===== */
 @media(max-width:768px){
   .menu{ flex-direction:column; align-items:center; padding:15px 0; height:auto; }
   .logo-2{ height:220px; max-height:220px; transform:translate(-50%,-30px); }
@@ -318,6 +319,25 @@ header *{ position:relative; z-index:1; }
   #ranking-ticker-juego{ margin:4px 16px 16px; border-radius:20px; }
   #ticker-contenido,#ticker-juego-contenido{ font-size:0.8rem; }
   .modelos-grid{ grid-template-columns:repeat(2,1fr); }
+
+  /* Tarjetas en 2 columnas */
+  .products{
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: unset;
+  }
+  .tab-content.active{
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: unset;
+  }
+
+  /* Última tarjeta sola → centrada SOLO en móvil */
+  .products .product:last-child:nth-child(odd),
+  .tab-content .product:last-child:nth-child(odd){
+    grid-column: 1 / -1;
+    max-width: 50%;
+    margin: 0 auto;
+    width: 100%;
+  }
 }
 
 @media(max-width:480px){
