@@ -37,23 +37,20 @@ document.addEventListener("DOMContentLoaded", function () {
   tabBtns.forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.tab)));
 
   /* ===== BÚSQUEDA ===== */
-  const searchInput = document.getElementById("searchInput");
-  if (searchInput) {
-    searchInput.addEventListener("input", function () {
-      const term = this.value.toLowerCase().trim();
-      let firstMatchTab = null;
-      tabContents.forEach(tab => {
-        let found = false;
-        tab.querySelectorAll(".product").forEach(product => {
-          const match = term === "" || product.innerText.toLowerCase().includes(term);
-          product.style.display = match ? "flex" : "none";
-          if (match) found = true;
-        });
-        if (found && !firstMatchTab) firstMatchTab = tab.id;
+  document.getElementById("searchInput")?.addEventListener("input", function () {
+    const term = this.value.toLowerCase().trim();
+    let firstMatchTab = null;
+    tabContents.forEach(tab => {
+      let found = false;
+      tab.querySelectorAll(".product").forEach(product => {
+        const match = term === "" || product.innerText.toLowerCase().includes(term);
+        product.style.display = match ? "flex" : "none";
+        if (match) found = true;
       });
-      if (firstMatchTab) activateTab(firstMatchTab);
+      if (found && !firstMatchTab) firstMatchTab = tab.id;
     });
-  }
+    if (firstMatchTab) activateTab(firstMatchTab);
+  });
 
   /* ===== CERRAR TODOS LOS MODALES ===== */
   function cerrarTodosLosModales() {
@@ -61,13 +58,19 @@ document.addEventListener("DOMContentLoaded", function () {
       const m = document.getElementById(id);
       if (m) m.style.display = 'none';
     });
-    if (window._cerrarJuego) window._cerrarJuego();
+    window._cerrarJuego?.();
+  }
+
+  /* ===== CERRAR MODAL AL CLICK EN FONDO ===== */
+  function cerrarAlFondo(id) {
+    document.getElementById(id)?.addEventListener("click", e => {
+      if (e.target.id === id) e.target.style.display = "none";
+    });
   }
 
   /* ===== SLIDER — agregar desde header ===== */
   window.agregarDesdeSlider = function(name) {
-    const btn = document.querySelector(`.add-to-cart[data-name="${name}"]`);
-    if (btn) btn.click();
+    document.querySelector(`.add-to-cart[data-name="${name}"]`)?.click();
     const dropdown = document.getElementById('cart-dropdown');
     if (dropdown) dropdown.style.display = 'block';
   };
@@ -78,9 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const cartTotal     = document.getElementById("cart-total");
   const cartCount     = document.getElementById("cart-count");
   const cartDropdown  = document.getElementById("cart-dropdown");
-  const cartToggle    = document.getElementById("cart-toggle");
 
-  cartToggle?.addEventListener("click", () => {
+  document.getElementById("cart-toggle")?.addEventListener("click", () => {
     cartDropdown.style.display = cartDropdown.style.display === "block" ? "none" : "block";
   });
 
@@ -91,13 +93,11 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCart();
   }
 
-  document.querySelectorAll(".add-to-cart").forEach(button => {
-    button.addEventListener("click", () => {
-      agregarAlCarrito(button.dataset.name, button.dataset.price, button.dataset.img);
-    });
+  document.querySelectorAll(".add-to-cart").forEach(btn => {
+    btn.addEventListener("click", () => agregarAlCarrito(btn.dataset.name, btn.dataset.price, btn.dataset.img));
   });
 
-  document.addEventListener('agregarProducto', (e) => {
+  document.addEventListener('agregarProducto', e => {
     agregarAlCarrito(e.detail.name, e.detail.price, e.detail.img);
   });
 
@@ -117,15 +117,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     cartTotal.textContent = total.toFixed(2);
     cartCount.textContent = count;
-    document.querySelectorAll(".minus").forEach(btn => {
+    cartItemsList.querySelectorAll(".minus").forEach(btn => {
       btn.addEventListener("click", () => {
         const i = parseInt(btn.dataset.index);
-        cart[i].quantity--;
-        if (cart[i].quantity <= 0) cart.splice(i, 1);
+        if (--cart[i].quantity <= 0) cart.splice(i, 1);
         updateCart();
       });
     });
-    document.querySelectorAll(".remove").forEach(btn => {
+    cartItemsList.querySelectorAll(".remove").forEach(btn => {
       btn.addEventListener("click", () => { cart.splice(parseInt(btn.dataset.index), 1); updateCart(); });
     });
   }
@@ -134,14 +133,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* ===== COMPRAR ===== */
   document.getElementById("buy-cart")?.addEventListener("click", () => {
-    const nombre = localStorage.getItem("userName") || "No indicado";
+    if (cart.length === 0) { alert("Tu carrito está vacío 🍬"); return; }
+    const nombre = localStorage.getItem("userName")  || "No indicado";
     const grado  = localStorage.getItem("userGrado") || "No indicado";
     const uid    = localStorage.getItem("userUID")   || "";
-    if (cart.length === 0) { alert("Tu carrito está vacío 🍬"); return; }
     const total  = parseFloat(cartTotal.textContent);
-    if (window.guardarPedido) {
-      window.guardarPedido({ uid, nombre, grado, items:[...cart], total, puntos:Math.floor(total), fecha:new Date().toLocaleString("es-GT") });
-    }
+    window.guardarPedido?.({ uid, nombre, grado, items:[...cart], total, puntos:Math.floor(total), fecha:new Date().toLocaleString("es-GT") });
     let mensaje = `🍬 Pedido Party Perilingües 🍬\n\n👤 Nombre: ${nombre}\n🎓 Grado/Carrera: ${grado}\n\n`;
     cart.forEach(item => { mensaje += `• ${item.name} x${item.quantity} — Q${item.price * item.quantity}\n`; });
     mensaje += `\n💰 Total: Q${total.toFixed(2)}`;
@@ -163,18 +160,9 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("closeRanking")?.addEventListener("click", () => {
     document.getElementById("rankingModal").style.display = "none";
   });
-  document.getElementById("rankingModal")?.addEventListener("click", e => {
-    if (e.target.id === "rankingModal") e.target.style.display = "none";
-  });
+  cerrarAlFondo("rankingModal");
 
-  // Ver más / menos compras
-  document.getElementById("ranking-ver-mas")?.addEventListener("click", () => {
-    const resto = document.getElementById("ranking-resto");
-    const btn   = document.getElementById("ranking-ver-mas");
-    const abierto = resto.style.display !== "none";
-    resto.style.display = abierto ? "none" : "block";
-    btn.textContent = abierto ? "Ver ranking completo ▼" : "Ver menos ▲";
-  });
+
 
   /* ===== RANKING JUEGO ===== */
   document.getElementById("ranking-juego-btn")?.addEventListener("click", () => {
@@ -185,59 +173,45 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("closeRankingJuego")?.addEventListener("click", () => {
     document.getElementById("rankingJuegoModal").style.display = "none";
   });
-  document.getElementById("rankingJuegoModal")?.addEventListener("click", e => {
-    if (e.target.id === "rankingJuegoModal") e.target.style.display = "none";
-  });
+  cerrarAlFondo("rankingJuegoModal");
 
-  // Ver más / menos juego
-  document.getElementById("ranking-juego-ver-mas")?.addEventListener("click", () => {
-    const resto = document.getElementById("ranking-juego-resto");
-    const btn   = document.getElementById("ranking-juego-ver-mas");
-    const abierto = resto.style.display !== "none";
-    resto.style.display = abierto ? "none" : "block";
-    btn.textContent = abierto ? "Ver ranking completo ▼" : "Ver menos ▲";
-  });
 
-  /* ===== BOTÓN PUBLICISTAS (📸) ===== */
+
+  /* ===== PUBLICISTAS ===== */
   document.getElementById("publicistas-btn")?.addEventListener("click", () => {
     cerrarTodosLosModales();
     document.getElementById("modelosModal").style.display = "flex";
   });
-  document.getElementById("modelosModal")?.addEventListener("click", e => {
-    if (e.target.id === "modelosModal") e.target.style.display = "none";
-  });
+  cerrarAlFondo("modelosModal");
 
-  /* ===== BOTÓN SECRETARIAS (en footer) ===== */
+  /* ===== SECRETARIAS ===== */
   document.getElementById("secretarias-btn")?.addEventListener("click", () => {
     cerrarTodosLosModales();
     document.getElementById("secretariasModal").style.display = "flex";
   });
-  document.getElementById("secretariasModal")?.addEventListener("click", e => {
-    if (e.target.id === "secretariasModal") e.target.style.display = "none";
-  });
+  cerrarAlFondo("secretariasModal");
 
   /* ===== MÚSICA ===== */
   const music    = document.getElementById("bg-music");
   const musicBtn = document.getElementById("music-btn");
   if (music && musicBtn) {
     musicBtn.classList.add("muted");
-    document.addEventListener("click", (e) => {
-      if (e.target.id !== "music-btn") {
-        music.muted = false; music.play().catch(()=>{});
-        musicBtn.textContent = "🔊";
-        musicBtn.classList.remove("muted"); musicBtn.classList.add("playing");
-      }
+    document.addEventListener("click", () => {
+      music.muted = false; music.play().catch(()=>{});
+      musicBtn.textContent = "🔊";
+      musicBtn.classList.replace("muted", "playing");
     }, { once: true });
-    musicBtn.addEventListener("click", (e) => {
+    musicBtn.addEventListener("click", e => {
       e.stopPropagation();
-      if (music.muted || music.paused) {
+      const silenciado = music.muted || music.paused;
+      if (silenciado) {
         music.muted = false; music.play().catch(()=>{});
         musicBtn.textContent = "🔊";
-        musicBtn.classList.remove("muted"); musicBtn.classList.add("playing");
+        musicBtn.classList.replace("muted", "playing");
       } else {
         music.muted = true;
         musicBtn.textContent = "🔇";
-        musicBtn.classList.remove("playing"); musicBtn.classList.add("muted");
+        musicBtn.classList.replace("playing", "muted");
       }
     });
   }
@@ -252,5 +226,11 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(() => { ad.style.display = "none"; }, 300);
     };
   }
+document.getElementById("logout-btn")?.addEventListener("click", () => {
+  localStorage.clear();
+  window.location.href = "index.html";
+});
+
 
 });
+
