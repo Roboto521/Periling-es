@@ -286,28 +286,75 @@
 
 <!-- MODAL PUBLICISTAS -->
 <div id="modelosModal" class="modal-publicistas-overlay">
-  <div class="modal-publicistas-box">
+  <div class="modal-publicistas-box" style="max-width:400px; padding:0; overflow:hidden;">
     <button class="modal-publicistas-close" onclick="document.getElementById('modelosModal').style.display='none'">✖</button>
-    <h2 class="modal-pub-titulo">📸 Nuestras Publicistas</h2>
+    <h2 class="modal-pub-titulo" style="padding-top:20px;">📸 Nuestras Publicistas</h2>
     <p class="modal-pub-sub">El equipo que hace posible Party Perilingüe 💪</p>
-    <div class="modelos-grid">
-      <div class="modelo-card">
-        <div class="modelo-foto-wrap"><div class="modelo-placeholder">👩</div></div>
-        <div class="modelo-nombre">Próximamente 🔜</div>
+
+    <div class="pub-carousel">
+      <div class="pub-carousel-wrap" style="position:relative;">
+        <div class="pub-carousel-track" id="pubTrack">
+
+          <!-- PUBLICISTA 1 -->
+          <div class="pub-slide">
+            <div class="pub-foto-wrap">
+              <img src="images/vm.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="pub-placeholder">👩</div>
+            </div>
+            <div class="pub-info">
+              <div class="pub-nombre">Nombre 1</div>
+              <div class="pub-rol">⭐ Party Perilingüe</div>
+            </div>
+          </div>
+
+          <!-- PUBLICISTA 2 -->
+          <div class="pub-slide">
+            <div class="pub-foto-wrap">
+              <img src="images/bbe.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="pub-placeholder">👩‍🦱</div>
+            </div>
+            <div class="pub-info">
+              <div class="pub-nombre">Nombre 2</div>
+              <div class="pub-rol">⭐ Party Perilingüe</div>
+            </div>
+          </div>
+
+          <!-- PUBLICISTA 3 -->
+          <div class="pub-slide">
+            <div class="pub-foto-wrap">
+              <img src="images/ca.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="pub-placeholder">👩‍🦰</div>
+            </div>
+            <div class="pub-info">
+              <div class="pub-nombre">Nombre 3</div>
+              <div class="pub-rol">⭐ Party Perilingüe</div>
+            </div>
+          </div>
+
+          <!-- PUBLICISTA 4 -->
+          <div class="pub-slide">
+            <div class="pub-foto-wrap">
+              <img src="images/jaja.png" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="pub-placeholder">👩‍🦳</div>
+            </div>
+            <div class="pub-info">
+              <div class="pub-nombre">Nombre 4</div>
+              <div class="pub-rol">⭐ Party Perilingüe</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- BOTONES ENCIMA DE LA FOTO A LOS LADOS -->
+        <button class="pub-btn pub-btn-prev" id="pubPrev">◀</button>
+        <button class="pub-btn pub-btn-next" id="pubNext">▶</button>
+
       </div>
-      <div class="modelo-card">
-        <div class="modelo-foto-wrap"><div class="modelo-placeholder">👩‍🦱</div></div>
-        <div class="modelo-nombre">Próximamente 🔜</div>
-      </div>
-      <div class="modelo-card">
-        <div class="modelo-foto-wrap"><div class="modelo-placeholder">👩‍🦰</div></div>
-        <div class="modelo-nombre">Próximamente 🔜</div>
-      </div>
-      <div class="modelo-card">
-        <div class="modelo-foto-wrap"><div class="modelo-placeholder">👩‍🦳</div></div>
-        <div class="modelo-nombre">Próximamente 🔜</div>
-      </div>
+
+      <div class="pub-dots" id="pubDots"></div>
+      <div class="pub-counter" id="pubCounter">1 / 6</div>
     </div>
+
   </div>
 </div>
 
@@ -420,7 +467,7 @@
 </a>
 
 <audio id="bg-music" autoplay loop muted>
-  <source src="musica/Animal Crossing - Bubblegum K.K. [Remix].mp3" type="audio/mpeg">
+  <source src="musica/" type="audio/mpeg">
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
