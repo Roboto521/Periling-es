@@ -234,3 +234,41 @@ document.getElementById("logout-btn")?.addEventListener("click", () => {
 
 });
 
+// ===== CARRUSEL PUBLICISTAS =====
+(function(){
+  const track = document.getElementById('pubTrack');
+  if(!track) return;
+  const dotsWrap = document.getElementById('pubDots');
+  const counter = document.getElementById('pubCounter');
+  const modalBox = document.querySelector('#modelosModal .modal-publicistas-box');
+  const slides = track.querySelectorAll('.pub-slide');
+  let cur = 0;
+
+  const colores = [
+    'linear-gradient(110deg,#E01B1B,#E01B1B,#fff0f8)',
+    'linear-gradient(110deg,#56CFFC,#56CFFC,#fff0f8)',
+    'linear-gradient(110deg,#128C03,#128C03,#fff0f8)',
+    'linear-gradient(110deg,#F5B618,#F5B618,#fff0f8)',
+    'linear-gradient(110deg,#e67e22,#ffb347,#fff0f8)',
+    'linear-gradient(110deg,#2980b9,#6dd5fa,#fff0f8)',
+  ];
+
+  slides.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'pub-dot' + (i===0?' active':'');
+    d.onclick = () => go(i);
+    dotsWrap.appendChild(d);
+  });
+
+  function go(n){
+    cur = (n + slides.length) % slides.length;
+    track.style.transform = `translateX(-${cur*100}%)`;
+    dotsWrap.querySelectorAll('.pub-dot').forEach((d,i) => d.classList.toggle('active', i===cur));
+    counter.textContent = `${cur+1} / ${slides.length}`;
+    if(modalBox && colores[cur]) modalBox.style.background = colores[cur];
+  }
+
+  document.getElementById('pubNext').onclick = () => go(cur+1);
+  document.getElementById('pubPrev').onclick = () => go(cur-1);
+  if(modalBox && colores[0]) modalBox.style.background = colores[0];
+})();
