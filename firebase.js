@@ -16,7 +16,7 @@ window._db = db;
 
 /* ===== NIVELES ===== */
 function calcularNivel(puntos) {
- if (puntos >= 500) return { nombre:"⚡ Elite", clase:"nivel-elite" };
+  if (puntos >= 500) return { nombre:"⚡ Elite",   clase:"nivel-elite"   };
   if (puntos >= 61)  return { nombre:"💎 Platino", clase:"nivel-platino" };
   if (puntos >= 41)  return { nombre:"🥇 Oro",     clase:"nivel-oro"     };
   if (puntos >= 21)  return { nombre:"🥈 Plata",   clase:"nivel-plata"   };
@@ -25,10 +25,10 @@ function calcularNivel(puntos) {
 
 function calcularNivelJuego(pts) {
   if (pts >= 5000) return { nombre:"🚀 Galáctico", clase:"nivel-galactico" };
-  if (pts >= 2500) return { nombre:"👑 Leyenda", clase:"nivel-oro"     };
-  if (pts >= 800)  return { nombre:"🔥 Pro",     clase:"nivel-plata"   };
-  if (pts >= 200)  return { nombre:"⚡ Bueno",   clase:"nivel-bronce"  };
-  return                  { nombre:"🌱 Nuevo",   clase:"nivel-bronce"  };
+  if (pts >= 2500) return { nombre:"👑 Leyenda",   clase:"nivel-oro"       };
+  if (pts >= 800)  return { nombre:"🔥 Pro",       clase:"nivel-plata"     };
+  if (pts >= 200)  return { nombre:"⚡ Bueno",     clase:"nivel-bronce"    };
+  return                  { nombre:"🌱 Nuevo",     clase:"nivel-bronce"    };
 }
 
 /* ===== AVATAR ===== */
@@ -113,7 +113,8 @@ window.guardarPedido = function (pedido) {
 /* ===== PUNTOS COMPRAS ===== */
 window.sumarPuntos = function (uid, puntosExtra) {
   get(ref(db, "usuarios/" + uid)).then(snap => {
-    if (snap.exists()) {
+    // ✅ FIX: verificar que el usuario no sea null antes de sumar
+    if (snap.exists() && snap.val() && typeof snap.val() === 'object') {
       update(ref(db, "usuarios/" + uid), { puntos: (snap.val().puntos || 0) + puntosExtra });
     }
   });
@@ -125,7 +126,8 @@ window._subirPuntosJuego = async function (pts) {
   if (!uid) return;
   try {
     const snap = await get(ref(db, "usuarios/" + uid));
-    if (snap.exists() && pts > (snap.val().puntosJuego || 0)) {
+    // ✅ FIX: verificar que el usuario no sea null
+    if (snap.exists() && snap.val() && typeof snap.val() === 'object' && pts > (snap.val().puntosJuego || 0)) {
       await update(ref(db, "usuarios/" + uid), { puntosJuego: pts });
     }
   } catch (e) { console.error("Error guardando puntos juego:", e); }
@@ -144,6 +146,8 @@ window.cargarRanking = function () {
 
     const uidActual = localStorage.getItem("userUID") || "";
     const lista = Object.entries(snap.val())
+      // ✅ FIX: filtrar nodos null o inválidos
+      .filter(([uid, d]) => d && typeof d === 'object')
       .map(([uid, d]) => ({ uid, nombre: d.nombre || "Anónimo", carrera: d.carrera || "", puntos: d.puntos || 0, foto: d.foto || "" }))
       .sort((a, b) => b.puntos - a.puntos);
 
@@ -164,6 +168,8 @@ window.cargarRankingJuego = function () {
 
     const uidActual = localStorage.getItem("userUID") || "";
     const lista = Object.entries(snap.val())
+      // ✅ FIX: filtrar nodos null o inválidos
+      .filter(([uid, d]) => d && typeof d === 'object')
       .map(([uid, d]) => ({ uid, nombre: d.nombre || "Anónimo", carrera: d.carrera || "", puntosJuego: d.puntosJuego || 0, foto: d.foto || "" }))
       .filter(u => u.puntosJuego > 0)
       .sort((a, b) => b.puntosJuego - a.puntosJuego);
@@ -182,7 +188,9 @@ window.cargarRankingJuego = function () {
 window.cargarTicker = function () {
   get(ref(db, "usuarios")).then(snap => {
     if (!snap.exists()) return;
-    const usuarios = Object.values(snap.val());
+
+    // ✅ FIX: filtrar nodos null o inválidos antes de usarlos
+    const usuarios = Object.values(snap.val()).filter(u => u && typeof u === 'object');
 
     function iniciarTicker(elementId, prefijo, lista, campo) {
       const el = document.getElementById(elementId);
