@@ -14,7 +14,7 @@ const firebaseConfig = {
 const db = getDatabase(initializeApp(firebaseConfig));
 window._db = db;
 
-/* ===== NIVELES ===== */
+/* ===== NIVELES COMPRAS ===== */
 function calcularNivel(puntos) {
   if (puntos >= 500) return { nombre:"⚡ Elite",   clase:"nivel-elite"   };
   if (puntos >= 61)  return { nombre:"💎 Platino", clase:"nivel-platino" };
@@ -23,25 +23,51 @@ function calcularNivel(puntos) {
   return                    { nombre:"🥉 Bronce",  clase:"nivel-bronce"  };
 }
 
+/* ===== NIVELES JUEGO (de 500 en 500) ===== */
 function calcularNivelJuego(pts) {
-  if (pts >= 8000) return { nombre:"🚀 Galáctico",  clase:"nivel-galactico" };
-  if (pts >= 7500) return { nombre:"👑 Leyenda",    clase:"nivel-oro"       };
-  if (pts >= 7000) return { nombre:"💎 Heroico",    clase:"nivel-platino"   };
-  if (pts >= 6500) return { nombre:"🔱 Supremo",    clase:"nivel-platino"   };
-  if (pts >= 6000) return { nombre:"⚡ Maestro",    clase:"nivel-elite"     };
-  if (pts >= 5500) return { nombre:"🎖️ Gran Pro",  clase:"nivel-elite"     };
-  if (pts >= 5000) return { nombre:"🔥 Pro",        clase:"nivel-elite"     };
-  if (pts >= 4500) return { nombre:"🏆 Experto",    clase:"nivel-oro"       };
-  if (pts >= 4000) return { nombre:"🎯 Veterano",   clase:"nivel-oro"       };
-  if (pts >= 3500) return { nombre:"⚔️ Élite",     clase:"nivel-oro"       };
-  if (pts >= 3000) return { nombre:"🛡️ Guerrero",  clase:"nivel-plata"     };
-  if (pts >= 2500) return { nombre:"💪 Luchador",   clase:"nivel-plata"     };
-  if (pts >= 2000) return { nombre:"🥊 Peleador",   clase:"nivel-plata"     };
-  if (pts >= 1500) return { nombre:"🎮 Jugador",    clase:"nivel-bronce"    };
-  if (pts >= 1000) return { nombre:"🌟 Novato",     clase:"nivel-bronce"    };
-  if (pts >= 500)  return { nombre:"🌱 Recluta",    clase:"nivel-bronce"    };
-  return                  { nombre:"👶 Nuevo",       clase:"nivel-bronce"    };
+  if (pts >= 35420) return { nombre:"👾 Inmortal",    clase:"nivel-galactico" };
+  if (pts >= 19500) return { nombre:"🌌 Cósmico",    clase:"nivel-galactico" };
+  if (pts >= 19000) return { nombre:"☄️ Meteoro",    clase:"nivel-galactico" };
+  if (pts >= 18500) return { nombre:"🌠 Estelar",    clase:"nivel-galactico" };
+  if (pts >= 18000) return { nombre:"🚀 Galáctico",  clase:"nivel-galactico" };
+  if (pts >= 17500) return { nombre:"🛸 Alienígena", clase:"nivel-galactico" };
+  if (pts >= 17000) return { nombre:"⭐ Astral",     clase:"nivel-galactico" };
+  if (pts >= 16500) return { nombre:"🌙 Lunar",      clase:"nivel-galactico" };
+  if (pts >= 16000) return { nombre:"💫 Orbital",    clase:"nivel-galactico" };
+  if (pts >= 15500) return { nombre:"🔭 Explorador", clase:"nivel-elite"     };
+  if (pts >= 15000) return { nombre:"⚡ Titán",      clase:"nivel-elite"     };
+  if (pts >= 14500) return { nombre:"🧨 Explosivo",  clase:"nivel-elite"     };
+  if (pts >= 14000) return { nombre:"🎖️ Glorioso",  clase:"nivel-elite"     };
+  if (pts >= 13500) return { nombre:"🏅 Insigne",    clase:"nivel-elite"     };
+  if (pts >= 13000) return { nombre:"👑 Leyenda",    clase:"nivel-elite"     };
+  if (pts >= 12500) return { nombre:"💎 Diamante",   clase:"nivel-platino"   };
+  if (pts >= 12000) return { nombre:"🔱 Supremo",    clase:"nivel-platino"   };
+  if (pts >= 11500) return { nombre:"🛡️ Indomable", clase:"nivel-platino"   };
+  if (pts >= 11000) return { nombre:"🗡️ Conquistador",clase:"nivel-platino" };
+  if (pts >= 10500) return { nombre:"🧠 Genio",      clase:"nivel-platino"   };
+  if (pts >= 10000) return { nombre:"🎯 Certero",    clase:"nivel-platino"   };
+  if (pts >= 9500)  return { nombre:"⚔️ Gladiador",  clase:"nivel-oro"       };
+  if (pts >= 9000)  return { nombre:"🔥 Infernal",   clase:"nivel-oro"       };
+  if (pts >= 8500)  return { nombre:"🌋 Volcánico",  clase:"nivel-oro"       };
+  if (pts >= 8000)  return { nombre:"💥 Brutal",     clase:"nivel-oro"       };
+  if (pts >= 7500)  return { nombre:"🏆 Campeón",    clase:"nivel-oro"       };
+  if (pts >= 7000)  return { nombre:"🦁 Feroz",      clase:"nivel-oro"       };
+  if (pts >= 6500)  return { nombre:"🐯 Salvaje",    clase:"nivel-oro"       };
+  if (pts >= 6000)  return { nombre:"⚡ Maestro",    clase:"nivel-oro"       };
+  if (pts >= 5500)  return { nombre:"🎖️ Gran Pro",  clase:"nivel-plata"     };
+  if (pts >= 5000)  return { nombre:"🔥 Pro",        clase:"nivel-plata"     };
+  if (pts >= 4500)  return { nombre:"🏆 Experto",    clase:"nivel-plata"     };
+  if (pts >= 4000)  return { nombre:"🎯 Veterano",   clase:"nivel-plata"     };
+  if (pts >= 3500)  return { nombre:"⚔️ Élite",     clase:"nivel-plata"     };
+  if (pts >= 3000)  return { nombre:"🛡️ Guerrero",  clase:"nivel-bronce"    };
+  if (pts >= 2500)  return { nombre:"💪 Luchador",   clase:"nivel-bronce"    };
+  if (pts >= 2000)  return { nombre:"🥊 Peleador",   clase:"nivel-bronce"    };
+  if (pts >= 1500)  return { nombre:"🎮 Jugador",    clase:"nivel-bronce"    };
+  if (pts >= 1000)  return { nombre:"🌟 Novato",     clase:"nivel-bronce"    };
+  if (pts >= 500)   return { nombre:"🌱 Recluta",    clase:"nivel-bronce"    };
+  return                   { nombre:"👶 Nuevo",      clase:"nivel-bronce"    };
 }
+
 /* ===== AVATAR ===== */
 function avatarHTML(nombre, foto) {
   if (foto) return `<img class="rank-avatar" src="${foto}" alt="${nombre}">`;
@@ -74,16 +100,13 @@ function renderRanking({ lista, tablaEl, verMasBtnId, uidActual, icono, calcNive
   const top10 = lista.slice(0, 10);
   const resto = lista.slice(10);
 
-  // Renderizar top 10
   tablaEl.innerHTML = top10.map((u, i) =>
     buildRow(u, i, uidActual, icono, calcNivel(u[campo]), campo)
   ).join("");
 
-  // Buscar el botón por ID directamente del DOM — siempre fresco
   const btn = document.getElementById(verMasBtnId);
 
   if (resto.length > 0) {
-    // Crear bloque con el resto de usuarios y agregarlo al tablaEl
     const restoDiv = document.createElement("div");
     restoDiv.className = "ranking-resto-inner";
     restoDiv.style.display = "none";
@@ -95,7 +118,6 @@ function renderRanking({ lista, tablaEl, verMasBtnId, uidActual, icono, calcNive
     if (btn) {
       btn.style.display = "block";
       btn.textContent   = "Ver ranking completo ▼";
-      // onclick sobreescribe cualquier handler anterior sin necesidad de clonar
       btn.onclick = function () {
         const abierto = restoDiv.style.display !== "none";
         restoDiv.style.display = abierto ? "none" : "block";
