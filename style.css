@@ -1,377 +1,495 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Party Perilingues</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-*{ margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+<header>
+  <div class="menu container">
+    <img class="logo-2" src="images/pt.png" alt="logo">
+    <nav class="navbar"><ul></ul></nav>
+  </div>
+  <div class="header-content container">
+    <div class="swiper mySwiper-1">
+      <div class="swiper-wrapper">
 
-:root{
-  --rojo:#ff7f8a;
-  --rosa:#ff8fdc;
-  --amarillo:#ffe57a;
-  --naranja:#ffb86b;
-  --verde:#6ee7b7;
-  --morado:#a78bfa;
-}
+        <div class="swiper-slide">
+          <div class="slider">
+            <div class="slider-txt">
+              <h1>Gomitas de Gusano</h1>
+              <p>Colores vibrantes y un toque ácido que despierta tus sentidos.</p>
+              <a href="#" class="btn-1" onclick="agregarDesdeSlider('Gusanos');return false;">Comprar</a>
+            </div>
+            <div class="slider-img"><img src="images/image-removebg-preview.png"></div>
+          </div>
+        </div>
 
-body{
-  background:linear-gradient(135deg,#fdfbfb,#ffecd2,#fcb69f,#a1c4fd,#c2e9fb,#d4fc79,#96e6a1,#e0c3fc,#f9c5d1);
-  background-size:500% 500%;
-  animation:fondo 20s ease infinite;
-}
-@keyframes fondo{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        <div class="swiper-slide">
+          <div class="slider">
+            <div class="slider-txt">
+              <h1>Gomitas de Osito</h1>
+              <p>Pequeñas, suaves y llenas de sabor.</p>
+              <a href="#" class="btn-1" onclick="agregarDesdeSlider('Ositos');return false;">Comprar</a>
+            </div>
+            <div class="slider-img"><img src="images/osos.png"></div>
+          </div>
+        </div>
 
-.container{ max-width:1200px; margin:auto; padding:20px; }
+        <div class="swiper-slide">
+          <div class="slider">
+            <div class="slider-txt">
+              <h1>Chocolates granada</h1>
+              <p>Calidad y sabor en su máxima expresión.</p>
+              <a href="#" class="btn-1" style="background:#ccc;cursor:not-allowed;pointer-events:none;opacity:0.7;">Sin Stock ❌</a>
+            </div>
+            <div class="slider-img"><img src="images/d.png"></div>
+          </div>
+        </div>
 
-/* ===== HEADER ===== */
-header{
-  background:linear-gradient(180deg,#ffffff,#fff5fa);
-  border-bottom-left-radius:50px; border-bottom-right-radius:50px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.15),0 0 40px rgba(255,102,196,0.3);
-  margin-bottom:50px; position:relative; overflow:hidden;
-}
-header::before{
-  content:""; position:absolute; top:-20%; left:-20%; width:140%; height:140%; z-index:0;
-  background:
-    radial-gradient(circle at 20% 30%,rgba(255,77,109,0.25),transparent 40%),
-    radial-gradient(circle at 80% 25%,rgba(255,217,61,0.25),transparent 40%),
-    radial-gradient(circle at 70% 80%,rgba(61,220,151,0.25),transparent 40%),
-    radial-gradient(circle at 30% 75%,rgba(157,107,255,0.25),transparent 40%);
-  animation:fondoSuave 18s ease-in-out infinite alternate;
-}
-header::after{
-  content:""; position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;
-  background-image:
-    radial-gradient(circle at 20% 30%,rgba(255,77,109,0.25) 40px,transparent 41px),
-    radial-gradient(circle at 80% 20%,rgba(255,217,61,0.25) 30px,transparent 31px),
-    radial-gradient(circle at 70% 70%,rgba(61,220,151,0.25) 35px,transparent 36px),
-    radial-gradient(circle at 30% 80%,rgba(157,107,255,0.25) 28px,transparent 29px);
-  background-repeat:no-repeat;
-}
-header *{ position:relative; z-index:1; }
-@keyframes fondoSuave{
-  0%{transform:translate(0,0) scale(1)} 50%{transform:translate(-3%,-2%) scale(1.05)} 100%{transform:translate(3%,2%) scale(1)}
-}
+      </div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</header>
 
-.menu{ display:flex; align-items:center; height:160px; position:relative; }
-.logo-2{ position:absolute; left:50%; transform:translateX(-50%); height:300px; max-height:300px; width:auto; }
-.navbar ul{ display:flex; gap:25px; list-style:none; }
-.navbar a{
-  padding:10px 22px; border-radius:30px; background:rgba(255,255,255,0.8); backdrop-filter:blur(6px);
-  border:2px solid transparent; font-weight:600; color:#ff4d6d; text-decoration:none;
-  transition:0.3s; box-shadow:0 5px 15px rgba(0,0,0,0.15);
-}
-.navbar a:hover{ background:linear-gradient(45deg,#ff66c4,#ffd93d); color:white; transform:translateY(-2px); }
-.navbar a.active{ background:linear-gradient(45deg,#ff4d6d,#ff8c42); color:white; }
+<div id="ranking-ticker"><span id="ticker-contenido">🏆 Cargando ranking...</span></div>
+<div id="ranking-ticker-juego"><span id="ticker-juego-contenido">🎮 Cargando ranking juego...</span></div>
 
-/* ===== SLIDER ===== */
-.slider{ display:flex; justify-content:center; flex-wrap:wrap; gap:20px; padding:40px 0; }
-.slider-txt{ width:50%; }
-.slider-txt h1{ font-size:52px; background:linear-gradient(90deg,#ff4d6d,#ffd93d,#3ddc97,#9d6bff); -webkit-background-clip:text; background-clip:text; color:transparent; }
-.slider-txt p{ margin:15px 0; }
-.slider-img{ margin-left:20px; width:auto; display:flex; justify-content:flex-start; }
-.slider-img img{ width:250px; animation:float 3s ease-in-out infinite; }
-@keyframes float{ 0%{transform:translateY(0)} 50%{transform:translateY(-12px)} 100%{transform:translateY(0)} }
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="🔎 Buscar productos...">
+</div>
 
-/* ===== BOTONES ===== */
-.btn-1{ display:inline-block; padding:12px 25px; background:linear-gradient(45deg,var(--rosa),var(--naranja)); color:white; border-radius:30px; text-decoration:none; margin-right:10px; transition:0.3s; }
-.btn-1:hover{ transform:scale(1.05); box-shadow:0 0 15px var(--rosa); }
+<button id="music-btn">🔇</button>
+<button id="ranking-btn">🏆</button>
+<button id="ranking-juego-btn">🕹️</button>
+<button id="game-btn">🎮</button>
+<button id="publicistas-btn" title="Nuestras Publicistas">📸</button>
 
-/* ===== BÚSQUEDA ===== */
-.search-box{ display:flex; justify-content:center; margin:40px 0; }
-#searchInput{ width:60%; padding:15px 20px; border-radius:40px; border:2px solid var(--rosa); background:white; font-size:16px; outline:none; box-shadow:0 0 10px var(--rosa); transition:0.3s; }
-#searchInput:focus{ box-shadow:0 0 25px var(--rosa),0 0 45px var(--amarillo); }
+<section class="container">
+  <h2>Nuestros productos</h2>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="gomitas">🍬 Gomitas</button>
+    <button class="tab-btn" data-tab="masvendidos">⭐ Más Vendidos</button>
+    <button class="tab-btn" data-tab="dulces">🍭 Dulces</button>
+    <button class="tab-btn" data-tab="chocolates">🍫 Chocolates</button>
+    <button class="tab-btn" data-tab="combos">🎁 Combos</button>
+  </div>
 
-/* ===== PRODUCTOS ===== */
-.add-to-cart{ padding:10px 20px; border:none; background:linear-gradient(45deg,var(--rosa),var(--naranja)); color:white; border-radius:30px; cursor:pointer; font-weight:600; transition:0.3s; font-size:0.82rem; }
-.add-to-cart:hover{ transform:scale(1.1); box-shadow:0 0 15px var(--rosa); }
-.products{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,220px)); gap:20px; padding:20px 0 60px; }
-.product{ background:white; border-radius:18px; padding:15px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.15); transition:0.3s; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:visible; }
-.product img{ width:100%; height:110px; object-fit:contain; margin-bottom:10px; }
-.product h4{ font-size:15px; margin-bottom:5px; color:var(--rosa); }
-.product span{ font-weight:bold; margin-bottom:8px; }
-.product:hover{ transform:translateY(-6px) scale(1.03); box-shadow:0 0 20px var(--rosa); }
-.prod-desc{ font-size:0.75rem; color:#aaa; margin:2px 0 6px; line-height:1.3; }
+  <!-- ===== MÁS VENDIDOS ===== -->
+  <div class="products tab-content" id="masvendidos">
+    <div class="product cat-top">
+      <div class="product-badge top-badge">🥇 #1</div>
+      <img src="images/osos.png"><h4>Ositos</h4>
+      <p class="prod-desc">El favorito de todos 🍬</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Ositos" data-price="1" data-img="images/osos.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-top">
+      <div class="product-badge top-badge">🥈 #2</div>
+      <img src="images/image-removebg-preview.png"><h4>Gusanos Ácidos</h4>
+      <p class="prod-desc">Sabor ácido que despierta tus sentidos</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Gusanos" data-price="1" data-img="images/image-removebg-preview.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-top">
+      <div class="product-badge top-badge">🥉 #3</div>
+      <img src="images/aros.png"><h4>Aros</h4>
+      <p class="prod-desc">Refrescante sabor a melocoton</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Aros" data-price="1" data-img="images/aros.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-top">
+      <div class="product-badge top-badge">⭐ Top</div>
+      <img src="images/regaliz.png"><h4>Regaliz</h4>
+      <p class="prod-desc">Refrescante sabor a fresa</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Regaliz" data-price="1" data-img="images/regaliz.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-top">
+      <div class="product-badge top-badge">⭐ Top</div>
+      <img src="images/lengua.png"><h4>Cachetadas</h4>
+      <p class="prod-desc">Arma tu propia paleta¡</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x1 unidades)</small></span>
+      <button class="add-to-cart" data-name="Cachetadas" data-price="1" data-img="images/lengua.png">Agregar 🛒</button>
+    </div>
+  </div>
 
-.precio-wrap{ display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px; }
-.precio-antes{ text-decoration:line-through; color:#ccc; font-size:0.8rem; }
+  <!-- ===== GOMITAS ===== -->
+  <div class="products tab-content active" id="gomitas">
+    <div class="product cat-gomitas">
+      <div class="product-badge">⭐ Popular</div>
+      <img src="images/osos.png"><h4>Ositos</h4>
+      <p class="prod-desc">Suaves y coloridos, sabor a fruta</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Ositos" data-price="1" data-img="images/osos.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-gomitas">
+      <img src="images/aros.png"><h4>Aros</h4>
+      <p class="prod-desc">Refrescante sabor a melocoton</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Aros" data-price="1" data-img="images/aros.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-gomitas">
+      <div class="product-badge new-badge">🔥 Ácidos</div>
+      <img src="images/image-removebg-preview.png"><h4>Gusanos Ácidos</h4>
+      <p class="prod-desc">Sabor ácido que despierta tus sentidos</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Gusanos" data-price="1" data-img="images/image-removebg-preview.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-gomitas">
+      <img src="images/regaliz.png"><h4>Regaliz</h4>
+      <p class="prod-desc">Refrescante sabor a fresa</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Regaliz" data-price="1" data-img="images/regaliz.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-gomitas">
+      <img src="images/tira.png"><h4>Tiras Ácidas Fresa</h4>
+      <p class="prod-desc">Todos los sabores en una sola gomita</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Tiras Acidas Fresa" data-price="1" data-img="images/tira.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-gomitas">
+      <div class="product-badge new-badge">🔥 Nuevo</div>
+      <img src="images/ewas.png"><h4>Gomitas Preparadas bolsita</h4>
+      <p class="prod-desc">Mezcla especial Con chamoy y mas</p>
+      <span>Q3</span>
+      <button class="add-to-cart" data-name="Gomitas Preparadas bolsita" data-price="3" data-img="images/ewas.png">Agregar 🛒</button>
+    </div>
 
-.product-badge{ position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:linear-gradient(45deg,var(--rosa),var(--naranja)); color:white; font-size:0.65rem; font-weight:700; padding:3px 10px; border-radius:999px; white-space:nowrap; box-shadow:0 3px 8px rgba(255,102,196,0.4); z-index:2; }
-.new-badge{ background:linear-gradient(45deg,#ff4d6d,#ff8c42); }
-.oferta-badge{ background:linear-gradient(45deg,#ff4d6d,#ff8c42); }
-.top-badge{ background:linear-gradient(45deg,#ffd93d,#ff8c42); }
-.combo-badge{ background:linear-gradient(45deg,#9d6bff,#ff66c4); }
+    <!-- ✅ VASITO → SIN STOCK -->
+    <div class="product cat-gomitas">
+      <div class="product-badge new-badge">🔥 Nuevo</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/vasokw.png"><h4>Gomitas Preparadas vasito</h4>
+      <p class="prod-desc">Mezcla especial de chamoy en vasito</p>
+      <span>Q6</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+  </div>
 
-.cat-gomitas    { border-top:3px solid #ff66c4; } .cat-gomitas    h4{ color:#ff66c4; }
-.cat-dulces     { border-top:3px solid #ffd93d; } .cat-dulces     h4{ color:#e6a800; }
-.cat-chocolates { border-top:3px solid #8B4513; } .cat-chocolates h4{ color:#8B4513; }
-.cat-oferta     { border-top:3px solid #ff4d6d; } .cat-oferta     h4{ color:#ff4d6d; }
-.cat-top        { border-top:3px solid #ffd93d; } .cat-top        h4{ color:#e6a800; }
-.cat-combo      { border-top:3px solid #9d6bff; } .cat-combo      h4{ color:#7c3aed; }
+  <!-- ===== DULCES ===== -->
+  <div class="products tab-content" id="dulces">
+    <div class="product cat-dulces">
+      <div class="product-badge">⭐ Popular</div>
+      <img src="images/lengua.png"><h4>Cachetadas</h4>
+      <p class="prod-desc">Arma tu propia paleta¡</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x1 unidades)</small></span>
+      <button class="add-to-cart" data-name="Cachetadas" data-price="1" data-img="images/lengua.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-dulces">
+      
+      <img src="images/dulduldul.png"><h4>Dulce cremoso </h4>
+      <p class="prod-desc">Suave y dulce, sabor clásico</p><span>Q1</span>
+      <button class="add-to-cart" data-name="Dulce cremoso" data-price="1" data-img="images/dulduldul.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-dulces">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/image-removebg-preview (4).png"><h4>Paleta</h4>
+      <p class="prod-desc">Paleta de sabores tropicales</p><span>Q1</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-dulces">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/image-removebg-preview (3).png"><h4>Bonbon</h4>
+      <p class="prod-desc">Relleno de fruta con cubierta azucarada</p><span>Q1</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-dulces">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/ca.png"><h4>Caramelo Leche</h4>
+      <p class="prod-desc">Cremoso y suave, sabor a leche</p><span>Q1</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+  </div>
 
-/* ===== TABS ===== */
-.tabs{ display:flex; gap:10px; margin:30px 0 25px; justify-content:center; flex-wrap:wrap; }
-.tab-btn{ padding:10px 20px; border:none; border-radius:30px; background:rgba(255,255,255,0.85); backdrop-filter:blur(6px); font-weight:600; font-size:14px; color:#ff4d6d; cursor:pointer; transition:0.3s; box-shadow:0 6px 18px rgba(0,0,0,0.18); }
-.tab-btn:hover{ transform:translateY(-2px); background:linear-gradient(45deg,#ff66c4,#ffd93d); color:white; }
-.tab-btn.active{ background:linear-gradient(45deg,#ff4d6d,#ff8c42); color:white; box-shadow:0 0 18px #ff66c4; }
-.tab-content{ display:none; }
-.tab-content.active{ display:grid; grid-template-columns:repeat(auto-fit,200px); justify-content:center; gap:20px; }
-.container h2{ text-align:center; font-size:38px; margin-bottom:25px; background:linear-gradient(90deg,#ff4d6d,#ffd93d,#3ddc97,#9d6bff); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 15px rgba(255,102,196,0.4); }
+  <!-- ===== CHOCOLATES ===== -->
+  <div class="products tab-content" id="chocolates">
+    <div class="product cat-chocolates">
+      <div class="product-badge">⭐ Popular</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/choco 1 .png"><h4>Kit Kat</h4>
+      <p class="prod-desc">Chocolate suave con leche entera</p><span>Q10</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-chocolates">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/choco 2 .png"><h4>M&M Milk chocolate</h4>
+      <p class="prod-desc">Explosión de sabor, botonetas de chocolate premium</p><span>Q15</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-chocolates">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/choco 3 .png"><h4>Reese´s</h4>
+      <p class="prod-desc">Intenso y delicioso</p><span>Q14.50</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-chocolates">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/image-removebg-preview (2).png"><h4>Chocolate Granada</h4>
+      <p class="prod-desc">Dulce y cremoso, irresistible</p><span>Q1.50</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-chocolates">
+      <div class="product-badge new-badge">🔥 Premium</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/choco 5 .png"><h4>Hershey´s milk chocolate</h4>
+      <p class="prod-desc">El chocolate mas premium que tenemos</p><span>Q15</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+  </div>
 
-/* ===== CARRITO ===== */
-#cart-count{ background:white; color:var(--rojo); padding:2px 8px; border-radius:50%; margin-left:5px; }
-.cart-dropdown{ position:fixed; top:70px; right:20px; width:260px; background:white; border-radius:15px; padding:20px; display:none; box-shadow:0 10px 25px rgba(0,0,0,0.25); z-index:99998; }
-.cart-dropdown ul{ list-style:none; margin-bottom:10px; }
-.cart-dropdown li{ margin-bottom:10px; display:flex; align-items:center; gap:10px; }
-.cart-dropdown button{ width:100%; padding:10px; border:none; background:var(--rosa); color:white; border-radius:10px; cursor:pointer; }
-.cart-icon{ position:fixed; top:20px; right:20px; background:var(--rojo); color:white; padding:10px 15px; border-radius:30px; cursor:pointer; font-weight:bold; box-shadow:0 0 12px var(--rojo); animation:pulse 2s infinite; z-index:99999; }
-#buy-cart{ margin-top:12px; background:linear-gradient(45deg,#3ddc97,#ffd93d); }
-#cliente-nombre,#cliente-grado{ width:100%; padding:12px 15px; margin-bottom:10px; border-radius:25px; border:2px solid var(--rosa); outline:none; box-shadow:0 4px 10px rgba(255,102,196,0.4); font-size:14px; transition:0.3s; }
+  <!-- ===== COMBOS ===== -->
+  <div class="products tab-content" id="combos">
+    <div class="product cat-combo">
+      <div class="product-badge combo-badge">🎁 Combo</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm.png"><h4>Combo Regular</h4>
+      <p class="prod-desc"></p><span>Q19</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-combo">
+      <div class="product-badge combo-badge">🔥 Popular</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm2.png"><h4>Combo Recreo</h4>
+      <p class="prod-desc"></p><span>Q16</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-combo">
+      <div class="product-badge combo-badge">🎉 Fiesta</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm3.png"><h4>Combo Fiesta</h4>
+      <p class="prod-desc"></p><span>Q18</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-combo">
+      <div class="product-badge combo-badge">⭐ Surtido</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm4.png"><h4>Combo Especial</h4>
+      <p class="prod-desc"></p><span>Q47</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+    <div class="product cat-combo">
+      <div class="product-badge combo-badge">⭐ Surtido</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm5.png"><h4>Combo Surtido</h4>
+      <p class="prod-desc"></p><span>Q21</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
+    </div>
+  </div>
 
-/* ===== ANIMACIONES ===== */
-@keyframes pulse{ 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
+</section>
 
-/* ===== SWIPER ===== */
-.swiper-button-next,.swiper-button-prev{ color:var(--rosa); }
-.swiper-pagination-bullet{ background:var(--rosa); }
+<footer class="footer container">
+  <div style="margin-bottom:100px;">
+    <button id="secretarias-btn" class="btn-secretarias-footer">🌟 Nuestras Secretarias </button>
+  </div>
+  <p class="titulo-dylan">🍬 Party Perilingüe — Dylan</p>
+  <button id="logout-btn">🚪 Salir</button>
+</footer>
 
-/* ===== FOOTER ===== */
-.footer{ text-align:center; padding:60px 20px 30px; color:white; font-weight:500; }
+<div id="puntos-badge"></div>
 
-/* ===== BADGE PUNTOS ===== */
-#puntos-badge{ position:fixed; top:20px; left:20px; display:none; align-items:center; gap:6px; background:white; color:var(--rosa); font-size:0.8rem; font-weight:700; padding:8px 14px; border-radius:30px; box-shadow:0 0 12px rgba(255,102,196,0.5); z-index:99999; animation:pulse 2s infinite; white-space:nowrap; }
+<!-- MODAL PUBLICISTAS -->
+<div id="modelosModal" class="modal-publicistas-overlay">
+  <div class="modal-publicistas-box" style="max-width:400px; padding:0; overflow:hidden;">
+    <button class="modal-publicistas-close" onclick="document.getElementById('modelosModal').style.display='none'">✖</button>
+    <h2 class="modal-pub-titulo" style="padding-top:20px;">📸 Nuestros Publicistas</h2>
+    <p class="modal-pub-sub">El equipo que hace posible Party Perilingüe 💪</p>
+    <div class="pub-carousel">
+      <div class="pub-carousel-wrap" style="position:relative;">
+        <div class="pub-carousel-track" id="pubTrack">
+          <div class="pub-slide">
+            <div class="pub-foto-wrap">
+              <img src="images/vm.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="pub-placeholder">👩</div>
+            </div>
+            <div class="pub-info">
+              <div class="pub-nombre">Yuri⭐</div>
+              <div class="pub-rol">⭐ Party Perilingüe</div>
+            </div>
+          </div>
+          <div class="pub-slide">
+            <div class="pub-foto-wrap">
+              <img src="images/bbe.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="pub-placeholder">👩‍🦱</div>
+            </div>
+            <div class="pub-info">
+              <div class="pub-nombre">Emilio ⭐</div>
+              <div class="pub-rol">⭐ Party Perilingüe</div>
+            </div>
+          </div>
+          <div class="pub-slide">
+            <div class="pub-foto-wrap">
+              <img src="images/ca.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="pub-placeholder">👩‍🦰</div>
+            </div>
+            <div class="pub-info">
+              <div class="pub-nombre">Analy ⭐</div>
+              <div class="pub-rol">⭐ Party Perilingüe</div>
+            </div>
+          </div>
+          <div class="pub-slide">
+            <div class="pub-foto-wrap">
+              <img src="images/logdog.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="pub-placeholder">👩‍🦳</div>
+            </div>
+            <div class="pub-info">
+              <div class="pub-nombre">Nuestro equipo ⭐</div>
+              <div class="pub-rol">⭐ Party Perilingüe</div>
+            </div>
+          </div>
+        </div>
+        <button class="pub-btn pub-btn-prev" id="pubPrev">◀</button>
+        <button class="pub-btn pub-btn-next" id="pubNext">▶</button>
+      </div>
+      <div class="pub-dots" id="pubDots"></div>
+      <div class="pub-counter" id="pubCounter">1 / 4</div>
+    </div>
+  </div>
+</div>
 
-/* ===== TICKERS ===== */
-#ranking-ticker{ text-align:center; padding:10px 20px; margin:-20px auto 6px; max-width:400px; background:linear-gradient(45deg,var(--rosa),var(--naranja)); border-radius:999px; box-shadow:0 4px 15px rgba(255,102,196,0.4); }
-#ticker-contenido{ color:white; font-weight:700; font-size:0.88rem; opacity:1; transition:opacity 0.4s ease; white-space:nowrap; }
-#ranking-ticker-juego{ text-align:center; padding:10px 20px; margin:6px auto 20px; max-width:400px; background:linear-gradient(45deg,#9d6bff,#3ddc97); border-radius:999px; box-shadow:0 4px 15px rgba(157,107,255,0.4); }
-#ticker-juego-contenido{ color:white; font-weight:700; font-size:0.88rem; opacity:1; transition:opacity 0.4s ease; white-space:nowrap; }
+<!-- MODAL SECRETARIAS -->
+<div id="secretariasModal" class="modal-publicistas-overlay">
+  <div class="modal-publicistas-box" style="max-width:400px; padding:0 0 20px;">
+    <button class="modal-publicistas-close" onclick="document.getElementById('secretariasModal').style.display='none'">✖</button>
+    <h2 class="modal-pub-titulo" style="padding-top:22px;">🌟 Nuestras Secretarias</h2>
+    <p class="modal-pub-sub">Estamos aquí para ayudarte 💪</p>
+    <p style="text-align:center; margin:0 0 10px;">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.25);border-radius:999px;padding:4px 14px;font-size:11px;color:white;font-weight:600;">
+        📍 Encuéntranos en 6to Secretariado
+      </span>
+    </p>
 
-/* ===== NIVELES ===== */
-.nivel-bronce{ background:#cd7f3220; color:#cd7f32; }
-.nivel-plata { background:#c0c0c020; color:#999; }
-.nivel-oro   { background:#ffd70020; color:#e6b800; }
-.nivel-platino{ background:#e5e4e220; color:#9999cc; }
-.nivel-elite{ background:linear-gradient(45deg,#ffd93d,#ff66c4); color:white; animation:pulse 5s infinite; }
-.nivel-galactico{ background:linear-gradient(45deg,#9d6bff,#c084fc); color:white; animation:pulse 5s infinite; }
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 14px 18px;">
 
-/* ===== BOTONES FLOTANTES ===== */
-#game-btn          { position:fixed; bottom:20px;   right:20px; width:70px; height:70px; background:linear-gradient(45deg,#9d6bff,#ff66c4); color:white; border:none; border-radius:50%; font-size:34px; cursor:pointer; box-shadow:0 0 22px rgba(157,107,255,0.7); z-index:100; transition:transform 0.2s; display:flex; align-items:center; justify-content:center; animation:pulse 2s infinite; }
-#ranking-juego-btn { position:fixed; bottom:105px;  right:20px; width:70px; height:70px; background:linear-gradient(45deg,#3ddc97,#9d6bff); color:white; border:none; border-radius:50%; font-size:32px; cursor:pointer; box-shadow:0 0 22px rgba(61,220,151,0.6); z-index:100; transition:transform 0.2s; display:flex; align-items:center; justify-content:center; }
-#ranking-btn       { position:fixed; bottom:190px;  right:20px; width:70px; height:70px; background:linear-gradient(45deg,var(--rosa),var(--naranja)); color:white; border:none; border-radius:50%; font-size:34px; cursor:pointer; box-shadow:0 0 22px rgba(255,102,196,0.6); z-index:100; transition:transform 0.2s; display:flex; align-items:center; justify-content:center; }
-#publicistas-btn   { position:fixed; bottom:100px; left:20px; width:70px; height:70px; background:linear-gradient(45deg,#ff66c4,#9d6bff); color:white; border:none; border-radius:50%; font-size:30px; cursor:pointer; box-shadow:0 0 22px rgba(157,107,255,0.6); z-index:100; transition:transform 0.2s; display:flex; align-items:center; justify-content:center; }
-#game-btn:hover,#ranking-juego-btn:hover,#ranking-btn:hover,#publicistas-btn:hover{ transform:scale(1.1); }
+      <div class="sec-card-inner">
+        <div class="sec-avatar" style="background:#FBEAF0;color:#993356;">SH</div>
+        <div class="sec-nombre">Sofia Hernandez</div>
+        <div class="sec-pill" style="background:#FBEAF0;color:#993356;">📞 Llamadas</div>
+        <p class="sec-desc">¿Dudas sobre un pedido? Sofia te atiende al instante.</p>
+        <div style="background:rgba(255,255,255,0.3);border-radius:999px;padding:3px 10px;font-size:10.5px;color:white;font-weight:600;">📱 3941-1839</div>
+      </div>
 
-/* ===== BOTÓN SECRETARIAS EN FOOTER ===== */
-.btn-secretarias-footer{ display:inline-block; padding:13px 28px; background:linear-gradient(45deg,#ffd93d,#ff66c4); color:white; border:none; border-radius:30px; font-size:0.95rem; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(255,102,196,0.45); transition:0.3s; animation:pulse 2s infinite; letter-spacing:0.3px; }
-.btn-secretarias-footer:hover{ transform:scale(1.05); }
+      <div class="sec-card-inner">
+        <div class="sec-avatar" style="background:#E1F5EE;color:#0F6E56;">NG</div>
+        <div class="sec-nombre">Natalia González</div>
+        <div class="sec-pill" style="background:#E1F5EE;color:#0F6E56;">📋 Pedidos</div>
+        <p class="sec-desc">¿Pedido desde la oficina? Natalia lo gestiona por ti.</p>
+      </div>
 
-/* ===== MODALES PUBLICISTAS / SECRETARIAS ===== */
-.modal-publicistas-overlay{
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.88); display:none;
-  align-items:flex-start; justify-content:center;
-  z-index:300000; overflow-y:auto; padding:20px;
-}
-.modal-publicistas-box{
-  position:relative; width:100%; max-width:400px;
-  margin:40px auto 20px;
-  background:linear-gradient(160deg,#ff9de2,#ffb347,#a78bfa);
-  background-size:300% 300%;
-  animation:fondo 6s ease infinite;
-  border-radius:24px; overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,0.4);
-}
-.modal-publicistas-close{
-  position:absolute; top:12px; right:12px;
-  width:36px; height:36px; background:#ff4d6d; color:white;
-  border-radius:50%; border:none; font-size:18px; font-weight:bold;
-  cursor:pointer; z-index:20;
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:0 4px 12px rgba(255,77,109,0.4);
-}
-.modal-pub-titulo{
-  text-align:center; font-size:1.3rem; padding-top:22px; margin-bottom:4px;
-  color:white; text-shadow:0 2px 8px rgba(0,0,0,0.2);
-}
-.modal-pub-sub{ text-align:center; color:rgba(255,255,255,0.85); font-size:0.8rem; margin-bottom:14px; }
+      <div class="sec-card-inner">
+        <div class="sec-avatar" style="background:#EEEDFE;color:#3C3489;">GX</div>
+        <div class="sec-nombre">Gaby Xol</div>
+        <div class="sec-pill" style="background:#EEEDFE;color:#3C3489;">🏢 Recepción</div>
+        <p class="sec-desc">¿Sugerencia o quieres saber más? Gaby te recibe.</p>
+      </div>
 
-/* ===== CARRUSEL PUBLICISTAS ===== */
-.pub-carousel{ margin-top:6px; }
-.pub-carousel-wrap{ overflow:hidden; position:relative; }
-.pub-carousel-track{ display:flex; transition:transform 0.4s cubic-bezier(.4,0,.2,1); }
-.pub-slide{ min-width:100%; display:flex; flex-direction:column; }
-.pub-foto-wrap{ width:100%; height:480px; overflow:hidden; background:#1a1a2e; display:flex; align-items:center; justify-content:center; }
-.pub-foto{ width:100%; height:100%; object-fit:cover; object-position:center; background:#1a1a2e; }
-.pub-placeholder{ width:100%; height:100%; display:none; align-items:center; justify-content:center; font-size:64px; }
-.pub-info{ padding:14px 16px 12px; text-align:center; background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); border-top:1px solid rgba(255,255,255,0.2); }
-.pub-nombre{ font-size:1.1rem; font-weight:700; color:white; text-shadow:0 2px 6px rgba(0,0,0,0.2); }
-.pub-rol{ font-size:0.78rem; color:rgba(255,255,255,0.8); margin-top:2px; }
+      <div class="sec-card-inner">
+        <div class="sec-avatar" style="background:#FAEEDA;color:#854F0B;">OC</div>
+        <div class="sec-nombre">Odalis Cotzajay</div>
+        <div class="sec-pill" style="background:#FAEEDA;color:#854F0B;">🎉 Mayoristas</div>
+        <p class="sec-desc">¿Comprar al mayor? Odalis coordina eventos y ventas especiales.</p>
+      </div>
 
-/* BOTONES FLOTANTES SOBRE LA FOTO */
-.pub-btn{
-  position:absolute; top:50%; transform:translateY(-50%);
-  width:38px; height:38px; border:none; border-radius:50%;
-  background:rgba(255,255,255,0.3); backdrop-filter:blur(8px);
-  color:white; font-size:16px; cursor:pointer; z-index:10;
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:0 2px 10px rgba(0,0,0,0.2); transition:background 0.2s;
-}
-.pub-btn:hover{ background:rgba(255,255,255,0.5); }
-.pub-btn-prev{ left:10px; }
-.pub-btn-next{ right:10px; }
+    </div>
+  </div>
+</div>
 
-/* PUNTITOS Y CONTADOR */
-.pub-dots{ display:flex; gap:6px; align-items:center; justify-content:center; margin:10px 0 4px; }
-.pub-dot{ width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.4); transition:all 0.3s; cursor:pointer; }
-.pub-dot.active{ background:white; width:20px; border-radius:999px; }
-.pub-counter{ text-align:center; font-size:12px; color:rgba(255,255,255,0.8); font-weight:600; margin-bottom:14px; }
+<!-- MODAL RESULTADO -->
+<div id="resultModal" class="modal-overlay">
+  <div class="resultBox">
+    <h2 id="resultTitle"></h2>
+    <p id="resultText"></p>
+    <button id="closeResult">Aceptar</button>
+  </div>
+</div>
 
-/* ===== MODELOS GRID (secretarias) ===== */
-.modelos-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
-.modelo-card{ background:#fafafa; border-radius:16px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.08); transition:0.25s; text-align:center; }
-.modelo-card:hover{ transform:translateY(-4px); box-shadow:0 12px 30px rgba(255,102,196,0.2); }
-.modelo-foto-wrap{ width:100%; aspect-ratio:3/4; background:linear-gradient(135deg,#ffecd2,#fcb69f); display:flex; align-items:center; justify-content:center; overflow:hidden; }
-.modelo-foto{ width:100%; height:100%; object-fit:cover; }
-.modelo-placeholder{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:3.5rem; background:linear-gradient(135deg,#ffecd2,#fcb69f); }
-.modelo-nombre{ padding:10px 8px 12px; font-weight:700; font-size:0.88rem; color:#333; }
+<!-- MODAL RANKING COMPRAS -->
+<div id="rankingModal">
+  <div id="rankingBox">
+    <div class="ranking-header-bg compras">
+      <button id="closeRanking">✖</button>
+      <div class="ranking-header-icon">🏆</div>
+      <h2>Ranking Compras</h2>
+      <p class="sub">1 punto por cada Q1 comprado</p>
+    </div>
+    <div id="ranking-lista"></div>
+    <div id="ranking-resto" style="display:none"></div>
+    <button id="ranking-ver-mas" class="btn-ver-mas" style="display:none">Ver ranking completo ▼</button>
+  </div>
+</div>
 
-/* ===== MUSIC BTN ===== */
-#music-btn{ position:fixed; top:70px; left:20px; width:45px; height:45px; background:rgba(255,255,255,0.9); color:#333; border-radius:50%; border:2px solid #ccc; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.15); z-index:99999; transition:0.2s; }
-#music-btn.playing{ border-color:#3ddc97; color:#3ddc97; }
-#music-btn.muted  { border-color:#ff4d4d; color:#ff4d4d; }
+<!-- MODAL RANKING JUEGO -->
+<div id="rankingJuegoModal">
+  <div id="rankingJuegoBox">
+    <div class="ranking-header-bg juego">
+      <button id="closeRankingJuego">✖</button>
+      <div class="ranking-header-icon">🕹️</div>
+      <h2>Ranking Juego</h2>
+      <p class="sub">Puntos acumulados jugando</p>
+    </div>
+    <div id="ranking-juego-lista"></div>
+    <div id="ranking-juego-resto" style="display:none"></div>
+    <button id="ranking-juego-ver-mas" class="btn-ver-mas juego" style="display:none">Ver ranking completo ▼</button>
+  </div>
+</div>
 
-/* ===== LOGO ESCUELA ===== */
-.logo-escuela{ position:fixed; bottom:20px; left:20px; width:70px; height:70px; object-fit:contain; opacity:0.9; z-index:99999; transition:0.3s; cursor:pointer; border-radius:50%; }
-.logo-escuela:hover{ transform:scale(1.1); opacity:1; }
+<!-- MODAL JUEGO -->
+<div id="gameModal">
+  <div id="gameBox">
+    <button id="closeGame">✖</button>
+    <div id="game-hud">
+      <div class="ghc"><div class="ghl">Puntos</div><div class="ghv" id="g-sc">0</div></div>
+      <div class="ghc"><div class="ghl">Mejor</div><div class="ghv" id="g-hi">0</div></div>
+      <div class="ghc"><div class="ghl">Nivel</div><div class="ghv" id="g-lv">1</div></div>
+      <div class="ghc"><div class="ghl">Vidas</div><div class="ghv" id="g-lives">❤️❤️❤️</div></div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="game-msg">Toca para empezar</div>
+  </div>
+</div>
 
-/* ===== MODAL RESULTADO ===== */
-#resultModal{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:none; align-items:center; justify-content:center; z-index:200000; }
-.resultBox{ background:#fff; padding:30px; border-radius:20px; text-align:center; max-width:300px; width:80%; box-shadow:0 0 30px rgba(255,102,196,0.8); }
-#closeResult{ margin-top:15px; padding:10px 25px; background:#ff4d6d; color:#fff; border:none; border-radius:25px; cursor:pointer; }
+<!-- CARRITO -->
+<div class="cart-icon" id="cart-toggle">🛒 <span id="cart-count">0</span></div>
+<div class="cart-dropdown" id="cart-dropdown">
+  <h3>Carrito</h3>
+  <div class="user-info">
+    <label for="cliente-nombre">Nombre:</label>
+    <input id="cliente-nombre" readonly>
+    <label for="cliente-grado">Grado/Carrera:</label>
+    <input id="cliente-grado" readonly>
+  </div>
+  <ul id="cart-items"></ul>
+  <p>Total: Q<span id="cart-total">0.00</span></p>
+  <button id="clear-cart">Vaciar carrito</button>
+  <button id="buy-cart">Comprar</button>
+</div>
 
-/* ===== PUBLICIDAD ===== */
-#adModal{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:none; align-items:center; justify-content:center; z-index:999999; opacity:0; transition:0.3s; }
-#adModal.show-ad{ opacity:1; display:flex; }
-.ad-box{ position:relative; width:90%; max-width:400px; transform:scale(0.7); transition:0.3s; }
-#adModal.show-ad .ad-box{ transform:scale(1); }
-.ad-box img{ width:100%; border-radius:15px; }
-#closeAd{ position:absolute; top:-40px; right:0; background:#ff4d6d; color:white; padding:8px 12px; border-radius:50%; cursor:pointer; font-size:16px; border:none; }
+<div id="adModal">
+  <div class="ad-box">
+    <span id="closeAd">✖</span>
+    <img src="images/wassaaa.jpeg" alt="Publicidad">
+  </div>
+</div>
 
-/* ===== MODAL JUEGO ===== */
-#gameModal{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.93); display:none; align-items:center; justify-content:center; z-index:200000; overflow-y:auto; }
-#gameBox{ position:relative; width:95%; max-width:420px; margin:60px auto 20px; display:flex; flex-direction:column; align-items:center; }
-#closeGame{ position:absolute; top:-44px; right:0; width:38px; height:38px; background:#ff4d6d; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:bold; cursor:pointer; border:none; z-index:10; }
-#game-hud{ display:flex; gap:6px; width:100%; margin-bottom:8px; }
-.ghc{ flex:1; background:rgba(255,255,255,0.12); border-radius:10px; padding:7px 4px; text-align:center; border:0.5px solid rgba(255,255,255,0.2); }
-.ghl{ font-size:10px; color:rgba(255,255,255,0.6); margin-bottom:2px; }
-.ghv{ font-size:14px; font-weight:600; color:white; }
-#gameCanvas{ width:100%; display:block; border-radius:14px; touch-action:none; cursor:none; }
-#game-msg{ text-align:center; font-size:12px; color:rgba(255,255,255,0.7); margin-top:8px; min-height:18px; font-weight:500; }
+<a href="https://www.facebook.com/iacccmp/?locale=es_LA" target="_blank" id="logo-escuela-link">
+  <img src="images/cole-modified.png" class="logo-escuela" alt="Escuela">
+</a>
 
-/* ===== TOAST ===== */
-#toast-puntos{ position:fixed; bottom:-80px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#1a1a2e,#16213e); color:#f0c040; padding:12px 24px; border-radius:999px; font-weight:700; font-size:0.95rem; box-shadow:0 8px 30px rgba(0,0,0,0.3); transition:bottom 0.5s cubic-bezier(.17,.67,.39,1.4); z-index:99999; white-space:nowrap; }
-#toast-puntos.toast-show{ bottom:30px; }
+<audio id="bg-music" autoplay loop muted>
+  <source src="musica/Milky - Just The Way You Are (Sub. Español  Lyrics)  Pibble Song.mp3" type="audio/mpeg">
+</audio>
 
-/* ===== RANKING ===== */
-#rankingModal, #rankingJuegoModal{
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.85); display:none;
-  align-items:center; justify-content:center; z-index:100000;
-}
-#rankingBox, #rankingJuegoBox{
-  position:relative; background:white; border-radius:24px;
-  width:90%; max-width:480px; overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,0.4);
-  display:flex; flex-direction:column;
-}
-.ranking-header-bg{ padding:22px 24px 16px; text-align:center; flex-shrink:0; position:relative; }
-#rankingBox .ranking-header-bg{ background:linear-gradient(135deg,#fff0f8,#ffd6f0,#ffe8d6); border-bottom:2px solid #ffb8e0; }
-#rankingJuegoBox .ranking-header-bg{ background:linear-gradient(135deg,#f0ebff,#ddc8ff,#c8f0ff); border-bottom:2px solid #c8a8ff; }
-.ranking-header-icon{ font-size:2.2rem; margin-bottom:4px; }
-.ranking-header-bg h2{ font-size:1.3rem; font-weight:700; color:#1a1a2e; margin-bottom:2px; }
-.ranking-header-bg .sub{ color:#999; font-size:0.78rem; }
-#closeRanking,#closeRankingJuego{ position:absolute; top:12px; right:14px; width:34px; height:34px; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; cursor:pointer; border:none; z-index:2; }
-#closeRanking{ background:#ff4d6d; }
-#closeRankingJuego{ background:#9d6bff; }
-#ranking-lista, #ranking-juego-lista{ max-height:295px; overflow-y:auto; scroll-behavior:smooth; padding:12px 18px 4px; }
-#ranking-resto, #ranking-juego-resto{ padding:0 18px; }
-.btn-ver-mas{ display:block; width:calc(100% - 36px); margin:8px 18px 4px; padding:11px 16px; border:none; border-radius:14px; background:linear-gradient(45deg,#ff66c4,#ff8c42); color:white; font-weight:700; font-size:0.88rem; cursor:pointer; transition:0.2s; box-shadow:0 4px 14px rgba(255,102,196,0.3); }
-.btn-ver-mas:hover{ transform:translateY(-2px); }
-.btn-ver-mas.juego{ background:linear-gradient(45deg,#9d6bff,#3ddc97); box-shadow:0 4px 14px rgba(157,107,255,0.3); }
-.ranking-row{ display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:14px; margin-bottom:7px; background:#f9f9f9; transition:background 0.2s; }
-.ranking-row:hover{ background:#f0f0f0; }
-.ranking-yo{ background:linear-gradient(135deg,#fffbe6,#fff3cd) !important; border:2px solid #ffd93d; }
-.rank-pos{ font-size:1.05rem; min-width:28px; text-align:center; }
-.rank-puntos{ font-weight:700; color:#e6b800; margin-left:auto; font-size:0.88rem; white-space:nowrap; }
-.rank-avatar{ width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.95rem; color:white; flex-shrink:0; object-fit:cover; }
-.rank-info{ display:flex; flex-direction:column; flex:1; min-width:0; }
-.rank-nombre{ font-size:0.85rem; color:#222; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.rank-nombre em{ color:#aaa; font-style:italic; font-size:0.72rem; }
-.rank-carrera{ font-size:0.72rem; color:#aaa; }
-.rank-nivel{ font-size:0.68rem; padding:2px 7px; border-radius:999px; font-weight:700; align-self:flex-start; margin-top:2px; }
-
-@media(max-width:768px){
-  .menu{ flex-direction:column; align-items:center; padding:15px 0; height:auto; }
-  .logo-2{ height:220px; max-height:220px; transform:translate(-50%,-30px); }
-  .navbar ul{ flex-direction:row; justify-content:center; gap:8px; }
-  .navbar a{ padding:8px 14px; font-size:14px; }
-  .slider{ flex-direction:column; align-items:center; gap:10px; padding:20px 0; }
-  .slider-img{ margin:0; width:100%; display:flex; justify-content:center; align-items:center; }
-  .slider-img img{ max-width:220px; width:70%; }
-  .slider-txt{ width:90%; text-align:center; margin-top:100px; }
-  .slider-txt h1{ font-size:24px; }
-  .slider-txt p{ font-size:13px; margin:6px 0; }
-  .slider-img img[src*="osos"]{ width:65%; margin-top:60px; }
-  .slider-img img[src*="image-removebg-preview"]{ width:50%; }
-  .slider-img img[src*="d.png"]{ width:60%; margin-top:25px; }
-  #ranking-ticker{ margin:-15px 16px 4px; border-radius:20px; }
-  #ranking-ticker-juego{ margin:4px 16px 16px; border-radius:20px; }
-  #ticker-contenido,#ticker-juego-contenido{ font-size:0.8rem; }
-  .modelos-grid{ grid-template-columns:repeat(2,1fr); }
-  .products{ grid-template-columns:repeat(2,1fr); justify-content:unset; }
-  .tab-content.active{ grid-template-columns:repeat(2,1fr); justify-content:unset; }
-  .products .product:last-child:nth-child(odd),
-  .tab-content .product:last-child:nth-child(odd){ grid-column:1 / -1; max-width:50%; margin:0 auto; width:100%; }
-}
-
-@media(max-width:480px){
-  #game-btn          { width:58px; height:58px; font-size:28px; bottom:15px;  right:15px; }
-  #ranking-juego-btn { width:58px; height:58px; font-size:26px; bottom:85px;  right:15px; }
-  #ranking-btn       { width:58px; height:58px; font-size:28px; bottom:155px; right:15px; }
-  #publicistas-btn   { width:58px; height:58px; font-size:28px; bottom:85px;  left:15px; }
-  .logo-escuela{ width:58px; height:58px; bottom:15px; left:15px; }
-  #music-btn{ top:65px; left:15px; width:40px; height:40px; font-size:16px; }
-  .tabs{ gap:6px; }
-  .tab-btn{ padding:8px 12px; font-size:12px; }
-}
-
-#logout-btn{ display:block; margin:10px auto 0; padding:6px 12px; background:#ff4d6d; color:white; border:none; border-radius:25px; font-size:11px; cursor:pointer; opacity:0.15; transition:0.3s; position:static; }
-#logout-btn:hover{ opacity:1; transform:scale(1.05); }
-
-.titulo-dylan{ font-size:20px; font-weight:700; text-align:center; letter-spacing:1px; background:linear-gradient(90deg,#ff2e7a,#ff85b3); background-clip:text; -webkit-background-clip:text; color:transparent; }
-
-.add-to-cart.sin-stock {
-  background: #ccc;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-  opacity: 0.7;
-  color: #666;
-}
-.add-to-cart.sin-stock:hover {
-  transform: none;
-  box-shadow: none;
-}
-.badge-sin-stock {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #aaa;
-  color: white;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
-  z-index: 2;
-}
-
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script type="module" src="firebase.js"></script>
+<script defer src="script.js"></script>
+<script defer src="game.js"></script>
+</body>
+</html>
