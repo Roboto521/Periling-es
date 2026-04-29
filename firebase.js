@@ -24,13 +24,24 @@ function calcularNivel(puntos) {
 }
 
 function calcularNivelJuego(pts) {
-  if (pts >= 5000) return { nombre:"🚀 Galáctico", clase:"nivel-galactico" };
-  if (pts >= 2500) return { nombre:"👑 Leyenda",   clase:"nivel-oro"       };
-  if (pts >= 800)  return { nombre:"🔥 Pro",       clase:"nivel-plata"     };
-  if (pts >= 200)  return { nombre:"⚡ Bueno",     clase:"nivel-bronce"    };
-  return                  { nombre:"🌱 Nuevo",     clase:"nivel-bronce"    };
+  if (pts >= 8000) return { nombre:"🚀 Galáctico",  clase:"nivel-galactico" };
+  if (pts >= 7500) return { nombre:"👑 Leyenda",    clase:"nivel-oro"       };
+  if (pts >= 7000) return { nombre:"💎 Heroico",    clase:"nivel-platino"   };
+  if (pts >= 6500) return { nombre:"🔱 Supremo",    clase:"nivel-platino"   };
+  if (pts >= 6000) return { nombre:"⚡ Maestro",    clase:"nivel-elite"     };
+  if (pts >= 5500) return { nombre:"🎖️ Gran Pro",  clase:"nivel-elite"     };
+  if (pts >= 5000) return { nombre:"🔥 Pro",        clase:"nivel-elite"     };
+  if (pts >= 4500) return { nombre:"🏆 Experto",    clase:"nivel-oro"       };
+  if (pts >= 4000) return { nombre:"🎯 Veterano",   clase:"nivel-oro"       };
+  if (pts >= 3500) return { nombre:"⚔️ Élite",     clase:"nivel-oro"       };
+  if (pts >= 3000) return { nombre:"🛡️ Guerrero",  clase:"nivel-plata"     };
+  if (pts >= 2500) return { nombre:"💪 Luchador",   clase:"nivel-plata"     };
+  if (pts >= 2000) return { nombre:"🥊 Peleador",   clase:"nivel-plata"     };
+  if (pts >= 1500) return { nombre:"🎮 Jugador",    clase:"nivel-bronce"    };
+  if (pts >= 1000) return { nombre:"🌟 Novato",     clase:"nivel-bronce"    };
+  if (pts >= 500)  return { nombre:"🌱 Recluta",    clase:"nivel-bronce"    };
+  return                  { nombre:"👶 Nuevo",       clase:"nivel-bronce"    };
 }
-
 /* ===== AVATAR ===== */
 function avatarHTML(nombre, foto) {
   if (foto) return `<img class="rank-avatar" src="${foto}" alt="${nombre}">`;
