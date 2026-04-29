@@ -347,3 +347,31 @@ header *{ position:relative; z-index:1; }
 #logout-btn:hover{ opacity:1; transform:scale(1.05); }
 
 .titulo-dylan{ font-size:20px; font-weight:700; text-align:center; letter-spacing:1px; background:linear-gradient(90deg,#ff2e7a,#ff85b3); background-clip:text; -webkit-background-clip:text; color:transparent; }
+
+.add-to-cart.sin-stock {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+  opacity: 0.7;
+  color: #666;
+}
+.add-to-cart.sin-stock:hover {
+  transform: none;
+  box-shadow: none;
+}
+.badge-sin-stock {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #aaa;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  z-index: 2;
+}
+
