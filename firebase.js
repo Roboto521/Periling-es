@@ -24,23 +24,11 @@ function calcularNivel(puntos) {
 }
 
 function calcularNivelJuego(pts) {
-  if (pts >= 8000) return { nombre:"🚀 Galáctico",  clase:"nivel-galactico" };
-  if (pts >= 7500) return { nombre:"👑 Leyenda",    clase:"nivel-oro"       };
-  if (pts >= 7000) return { nombre:"💎 Heroico",    clase:"nivel-platino"   };
-  if (pts >= 6500) return { nombre:"🔱 Supremo",    clase:"nivel-platino"   };
-  if (pts >= 6000) return { nombre:"⚡ Maestro",    clase:"nivel-elite"     };
-  if (pts >= 5500) return { nombre:"🎖️ Gran Pro",  clase:"nivel-elite"     };
-  if (pts >= 5000) return { nombre:"🔥 Pro",        clase:"nivel-elite"     };
-  if (pts >= 4500) return { nombre:"🏆 Experto",    clase:"nivel-oro"       };
-  if (pts >= 4000) return { nombre:"🎯 Veterano",   clase:"nivel-oro"       };
-  if (pts >= 3500) return { nombre:"⚔️ Élite",     clase:"nivel-oro"       };
-  if (pts >= 3000) return { nombre:"🛡️ Guerrero",  clase:"nivel-plata"     };
-  if (pts >= 2500) return { nombre:"💪 Luchador",   clase:"nivel-plata"     };
-  if (pts >= 2000) return { nombre:"🥊 Peleador",   clase:"nivel-plata"     };
-  if (pts >= 1500) return { nombre:"🎮 Jugador",    clase:"nivel-bronce"    };
-  if (pts >= 1000) return { nombre:"🌟 Novato",     clase:"nivel-bronce"    };
-  if (pts >= 500)  return { nombre:"🌱 Recluta",    clase:"nivel-bronce"    };
-  return                  { nombre:"👶 Nuevo",       clase:"nivel-bronce"    };
+  if (pts >= 5000) return { nombre:"🚀 Galáctico", clase:"nivel-galactico" };
+  if (pts >= 2500) return { nombre:"👑 Leyenda",   clase:"nivel-oro"       };
+  if (pts >= 800)  return { nombre:"🔥 Pro",       clase:"nivel-plata"     };
+  if (pts >= 200)  return { nombre:"⚡ Bueno",     clase:"nivel-bronce"    };
+  return                  { nombre:"🌱 Nuevo",     clase:"nivel-bronce"    };
 }
 
 /* ===== AVATAR ===== */
@@ -71,34 +59,41 @@ function buildRow(u, i, uidActual, icono, nivel, campo) {
 }
 
 /* ===== HELPERS RANKING ===== */
-function renderRanking({ lista, tablaEl, restoEl, verMasBtn, uidActual, icono, calcNivel, campo }) {
+function renderRanking({ lista, tablaEl, verMasBtnId, uidActual, icono, calcNivel, campo }) {
   const top10 = lista.slice(0, 10);
   const resto = lista.slice(10);
 
-  tablaEl.innerHTML = top10.map((u, i) => buildRow(u, i, uidActual, icono, calcNivel(u[campo]), campo)).join("");
+  // Renderizar top 10
+  tablaEl.innerHTML = top10.map((u, i) =>
+    buildRow(u, i, uidActual, icono, calcNivel(u[campo]), campo)
+  ).join("");
 
-  if (restoEl) restoEl.innerHTML = "";
+  // Buscar el botón por ID directamente del DOM — siempre fresco
+  const btn = document.getElementById(verMasBtnId);
 
   if (resto.length > 0) {
+    // Crear bloque con el resto de usuarios y agregarlo al tablaEl
     const restoDiv = document.createElement("div");
     restoDiv.className = "ranking-resto-inner";
     restoDiv.style.display = "none";
-    restoDiv.innerHTML = resto.map((u, i) => buildRow(u, i + 10, uidActual, icono, calcNivel(u[campo]), campo)).join("");
+    restoDiv.innerHTML = resto.map((u, i) =>
+      buildRow(u, i + 10, uidActual, icono, calcNivel(u[campo]), campo)
+    ).join("");
     tablaEl.appendChild(restoDiv);
 
-    verMasBtn.style.display = "block";
-    verMasBtn.textContent   = "Ver ranking completo ▼";
-
-    const nuevoBtn = verMasBtn.cloneNode(true);
-    verMasBtn.parentNode.replaceChild(nuevoBtn, verMasBtn);
-    nuevoBtn.addEventListener("click", function () {
-      const abierto = restoDiv.style.display !== "none";
-      restoDiv.style.display = abierto ? "none" : "block";
-      this.textContent = abierto ? "Ver ranking completo ▼" : "Ver menos ▲";
-      if (!abierto) tablaEl.scrollTop = tablaEl.scrollHeight;
-    });
+    if (btn) {
+      btn.style.display = "block";
+      btn.textContent   = "Ver ranking completo ▼";
+      // onclick sobreescribe cualquier handler anterior sin necesidad de clonar
+      btn.onclick = function () {
+        const abierto = restoDiv.style.display !== "none";
+        restoDiv.style.display = abierto ? "none" : "block";
+        this.textContent = abierto ? "Ver ranking completo ▼" : "Ver menos ▲";
+        if (!abierto) tablaEl.scrollTop = tablaEl.scrollHeight;
+      };
+    }
   } else {
-    verMasBtn.style.display = "none";
+    if (btn) btn.style.display = "none";
   }
 }
 
@@ -125,7 +120,6 @@ window.guardarPedido = function (pedido) {
 /* ===== PUNTOS COMPRAS ===== */
 window.sumarPuntos = function (uid, puntosExtra) {
   get(ref(db, "usuarios/" + uid)).then(snap => {
-    // ✅ FIX: verificar que el usuario no sea null antes de sumar
     if (snap.exists() && snap.val() && typeof snap.val() === 'object') {
       update(ref(db, "usuarios/" + uid), { puntos: (snap.val().puntos || 0) + puntosExtra });
     }
@@ -138,7 +132,6 @@ window._subirPuntosJuego = async function (pts) {
   if (!uid) return;
   try {
     const snap = await get(ref(db, "usuarios/" + uid));
-    // ✅ FIX: verificar que el usuario no sea null
     if (snap.exists() && snap.val() && typeof snap.val() === 'object' && pts > (snap.val().puntosJuego || 0)) {
       await update(ref(db, "usuarios/" + uid), { puntosJuego: pts });
     }
@@ -147,52 +140,79 @@ window._subirPuntosJuego = async function (pts) {
 
 /* ===== RANKING COMPRAS ===== */
 window.cargarRanking = function () {
-  const tablaEl   = document.getElementById("ranking-lista");
-  const restoEl   = document.getElementById("ranking-resto");
-  const verMasBtn = document.getElementById("ranking-ver-mas");
-
+  const tablaEl = document.getElementById("ranking-lista");
   tablaEl.innerHTML = "<p style='text-align:center;color:#aaa'>Cargando...</p>";
 
   get(ref(db, "usuarios")).then(snap => {
-    if (!snap.exists()) { tablaEl.innerHTML = "<p style='text-align:center;color:#aaa'>No hay usuarios aún.</p>"; return; }
+    if (!snap.exists()) {
+      tablaEl.innerHTML = "<p style='text-align:center;color:#aaa'>No hay usuarios aún.</p>";
+      return;
+    }
 
     const uidActual = localStorage.getItem("userUID") || "";
     const lista = Object.entries(snap.val())
-      // ✅ FIX: filtrar nodos null o inválidos
       .filter(([uid, d]) => d && typeof d === 'object')
-      .map(([uid, d]) => ({ uid, nombre: d.nombre || "Anónimo", carrera: d.carrera || "", puntos: d.puntos || 0, foto: d.foto || "" }))
+      .map(([uid, d]) => ({
+        uid,
+        nombre  : d.nombre  || "Anónimo",
+        carrera : d.carrera || "",
+        puntos  : d.puntos  || 0,
+        foto    : d.foto    || ""
+      }))
       .sort((a, b) => b.puntos - a.puntos);
 
-    renderRanking({ lista, tablaEl, restoEl, verMasBtn, uidActual, icono: "⭐", calcNivel: calcularNivel, campo: "puntos" });
+    renderRanking({
+      lista,
+      tablaEl,
+      verMasBtnId : "ranking-ver-mas",
+      uidActual,
+      icono       : "⭐",
+      calcNivel   : calcularNivel,
+      campo       : "puntos"
+    });
   });
 };
 
 /* ===== RANKING JUEGO ===== */
 window.cargarRankingJuego = function () {
-  const tablaEl   = document.getElementById("ranking-juego-lista");
-  const restoEl   = document.getElementById("ranking-juego-resto");
-  const verMasBtn = document.getElementById("ranking-juego-ver-mas");
-
+  const tablaEl = document.getElementById("ranking-juego-lista");
   tablaEl.innerHTML = "<p style='text-align:center;color:#aaa'>Cargando...</p>";
 
   get(ref(db, "usuarios")).then(snap => {
-    if (!snap.exists()) { tablaEl.innerHTML = "<p style='text-align:center;color:#aaa'>Nadie ha jugado aún.</p>"; return; }
+    if (!snap.exists()) {
+      tablaEl.innerHTML = "<p style='text-align:center;color:#aaa'>Nadie ha jugado aún.</p>";
+      return;
+    }
 
     const uidActual = localStorage.getItem("userUID") || "";
     const lista = Object.entries(snap.val())
-      // ✅ FIX: filtrar nodos null o inválidos
       .filter(([uid, d]) => d && typeof d === 'object')
-      .map(([uid, d]) => ({ uid, nombre: d.nombre || "Anónimo", carrera: d.carrera || "", puntosJuego: d.puntosJuego || 0, foto: d.foto || "" }))
+      .map(([uid, d]) => ({
+        uid,
+        nombre      : d.nombre      || "Anónimo",
+        carrera     : d.carrera     || "",
+        puntosJuego : d.puntosJuego || 0,
+        foto        : d.foto        || ""
+      }))
       .filter(u => u.puntosJuego > 0)
       .sort((a, b) => b.puntosJuego - a.puntosJuego);
 
     if (lista.length === 0) {
       tablaEl.innerHTML = "<p style='text-align:center;color:#aaa'>Nadie ha jugado aún — ¡sé el primero!</p>";
-      verMasBtn.style.display = "none";
+      const btn = document.getElementById("ranking-juego-ver-mas");
+      if (btn) btn.style.display = "none";
       return;
     }
 
-    renderRanking({ lista, tablaEl, restoEl, verMasBtn, uidActual, icono: "🎮", calcNivel: calcularNivelJuego, campo: "puntosJuego" });
+    renderRanking({
+      lista,
+      tablaEl,
+      verMasBtnId : "ranking-juego-ver-mas",
+      uidActual,
+      icono       : "🎮",
+      calcNivel   : calcularNivelJuego,
+      campo       : "puntosJuego"
+    });
   });
 };
 
@@ -201,7 +221,6 @@ window.cargarTicker = function () {
   get(ref(db, "usuarios")).then(snap => {
     if (!snap.exists()) return;
 
-    // ✅ FIX: filtrar nodos null o inválidos antes de usarlos
     const usuarios = Object.values(snap.val()).filter(u => u && typeof u === 'object');
 
     function iniciarTicker(elementId, prefijo, lista, campo) {
@@ -214,17 +233,23 @@ window.cargarTicker = function () {
       let idx = 0;
       function rotar() {
         el.style.opacity = "0";
-        setTimeout(() => { el.textContent = prefijo + " " + items[idx]; el.style.opacity = "1"; idx = (idx + 1) % items.length; }, 400);
+        setTimeout(() => {
+          el.textContent = prefijo + " " + items[idx];
+          el.style.opacity = "1";
+          idx = (idx + 1) % items.length;
+        }, 400);
       }
       rotar();
       setInterval(rotar, 3000);
     }
 
-    iniciarTicker("ticker-contenido", "🏆",
+    iniciarTicker(
+      "ticker-contenido", "🏆",
       usuarios.filter(u => (u.puntos || 0) > 0).sort((a, b) => b.puntos - a.puntos).slice(0, 3),
       "puntos"
     );
-    iniciarTicker("ticker-juego-contenido", "🎮",
+    iniciarTicker(
+      "ticker-juego-contenido", "🎮",
       usuarios.filter(u => (u.puntosJuego || 0) > 0).sort((a, b) => b.puntosJuego - a.puntosJuego).slice(0, 3),
       "puntosJuego"
     );
