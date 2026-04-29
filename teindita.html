@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="es">
 
@@ -822,12 +822,168 @@
 
 </div>
 
-
-
 <!-- MODAL RANKING COMPRAS -->
 
 <div id="rankingModal">
 
   <div id="rankingBox">
 
-    <div class="ranking-header-bg c
+    <div class="ranking-header-bg compras">
+
+      <button id="closeRanking">✖</button>
+
+      <div class="ranking-header-icon">🏆</div>
+
+      <h2>Ranking Compras</h2>
+
+      <p class="sub">1 punto por cada Q1 comprado</p>
+
+    </div>
+
+    <div id="ranking-lista"></div>
+
+    <div id="ranking-resto" style="display:none"></div>
+
+    <button id="ranking-ver-mas" class="btn-ver-mas" style="display:none">Ver ranking completo ▼</button>
+
+  </div>
+
+</div>
+
+
+
+<!-- MODAL RANKING JUEGO -->
+
+<div id="rankingJuegoModal">
+
+  <div id="rankingJuegoBox">
+
+    <div class="ranking-header-bg juego">
+
+      <button id="closeRankingJuego">✖</button>
+
+      <div class="ranking-header-icon">🕹️</div>
+
+      <h2>Ranking Juego</h2>
+
+      <p class="sub">Puntos acumulados jugando</p>
+
+    </div>
+
+    <div id="ranking-juego-lista"></div>
+
+    <div id="ranking-juego-resto" style="display:none"></div>
+
+    <button id="ranking-juego-ver-mas" class="btn-ver-mas juego" style="display:none">Ver ranking completo ▼</button>
+
+  </div>
+
+</div>
+
+
+
+<!-- MODAL JUEGO -->
+
+<div id="gameModal">
+
+  <div id="gameBox">
+
+    <button id="closeGame">✖</button>
+
+    <div id="game-hud">
+
+      <div class="ghc"><div class="ghl">Puntos</div><div class="ghv" id="g-sc">0</div></div>
+
+      <div class="ghc"><div class="ghl">Mejor</div><div class="ghv" id="g-hi">0</div></div>
+
+      <div class="ghc"><div class="ghl">Nivel</div><div class="ghv" id="g-lv">1</div></div>
+
+      <div class="ghc"><div class="ghl">Vidas</div><div class="ghv" id="g-lives">❤️❤️❤️</div></div>
+
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="game-msg">Toca para empezar</div>
+
+  </div>
+
+</div>
+
+
+
+<!-- CARRITO -->
+
+<div class="cart-icon" id="cart-toggle">🛒 <span id="cart-count">0</span></div>
+
+<div class="cart-dropdown" id="cart-dropdown">
+
+  <h3>Carrito</h3>
+
+  <div class="user-info">
+
+    <label for="cliente-nombre">Nombre:</label>
+
+    <input id="cliente-nombre" readonly>
+
+    <label for="cliente-grado">Grado/Carrera:</label>
+
+    <input id="cliente-grado" readonly>
+
+  </div>
+
+  <ul id="cart-items"></ul>
+
+  <p>Total: Q<span id="cart-total">0.00</span></p>
+
+  <button id="clear-cart">Vaciar carrito</button>
+
+  <button id="buy-cart">Comprar</button>
+
+</div>
+
+
+
+<div id="adModal">
+
+  <div class="ad-box">
+
+    <span id="closeAd">✖</span>
+
+    <img src="images/wassaaa.jpeg" alt="Publicidad">
+
+  </div>
+
+</div>
+
+
+
+<a href="https://www.facebook.com/iacccmp/?locale=es_LA" target="_blank" id="logo-escuela-link">
+
+  <img src="images/cole-modified.png" class="logo-escuela" alt="Escuela">
+
+</a>
+
+
+
+<audio id="bg-music" autoplay loop muted>
+
+  <source src="musica/Milky - Just The Way You Are (Sub. Español  Lyrics)  Pibble Song.mp3" type="audio/mpeg">
+
+</audio>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+<script type="module" src="firebase.js"></script>
+
+<script defer src="script.js"></script>
+
+<script defer src="game.js"></script>
+
+</body>
+
+</html>
+
+
