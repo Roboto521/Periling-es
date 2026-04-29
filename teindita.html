@@ -3,494 +3,166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Party Perilingues</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
-<link rel="stylesheet" href="style.css?v=2">
+<title>Party Perilingüe</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+
+body{
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#fdfbfb,#ffecd2,#fcb69f,#a1c4fd,#c2e9fb,#d4fc79,#96e6a1,#e0c3fc,#f9c5d1);
+  background-size:500% 500%;
+  animation:fondo 20s ease infinite;
+  padding:20px;
+}
+@keyframes fondo{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+.card{
+  background:white;
+  border-radius:28px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 40px rgba(255,102,196,0.2);
+  width:100%; max-width:400px;
+  padding:44px 32px 40px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute; top:-60px; right:-60px;
+  width:160px; height:160px; border-radius:50%;
+  background:linear-gradient(135deg,rgba(255,102,196,0.1),rgba(157,107,255,0.1));
+}
+.card::after{
+  content:"";
+  position:absolute; bottom:-50px; left:-50px;
+  width:130px; height:130px; border-radius:50%;
+  background:linear-gradient(135deg,rgba(255,217,61,0.1),rgba(61,220,151,0.1));
+}
+.card *{ position:relative; z-index:1; }
+
+.logo{ width:110px; height:auto; margin-bottom:8px; }
+
+.gomita-wrap{
+  font-size:80px;
+  animation:bounce 1.2s ease-in-out infinite;
+  display:block;
+  margin:8px 0 6px;
+  line-height:1;
+}
+@keyframes bounce{
+  0%,100%{ transform:translateY(0) rotate(-5deg); }
+  50%{ transform:translateY(-16px) rotate(5deg); }
+}
+
+.titulo{
+  font-size:26px; font-weight:700;
+  background:linear-gradient(90deg,#ff4d6d,#ffd93d,#3ddc97,#9d6bff);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin:12px 0 8px; line-height:1.25;
+}
+
+.subtitulo{
+  font-size:13.5px; color:#aaa; margin-bottom:24px; line-height:1.7;
+}
+
+.tag{
+  display:inline-block;
+  background:linear-gradient(45deg,#ff66c4,#ff8c42);
+  color:white; font-size:11px; font-weight:700;
+  padding:5px 16px; border-radius:999px;
+  margin-bottom:28px;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{ 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
+
+.info-box{
+  background:linear-gradient(135deg,#fff5fa,#fff8f0);
+  border:1.5px solid #ffd6f0;
+  border-radius:16px;
+  padding:18px 20px;
+}
+.info-row{
+  display:flex; align-items:center; gap:10px;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,102,196,0.1);
+  font-size:13px; color:#666;
+}
+.info-row:last-child{ border-bottom:none; padding-bottom:0; }
+.info-icon{ font-size:18px; flex-shrink:0; }
+.info-txt{ text-align:left; }
+.info-txt strong{ color:#ff4d6d; font-weight:600; display:block; font-size:11.5px; margin-bottom:1px; }
+
+.footer-txt{
+  margin-top:26px; font-size:11.5px; color:#ccc;
+}
+.footer-txt span{ color:#ff66c4; font-weight:600; }
+
+.dots{
+  display:flex; justify-content:center; gap:7px; margin:16px 0 0;
+}
+.dot{
+  width:8px; height:8px; border-radius:50%;
+  background:linear-gradient(45deg,#ff66c4,#ff8c42);
+  animation:dotbounce 1.4s ease-in-out infinite;
+}
+.dot:nth-child(2){ animation-delay:0.2s; }
+.dot:nth-child(3){ animation-delay:0.4s; }
+@keyframes dotbounce{
+  0%,80%,100%{ transform:scale(0.6); opacity:0.5; }
+  40%{ transform:scale(1); opacity:1; }
+}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="menu container">
-    <img class="logo-2" src="images/pt.png" alt="logo">
-    <nav class="navbar"><ul></ul></nav>
-  </div>
-  <div class="header-content container">
-    <div class="swiper mySwiper-1">
-      <div class="swiper-wrapper">
+<div class="card">
 
-        <div class="swiper-slide">
-          <div class="slider">
-            <div class="slider-txt">
-              <h1>Gomitas de Gusano</h1>
-              <p>Colores vibrantes y un toque ácido que despierta tus sentidos.</p>
-              <a href="#" class="btn-1" onclick="agregarDesdeSlider('Gusanos');return false;">Comprar</a>
-            </div>
-            <div class="slider-img"><img src="images/image-removebg-preview.png"></div>
-          </div>
-        </div>
+  <img src="images/pt.png" class="logo" alt="Party Perilingüe" onerror="this.style.display='none'">
 
-        <div class="swiper-slide">
-          <div class="slider">
-            <div class="slider-txt">
-              <h1>Gomitas de Osito</h1>
-              <p>Pequeñas, suaves y llenas de sabor.</p>
-              <a href="#" class="btn-1" onclick="agregarDesdeSlider('Ositos');return false;">Comprar</a>
-            </div>
-            <div class="slider-img"><img src="images/osos.png"></div>
-          </div>
-        </div>
+  <span class="gomita-wrap">🍬</span>
 
-        <div class="swiper-slide">
-          <div class="slider">
-            <div class="slider-txt">
-              <h1>Chocolates granada</h1>
-              <p>Calidad y sabor en su máxima expresión.</p>
-              <a href="#" class="btn-1" style="background:#ccc;cursor:not-allowed;pointer-events:none;opacity:0.7;">Sin Stock ❌</a>
-            </div>
-            <div class="slider-img"><img src="images/d.png"></div>
-          </div>
-        </div>
+  <h1 class="titulo">¡Oops! Tenemos<br>un problema técnico 😅</h1>
+  <p class="subtitulo">La página está temporalmente fuera de servicio.<br>Estamos trabajando para volver muy pronto.<br>¡Gracias por tu paciencia! 💕</p>
 
+  <div class="tag">⚙️ En mantenimiento</div>
+
+  <div class="info-box">
+    <div class="info-row">
+      <span class="info-icon">🔧</span>
+      <div class="info-txt">
+        <strong>¿Qué pasó?</strong>
+        Estamos haciendo mejoras en el sistema
       </div>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-pagination"></div>
     </div>
-  </div>
-</header>
-
-<div id="ranking-ticker"><span id="ticker-contenido">🏆 Cargando ranking...</span></div>
-<div id="ranking-ticker-juego"><span id="ticker-juego-contenido">🎮 Cargando ranking juego...</span></div>
-
-<div class="search-box">
-  <input type="text" id="searchInput" placeholder="🔎 Buscar productos...">
-</div>
-
-<button id="music-btn">🔇</button>
-<button id="ranking-btn">🏆</button>
-<button id="ranking-juego-btn">🕹️</button>
-<button id="game-btn">🎮</button>
-<button id="publicistas-btn" title="Nuestras Publicistas">📸</button>
-
-<section class="container">
-  <h2>Nuestros productos</h2>
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="gomitas">🍬 Gomitas</button>
-    <button class="tab-btn" data-tab="masvendidos">⭐ Más Vendidos</button>
-    <button class="tab-btn" data-tab="dulces">🍭 Dulces</button>
-    <button class="tab-btn" data-tab="chocolates">🍫 Chocolates</button>
-    <button class="tab-btn" data-tab="combos">🎁 Combos</button>
-  </div>
-
-  <!-- ===== MÁS VENDIDOS ===== -->
-  <div class="products tab-content" id="masvendidos">
-    <div class="product cat-top">
-      <div class="product-badge top-badge">🥇 #1</div>
-      <img src="images/osos.png"><h4>Ositos</h4>
-      <p class="prod-desc">El favorito de todos 🍬</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
-      <button class="add-to-cart" data-name="Ositos" data-price="1" data-img="images/osos.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-top">
-      <div class="product-badge top-badge">🥈 #2</div>
-      <img src="images/image-removebg-preview.png"><h4>Gusanos Ácidos</h4>
-      <p class="prod-desc">Sabor ácido que despierta tus sentidos</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
-      <button class="add-to-cart" data-name="Gusanos" data-price="1" data-img="images/image-removebg-preview.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-top">
-      <div class="product-badge top-badge">🥉 #3</div>
-      <img src="images/aros.png"><h4>Aros</h4>
-      <p class="prod-desc">Refrescante sabor a melocoton</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
-      <button class="add-to-cart" data-name="Aros" data-price="1" data-img="images/aros.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-top">
-      <div class="product-badge top-badge">⭐ Top</div>
-      <img src="images/regaliz.png"><h4>Regaliz</h4>
-      <p class="prod-desc">Refrescante sabor a fresa</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
-      <button class="add-to-cart" data-name="Regaliz" data-price="1" data-img="images/regaliz.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-top">
-      <div class="product-badge top-badge">⭐ Top</div>
-      <img src="images/lengua.png"><h4>Cachetadas</h4>
-      <p class="prod-desc">Arma tu propia paleta¡</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x1 unidades)</small></span>
-      <button class="add-to-cart" data-name="Cachetadas" data-price="1" data-img="images/lengua.png">Agregar 🛒</button>
-    </div>
-  </div>
-
-  <!-- ===== GOMITAS ===== -->
-  <div class="products tab-content active" id="gomitas">
-    <div class="product cat-gomitas">
-      <div class="product-badge">⭐ Popular</div>
-      <img src="images/osos.png"><h4>Ositos</h4>
-      <p class="prod-desc">Suaves y coloridos, sabor a fruta</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
-      <button class="add-to-cart" data-name="Ositos" data-price="1" data-img="images/osos.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-gomitas">
-      <img src="images/aros.png"><h4>Aros</h4>
-      <p class="prod-desc">Refrescante sabor a melocoton</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
-      <button class="add-to-cart" data-name="Aros" data-price="1" data-img="images/aros.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-gomitas">
-      <div class="product-badge new-badge">🔥 Ácidos</div>
-      <img src="images/image-removebg-preview.png"><h4>Gusanos Ácidos</h4>
-      <p class="prod-desc">Sabor ácido que despierta tus sentidos</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
-      <button class="add-to-cart" data-name="Gusanos" data-price="1" data-img="images/image-removebg-preview.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-gomitas">
-      <img src="images/regaliz.png"><h4>Regaliz</h4>
-      <p class="prod-desc">Refrescante sabor a fresa</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
-      <button class="add-to-cart" data-name="Regaliz" data-price="1" data-img="images/regaliz.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-gomitas">
-      <img src="images/tira.png"><h4>Tiras Ácidas Fresa</h4>
-      <p class="prod-desc">Todos los sabores en una sola gomita</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
-      <button class="add-to-cart" data-name="Tiras Acidas Fresa" data-price="1" data-img="images/tira.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-gomitas">
-      <div class="product-badge new-badge">🔥 Nuevo</div>
-      <img src="images/ewas.png"><h4>Gomitas Preparadas bolsita</h4>
-      <p class="prod-desc">Mezcla especial Con chamoy y mas</p>
-      <span>Q3</span>
-      <button class="add-to-cart" data-name="Gomitas Preparadas bolsita" data-price="3" data-img="images/ewas.png">Agregar 🛒</button>
-    </div>
-
-    <!-- ✅ VASITO → SIN STOCK -->
-    <div class="product cat-gomitas">
-      <div class="product-badge new-badge">🔥 Nuevo</div>
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/vasokw.png"><h4>Gomitas Preparadas vasito</h4>
-      <p class="prod-desc">Mezcla especial de chamoy en vasito</p>
-      <span>Q6</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-  </div>
-
-  <!-- ===== DULCES ===== -->
-  <div class="products tab-content" id="dulces">
-    <div class="product cat-dulces">
-      <div class="product-badge">⭐ Popular</div>
-      <img src="images/lengua.png"><h4>Cachetadas</h4>
-      <p class="prod-desc">Arma tu propia paleta¡</p>
-      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x1 unidades)</small></span>
-      <button class="add-to-cart" data-name="Cachetadas" data-price="1" data-img="images/lengua.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-dulces">
-      
-      <img src="images/dulduldul.png"><h4>Dulce cremoso </h4>
-      <p class="prod-desc">Suave y dulce, sabor clásico</p><span>Q1</span>
-      <button class="add-to-cart" data-name="Dulce cremoso" data-price="1" data-img="images/dulduldul.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-dulces">
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/image-removebg-preview (4).png"><h4>Paleta</h4>
-      <p class="prod-desc">Paleta de sabores tropicales</p><span>Q1</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-dulces">
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/image-removebg-preview (3).png"><h4>Bonbon</h4>
-      <p class="prod-desc">Relleno de fruta con cubierta azucarada</p><span>Q1</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-dulces">
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/ca.png"><h4>Caramelo Leche</h4>
-      <p class="prod-desc">Cremoso y suave, sabor a leche</p><span>Q1</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-  </div>
-
-  <!-- ===== CHOCOLATES ===== -->
-  <div class="products tab-content" id="chocolates">
-    <div class="product cat-chocolates">
-      <div class="product-badge">⭐ Popular</div>
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/choco 1 .png"><h4>Kit Kat</h4>
-      <p class="prod-desc">Chocolate suave con leche entera</p><span>Q10</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-chocolates">
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/choco 2 .png"><h4>M&M Milk chocolate</h4>
-      <p class="prod-desc">Explosión de sabor, botonetas de chocolate premium</p><span>Q15</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-chocolates">
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/choco 3 .png"><h4>Reese´s</h4>
-      <p class="prod-desc">Intenso y delicioso</p><span>Q14.50</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-chocolates">
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/image-removebg-preview (2).png"><h4>Chocolate Granada</h4>
-      <p class="prod-desc">Dulce y cremoso, irresistible</p><span>Q1.50</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-chocolates">
-      <div class="product-badge new-badge">🔥 Premium</div>
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/choco 5 .png"><h4>Hershey´s milk chocolate</h4>
-      <p class="prod-desc">El chocolate mas premium que tenemos</p><span>Q15</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-  </div>
-
-  <!-- ===== COMBOS ===== -->
-  <div class="products tab-content" id="combos">
-    <div class="product cat-combo">
-      <div class="product-badge combo-badge">🎁 Combo</div>
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/cm.png"><h4>Combo Regular</h4>
-      <p class="prod-desc"></p><span>Q19</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-combo">
-      <div class="product-badge combo-badge">🔥 Popular</div>
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/cm2.png"><h4>Combo Recreo</h4>
-      <p class="prod-desc"></p><span>Q16</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-combo">
-      <div class="product-badge combo-badge">🎉 Fiesta</div>
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/cm3.png"><h4>Combo Fiesta</h4>
-      <p class="prod-desc"></p><span>Q18</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-combo">
-      <div class="product-badge combo-badge">⭐ Surtido</div>
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/cm4.png"><h4>Combo Especial</h4>
-      <p class="prod-desc"></p><span>Q47</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-    <div class="product cat-combo">
-      <div class="product-badge combo-badge">⭐ Surtido</div>
-      <div class="badge-sin-stock">📦 Sin Stock</div>
-      <img src="images/cm5.png"><h4>Combo Surtido</h4>
-      <p class="prod-desc"></p><span>Q21</span>
-      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
-    </div>
-  </div>
-
-</section>
-
-<footer class="footer container">
-  <div style="margin-bottom:100px;">
-    <button id="secretarias-btn" class="btn-secretarias-footer">🌟 Nuestras Secretarias </button>
-  </div>
-  <p class="titulo-dylan">🍬 Party Perilingüe — Dylan</p>
-  <button id="logout-btn">🚪 Salir</button>
-</footer>
-
-<div id="puntos-badge"></div>
-
-<!-- MODAL PUBLICISTAS -->
-<div id="modelosModal" class="modal-publicistas-overlay">
-  <div class="modal-publicistas-box" style="max-width:400px; padding:0; overflow:hidden;">
-    <button class="modal-publicistas-close" onclick="document.getElementById('modelosModal').style.display='none'">✖</button>
-    <h2 class="modal-pub-titulo" style="padding-top:20px;">📸 Nuestros Publicistas</h2>
-    <p class="modal-pub-sub">El equipo que hace posible Party Perilingüe 💪</p>
-    <div class="pub-carousel">
-      <div class="pub-carousel-wrap" style="position:relative;">
-        <div class="pub-carousel-track" id="pubTrack">
-          <div class="pub-slide">
-            <div class="pub-foto-wrap">
-              <img src="images/vm.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-              <div class="pub-placeholder">👩</div>
-            </div>
-            <div class="pub-info">
-              <div class="pub-nombre">Yuri⭐</div>
-              <div class="pub-rol">⭐ Party Perilingüe</div>
-            </div>
-          </div>
-          <div class="pub-slide">
-            <div class="pub-foto-wrap">
-              <img src="images/bbe.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-              <div class="pub-placeholder">👩‍🦱</div>
-            </div>
-            <div class="pub-info">
-              <div class="pub-nombre">Emilio ⭐</div>
-              <div class="pub-rol">⭐ Party Perilingüe</div>
-            </div>
-          </div>
-          <div class="pub-slide">
-            <div class="pub-foto-wrap">
-              <img src="images/ca.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-              <div class="pub-placeholder">👩‍🦰</div>
-            </div>
-            <div class="pub-info">
-              <div class="pub-nombre">Analy ⭐</div>
-              <div class="pub-rol">⭐ Party Perilingüe</div>
-            </div>
-          </div>
-          <div class="pub-slide">
-            <div class="pub-foto-wrap">
-              <img src="images/logdog.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-              <div class="pub-placeholder">👩‍🦳</div>
-            </div>
-            <div class="pub-info">
-              <div class="pub-nombre">Nuestro equipo ⭐</div>
-              <div class="pub-rol">⭐ Party Perilingüe</div>
-            </div>
-          </div>
-        </div>
-        <button class="pub-btn pub-btn-prev" id="pubPrev">◀</button>
-        <button class="pub-btn pub-btn-next" id="pubNext">▶</button>
+    <div class="info-row">
+      <span class="info-icon">⏰</span>
+      <div class="info-txt">
+        <strong>¿Cuándo vuelve?</strong>
+        Muy pronto, prometido 🍬
       </div>
-      <div class="pub-dots" id="pubDots"></div>
-      <div class="pub-counter" id="pubCounter">1 / 4</div>
     </div>
-  </div>
-</div>
-
-<!-- MODAL SECRETARIAS -->
-<div id="secretariasModal" class="modal-publicistas-overlay">
-  <div class="modal-publicistas-box" style="max-width:400px; padding:0 0 20px;">
-    <button class="modal-publicistas-close" onclick="document.getElementById('secretariasModal').style.display='none'">✖</button>
-    <h2 class="modal-pub-titulo" style="padding-top:22px;">🌟 Nuestras Secretarias</h2>
-    <p class="modal-pub-sub">Estamos aquí para ayudarte 💪</p>
-    <p style="text-align:center; margin:0 0 10px;">
-      <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.25);border-radius:999px;padding:4px 14px;font-size:11px;color:white;font-weight:600;">
-        📍 Encuéntranos en 6to Secretariado
-      </span>
-    </p>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 14px 18px;">
-
-      <div class="sec-card-inner">
-        <div class="sec-avatar" style="background:#FBEAF0;color:#993356;">SH</div>
-        <div class="sec-nombre">Sofia Hernandez</div>
-        <div class="sec-pill" style="background:#FBEAF0;color:#993356;">📞 Llamadas</div>
-        <p class="sec-desc">¿Dudas sobre un pedido? Sofia te atiende al instante.</p>
-        <div style="background:rgba(255,255,255,0.3);border-radius:999px;padding:3px 10px;font-size:10.5px;color:white;font-weight:600;">📱 3941-1839</div>
+    <div class="info-row">
+      <span class="info-icon">💪</span>
+      <div class="info-txt">
+        <strong>¿Qué hago mientras?</strong>
+        Espera a que volvamos con más dulces
       </div>
-
-      <div class="sec-card-inner">
-        <div class="sec-avatar" style="background:#E1F5EE;color:#0F6E56;">NG</div>
-        <div class="sec-nombre">Natalia González</div>
-        <div class="sec-pill" style="background:#E1F5EE;color:#0F6E56;">📋 Pedidos</div>
-        <p class="sec-desc">¿Pedido desde la oficina? Natalia lo gestiona por ti.</p>
-      </div>
-
-      <div class="sec-card-inner">
-        <div class="sec-avatar" style="background:#EEEDFE;color:#3C3489;">GX</div>
-        <div class="sec-nombre">Gaby Xol</div>
-        <div class="sec-pill" style="background:#EEEDFE;color:#3C3489;">🏢 Recepción</div>
-        <p class="sec-desc">¿Sugerencia o quieres saber más? Gaby te recibe.</p>
-      </div>
-
-      <div class="sec-card-inner">
-        <div class="sec-avatar" style="background:#FAEEDA;color:#854F0B;">OC</div>
-        <div class="sec-nombre">Odalis Cotzajay</div>
-        <div class="sec-pill" style="background:#FAEEDA;color:#854F0B;">🎉 Mayoristas</div>
-        <p class="sec-desc">¿Comprar al mayor? Odalis coordina eventos y ventas especiales.</p>
-      </div>
-
     </div>
   </div>
-</div>
 
-<!-- MODAL RESULTADO -->
-<div id="resultModal" class="modal-overlay">
-  <div class="resultBox">
-    <h2 id="resultTitle"></h2>
-    <p id="resultText"></p>
-    <button id="closeResult">Aceptar</button>
+  <p class="footer-txt">
+    🍬 <span>Party Perilingüe</span> — Hecho con amor por Dylan
+  </p>
+
+  <div class="dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
   </div>
+
 </div>
 
-<!-- MODAL RANKING COMPRAS -->
-<div id="rankingModal">
-  <div id="rankingBox">
-    <div class="ranking-header-bg compras">
-      <button id="closeRanking">✖</button>
-      <div class="ranking-header-icon">🏆</div>
-      <h2>Ranking Compras</h2>
-      <p class="sub">1 punto por cada Q1 comprado</p>
-    </div>
-    <div id="ranking-lista"></div>
-    <div id="ranking-resto" style="display:none"></div>
-    <button id="ranking-ver-mas" class="btn-ver-mas" style="display:none">Ver ranking completo ▼</button>
-  </div>
-</div>
-
-<!-- MODAL RANKING JUEGO -->
-<div id="rankingJuegoModal">
-  <div id="rankingJuegoBox">
-    <div class="ranking-header-bg juego">
-      <button id="closeRankingJuego">✖</button>
-      <div class="ranking-header-icon">🕹️</div>
-      <h2>Ranking Juego</h2>
-      <p class="sub">Puntos acumulados jugando</p>
-    </div>
-    <div id="ranking-juego-lista"></div>
-    <div id="ranking-juego-resto" style="display:none"></div>
-    <button id="ranking-juego-ver-mas" class="btn-ver-mas juego" style="display:none">Ver ranking completo ▼</button>
-  </div>
-</div>
-
-<!-- MODAL JUEGO -->
-<div id="gameModal">
-  <div id="gameBox">
-    <button id="closeGame">✖</button>
-    <div id="game-hud">
-      <div class="ghc"><div class="ghl">Puntos</div><div class="ghv" id="g-sc">0</div></div>
-      <div class="ghc"><div class="ghl">Mejor</div><div class="ghv" id="g-hi">0</div></div>
-      <div class="ghc"><div class="ghl">Nivel</div><div class="ghv" id="g-lv">1</div></div>
-      <div class="ghc"><div class="ghl">Vidas</div><div class="ghv" id="g-lives">❤️❤️❤️</div></div>
-    </div>
-    <canvas id="gameCanvas"></canvas>
-    <div id="game-msg">Toca para empezar</div>
-  </div>
-</div>
-
-<!-- CARRITO -->
-<div class="cart-icon" id="cart-toggle">🛒 <span id="cart-count">0</span></div>
-<div class="cart-dropdown" id="cart-dropdown">
-  <h3>Carrito</h3>
-  <div class="user-info">
-    <label for="cliente-nombre">Nombre:</label>
-    <input id="cliente-nombre" readonly>
-    <label for="cliente-grado">Grado/Carrera:</label>
-    <input id="cliente-grado" readonly>
-  </div>
-  <ul id="cart-items"></ul>
-  <p>Total: Q<span id="cart-total">0.00</span></p>
-  <button id="clear-cart">Vaciar carrito</button>
-  <button id="buy-cart">Comprar</button>
-</div>
-
-<div id="adModal">
-  <div class="ad-box">
-    <span id="closeAd">✖</span>
-    <img src="images/wassaaa.jpeg" alt="Publicidad">
-  </div>
-</div>
-
-<a href="https://www.facebook.com/iacccmp/?locale=es_LA" target="_blank" id="logo-escuela-link">
-  <img src="images/cole-modified.png" class="logo-escuela" alt="Escuela">
-</a>
-
-<audio id="bg-music" autoplay loop muted>
-  <source src="musica/Milky - Just The Way You Are (Sub. Español  Lyrics)  Pibble Song.mp3" type="audio/mpeg">
-</audio>
-
-<!-- Después -->
-<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-<script type="module" src="firebase.js?v=2"></script>
-<script defer src="script.js?v=2"></script>
-<script defer src="game.js?v=2"></script>
 </body>
 </html>
