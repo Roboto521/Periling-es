@@ -115,7 +115,7 @@
     <div class="product cat-top">
       <div class="product-badge top-badge">⭐ Top</div>
       <img src="images/lengua.png"><h4>Cachetadas</h4>
-      <p class="prod-desc">Atma tu propia paleta¡</p>
+      <p class="prod-desc">Arma tu propia paleta¡</p>
       <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x1 unidades)</small></span>
       <button class="add-to-cart" data-name="Cachetadas" data-price="1" data-img="images/lengua.png">Agregar 🛒</button>
     </div>
@@ -288,7 +288,7 @@
 
 <footer class="footer container">
   <div style="margin-bottom:100px;">
-    <button id="secretarias-btn" class="btn-secretarias-footer">🌟 Secretarias — A tu servicio Proximamente...</button>
+    <button id="secretarias-btn" class="btn-secretarias-footer">🌟 Nuestras Secretarias </button>
   </div>
   <p class="titulo-dylan">🍬 Party Perilingüe — Dylan</p>
   <button id="logout-btn">🚪 Salir</button>
@@ -357,27 +357,47 @@
 
 <!-- MODAL SECRETARIAS -->
 <div id="secretariasModal" class="modal-publicistas-overlay">
-  <div class="modal-publicistas-box">
+  <div class="modal-publicistas-box" style="max-width:400px; padding:0 0 20px;">
     <button class="modal-publicistas-close" onclick="document.getElementById('secretariasModal').style.display='none'">✖</button>
-    <h2 class="modal-pub-titulo">🌟 Nuestras Secretarias</h2>
-    <p class="modal-pub-sub">Próximamente — ¡el equipo de Party Perilingüe! 💪</p>
-    <div class="modelos-grid">
-      <div class="modelo-card">
-        <div class="modelo-foto-wrap"><div class="modelo-placeholder">👩</div></div>
-        <div class="modelo-nombre">Próximamente🔜</div>
+    <h2 class="modal-pub-titulo" style="padding-top:22px;">🌟 Nuestras Secretarias</h2>
+    <p class="modal-pub-sub">Estamos aquí para ayudarte 💪</p>
+    <p style="text-align:center; margin:0 0 10px;">
+      <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.25);border-radius:999px;padding:4px 14px;font-size:11px;color:white;font-weight:600;">
+        📍 Encuéntranos en 6to Secretariado
+      </span>
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 14px 18px;">
+
+      <div class="sec-card-inner">
+        <div class="sec-avatar" style="background:#FBEAF0;color:#993356;">SH</div>
+        <div class="sec-nombre">Sofia Hernandez</div>
+        <div class="sec-pill" style="background:#FBEAF0;color:#993356;">📞 Llamadas</div>
+        <p class="sec-desc">¿Dudas sobre un pedido? Sofia te atiende al instante.</p>
+        <div style="background:rgba(255,255,255,0.3);border-radius:999px;padding:3px 10px;font-size:10.5px;color:white;font-weight:600;">📱 3941-1839</div>
       </div>
-      <div class="modelo-card">
-        <div class="modelo-foto-wrap"><div class="modelo-placeholder">👩‍🦱</div></div>
-        <div class="modelo-nombre">Próximamente 🔜</div>
+
+      <div class="sec-card-inner">
+        <div class="sec-avatar" style="background:#E1F5EE;color:#0F6E56;">NG</div>
+        <div class="sec-nombre">Natalia González</div>
+        <div class="sec-pill" style="background:#E1F5EE;color:#0F6E56;">📋 Pedidos</div>
+        <p class="sec-desc">¿Pedido desde la oficina? Natalia lo gestiona por ti.</p>
       </div>
-      <div class="modelo-card">
-        <div class="modelo-foto-wrap"><div class="modelo-placeholder">👩‍🦰</div></div>
-        <div class="modelo-nombre">Próximamente 🔜</div>
+
+      <div class="sec-card-inner">
+        <div class="sec-avatar" style="background:#EEEDFE;color:#3C3489;">GX</div>
+        <div class="sec-nombre">Gaby Xol</div>
+        <div class="sec-pill" style="background:#EEEDFE;color:#3C3489;">🏢 Recepción</div>
+        <p class="sec-desc">¿Sugerencia o quieres saber más? Gaby te recibe.</p>
       </div>
-      <div class="modelo-card">
-        <div class="modelo-foto-wrap"><div class="modelo-placeholder">👩‍🦳</div></div>
-        <div class="modelo-nombre">Próximamente 🔜</div>
+
+      <div class="sec-card-inner">
+        <div class="sec-avatar" style="background:#FAEEDA;color:#854F0B;">OC</div>
+        <div class="sec-nombre">Odalis Cotzajay</div>
+        <div class="sec-pill" style="background:#FAEEDA;color:#854F0B;">🎉 Mayoristas</div>
+        <p class="sec-desc">¿Comprar al mayor? Odalis coordina eventos y ventas especiales.</p>
       </div>
+
     </div>
   </div>
 </div>
@@ -464,7 +484,7 @@
 </a>
 
 <audio id="bg-music" autoplay loop muted>
-  <source src="musica/" type="audio/mpeg">
+  <source src="musica/Milky - Just The Way You Are (Sub. Español  Lyrics)  Pibble Song.mp3" type="audio/mpeg">
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
