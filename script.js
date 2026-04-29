@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (existing) existing.quantity++;
     else cart.push({ name, price: parseFloat(price), img, quantity: 1 });
     updateCart();
+    
   }
 
   document.querySelectorAll(".add-to-cart").forEach(btn => {
@@ -162,8 +163,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   cerrarAlFondo("rankingModal");
 
-
-
   /* ===== RANKING JUEGO ===== */
   document.getElementById("ranking-juego-btn")?.addEventListener("click", () => {
     cerrarTodosLosModales();
@@ -174,8 +173,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("rankingJuegoModal").style.display = "none";
   });
   cerrarAlFondo("rankingJuegoModal");
-
-
 
   /* ===== PUBLICISTAS ===== */
   document.getElementById("publicistas-btn")?.addEventListener("click", () => {
@@ -226,11 +223,19 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(() => { ad.style.display = "none"; }, 300);
     };
   }
-document.getElementById("logout-btn")?.addEventListener("click", () => {
-  localStorage.clear();
-  window.location.href = "index.html";
-});
 
+  /* ===== LOGOUT ===== */
+  // ✅ FIX: cierra sesión de Firebase Auth correctamente además de limpiar localStorage
+  document.getElementById("logout-btn")?.addEventListener("click", async () => {
+    try {
+      const { getAuth, signOut } = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js");
+      await signOut(getAuth());
+    } catch(e) {
+      console.error("Error al cerrar sesión:", e);
+    }
+    localStorage.clear();
+    window.location.href = "index.html";
+  });
 
 });
 
@@ -248,9 +253,7 @@ document.getElementById("logout-btn")?.addEventListener("click", () => {
     'linear-gradient(110deg,#E01B1B,#E01B1B,#fff0f8)',
     'linear-gradient(110deg,#56CFFC,#56CFFC,#fff0f8)',
     'linear-gradient(110deg,#128C03,#128C03,#fff0f8)',
-    'linear-gradient(110deg,#F5B618,#F5B618,#fff0f8)',
-    'linear-gradient(110deg,#e67e22,#ffb347,#fff0f8)',
-    'linear-gradient(110deg,#2980b9,#6dd5fa,#fff0f8)',
+    'linear-gradient(110deg,#EA87ED,#EA87ED,#fff0f8)',
   ];
 
   slides.forEach((_,i) => {
