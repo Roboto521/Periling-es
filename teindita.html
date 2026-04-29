@@ -10,7 +10,6 @@
 <body>
 
 <header>
-  
   <div class="menu container">
     <img class="logo-2" src="images/pt.png" alt="logo">
     <nav class="navbar"><ul></ul></nav>
@@ -18,6 +17,7 @@
   <div class="header-content container">
     <div class="swiper mySwiper-1">
       <div class="swiper-wrapper">
+
         <div class="swiper-slide">
           <div class="slider">
             <div class="slider-txt">
@@ -28,6 +28,7 @@
             <div class="slider-img"><img src="images/image-removebg-preview.png"></div>
           </div>
         </div>
+
         <div class="swiper-slide">
           <div class="slider">
             <div class="slider-txt">
@@ -38,16 +39,18 @@
             <div class="slider-img"><img src="images/osos.png"></div>
           </div>
         </div>
+
         <div class="swiper-slide">
           <div class="slider">
             <div class="slider-txt">
               <h1>Chocolates granada</h1>
               <p>Calidad y sabor en su máxima expresión.</p>
-              <a href="#" class="btn-1" onclick="agregarDesdeSlider('Chocolate Granada');return false;">Comprar</a>
+              <a href="#" class="btn-1" style="background:#ccc;cursor:not-allowed;pointer-events:none;opacity:0.7;">Sin Stock ❌</a>
             </div>
             <div class="slider-img"><img src="images/d.png"></div>
           </div>
         </div>
+
       </div>
       <div class="swiper-button-next"></div>
       <div class="swiper-button-prev"></div>
@@ -72,206 +75,215 @@
 <section class="container">
   <h2>Nuestros productos</h2>
   <div class="tabs">
-    <button class="tab-btn active" data-tab="ofertas">🔥 Ofertas</button>
+    <button class="tab-btn active" data-tab="gomitas">🍬 Gomitas</button>
     <button class="tab-btn" data-tab="masvendidos">⭐ Más Vendidos</button>
-    <button class="tab-btn" data-tab="gomitas">🍬 Gomitas</button>
     <button class="tab-btn" data-tab="dulces">🍭 Dulces</button>
     <button class="tab-btn" data-tab="chocolates">🍫 Chocolates</button>
     <button class="tab-btn" data-tab="combos">🎁 Combos</button>
   </div>
 
-  <div class="products tab-content active" id="ofertas">
-    <div class="product cat-oferta">
-      <div class="product-badge oferta-badge">🔥 2x1</div>
-      <img src="images/osos.png"><h4>Ositos 2x1</h4>
-      <p class="prod-desc">¡Lleva 2 por el precio de 1!</p>
-      <div class="precio-wrap"><span class="precio-antes">Q4</span><span>Q2</span></div>
-      <button class="add-to-cart" data-name="Ositos" data-price="2" data-img="images/osos.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-oferta">
-      <div class="product-badge oferta-badge">💥 Oferta</div>
-      <img src="images/image-removebg-preview.png"><h4>Gusanos Ácidos</h4>
-      <p class="prod-desc">Precio especial del día</p>
-      <div class="precio-wrap"><span class="precio-antes">Q5</span><span>Q3</span></div>
-      <button class="add-to-cart" data-name="Gusanos" data-price="3" data-img="images/image-removebg-preview.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-oferta">
-      <div class="product-badge oferta-badge">⚡ Promo</div>
-      <img src="images/image-removebg-preview (2).png"><h4>Chocolate</h4>
-      <p class="prod-desc">Promo del recreo 🍫</p>
-      <div class="precio-wrap"><span class="precio-antes">Q4</span><span>Q2</span></div>
-      <button class="add-to-cart" data-name="Chocolate" data-price="2" data-img="images/image-removebg-preview (2).png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-oferta">
-      <div class="product-badge oferta-badge">🎉 Combo</div>
-      <img src="images/osos.png"><h4>Combo Recreo</h4>
-      <p class="prod-desc">Gomita + Dulce + Chocolate</p>
-      <div class="precio-wrap"><span class="precio-antes">Q10</span><span>Q7</span></div>
-      <button class="add-to-cart" data-name="Combo Recreo" data-price="7" data-img="images/osos.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-oferta">
-      <div class="product-badge oferta-badge">🎉 Combo</div>
-      <img src="images/osos.png"><h4>Combo Recreo</h4>
-      <p class="prod-desc">Gomita + Dulce + Chocolate</p>
-      <div class="precio-wrap"><span class="precio-antes">Q10</span><span>Q7</span></div>
-      <button class="add-to-cart" data-name="Combo Recreo" data-price="7" data-img="images/osos.png">Agregar 🛒</button>
-    </div>
-  </div>
-
+  <!-- ===== MÁS VENDIDOS ===== -->
   <div class="products tab-content" id="masvendidos">
     <div class="product cat-top">
       <div class="product-badge top-badge">🥇 #1</div>
       <img src="images/osos.png"><h4>Ositos</h4>
-      <p class="prod-desc">El favorito de todos 🍬</p><span>Q2</span>
-      <button class="add-to-cart" data-name="Ositos" data-price="2" data-img="images/osos.png">Agregar 🛒</button>
+      <p class="prod-desc">El favorito de todos 🍬</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Ositos" data-price="1" data-img="images/osos.png">Agregar 🛒</button>
     </div>
     <div class="product cat-top">
       <div class="product-badge top-badge">🥈 #2</div>
-      <img src="images/choco 2 .png"><h4>M&M Milk chocolate</h4>
-      <p class="prod-desc">Explosión de sabor, chocolate premium</p><span>Q5</span>
-      <button class="add-to-cart" data-name="M&M Milk chocolate" data-price="5" data-img="images/choco 2 .png">Agregar 🛒</button>
+      <img src="images/image-removebg-preview.png"><h4>Gusanos Ácidos</h4>
+      <p class="prod-desc">Sabor ácido que despierta tus sentidos</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Gusanos" data-price="1" data-img="images/image-removebg-preview.png">Agregar 🛒</button>
     </div>
     <div class="product cat-top">
       <div class="product-badge top-badge">🥉 #3</div>
-      <img src="images/image-removebg-preview (2).png"><h4>Chocolate</h4>
-      <p class="prod-desc">Siempre sale rápido</p><span>Q2</span>
-      <button class="add-to-cart" data-name="Chocolate" data-price="2" data-img="images/image-removebg-preview (2).png">Agregar 🛒</button>
+      <img src="images/aros.png"><h4>Aros</h4>
+      <p class="prod-desc">Refrescante sabor a melocoton</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Aros" data-price="1" data-img="images/aros.png">Agregar 🛒</button>
     </div>
     <div class="product cat-top">
       <div class="product-badge top-badge">⭐ Top</div>
-      <img src="images/image-removebg-preview (4).png"><h4>Paleta</h4>
-      <p class="prod-desc">Sabores tropicales irresistibles</p><span>Q3</span>
-      <button class="add-to-cart" data-name="Paleta" data-price="3" data-img="images/image-removebg-preview (4).png">Agregar 🛒</button>
+      <img src="images/regaliz.png"><h4>Regaliz</h4>
+      <p class="prod-desc">Refrescante sabor a fresa</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Regaliz" data-price="1" data-img="images/regaliz.png">Agregar 🛒</button>
     </div>
     <div class="product cat-top">
       <div class="product-badge top-badge">⭐ Top</div>
-      <img src="images/sandais.png"><h4>Sandías</h4>
-      <p class="prod-desc">Refrescante sabor a sandía</p><span>Q4</span>
-      <button class="add-to-cart" data-name="Sandías" data-price="4" data-img="images/sandais.png">Agregar 🛒</button>
+      <img src="images/lengua.png"><h4>Cachetadas</h4>
+      <p class="prod-desc">Atma tu propia paleta¡</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x1 unidades)</small></span>
+      <button class="add-to-cart" data-name="Cachetadas" data-price="1" data-img="images/lengua.png">Agregar 🛒</button>
     </div>
   </div>
 
-  <div class="products tab-content" id="gomitas">
+  <!-- ===== GOMITAS ===== -->
+  <div class="products tab-content active" id="gomitas">
     <div class="product cat-gomitas">
       <div class="product-badge">⭐ Popular</div>
       <img src="images/osos.png"><h4>Ositos</h4>
-      <p class="prod-desc">Suaves y coloridos, sabor a fruta</p><span>Q2</span>
-      <button class="add-to-cart" data-name="Ositos" data-price="2" data-img="images/osos.png">Agregar 🛒</button>
+      <p class="prod-desc">Suaves y coloridos, sabor a fruta</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Ositos" data-price="1" data-img="images/osos.png">Agregar 🛒</button>
     </div>
     <div class="product cat-gomitas">
       <img src="images/aros.png"><h4>Aros</h4>
-      <p class="prod-desc">Crujientes por fuera, suaves por dentro</p><span>Q2</span>
-      <button class="add-to-cart" data-name="Aros" data-price="2" data-img="images/aros.png">Agregar 🛒</button>
+      <p class="prod-desc">Refrescante sabor a melocoton</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Aros" data-price="1" data-img="images/aros.png">Agregar 🛒</button>
     </div>
     <div class="product cat-gomitas">
       <div class="product-badge new-badge">🔥 Ácidos</div>
       <img src="images/image-removebg-preview.png"><h4>Gusanos Ácidos</h4>
-      <p class="prod-desc">Sabor ácido que despierta tus sentidos</p><span>Q3</span>
-      <button class="add-to-cart" data-name="Gusanos" data-price="3" data-img="images/image-removebg-preview.png">Agregar 🛒</button>
+      <p class="prod-desc">Sabor ácido que despierta tus sentidos</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Gusanos" data-price="1" data-img="images/image-removebg-preview.png">Agregar 🛒</button>
     </div>
     <div class="product cat-gomitas">
-      <img src="images/sandais.png"><h4>Sandías</h4>
-      <p class="prod-desc">Refrescante sabor a sandía</p><span>Q4</span>
-      <button class="add-to-cart" data-name="Sandías" data-price="4" data-img="images/sandais.png">Agregar 🛒</button>
+      <img src="images/regaliz.png"><h4>Regaliz</h4>
+      <p class="prod-desc">Refrescante sabor a fresa</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Regaliz" data-price="1" data-img="images/regaliz.png">Agregar 🛒</button>
     </div>
     <div class="product cat-gomitas">
-      <img src="images/x.png"><h4>Arcoiris</h4>
-      <p class="prod-desc">Todos los sabores en una sola gomita</p><span>Q3</span>
-      <button class="add-to-cart" data-name="Arcoiris" data-price="3" data-img="images/x.png">Agregar 🛒</button>
+      <img src="images/tira.png"><h4>Tiras Ácidas Fresa</h4>
+      <p class="prod-desc">Todos los sabores en una sola gomita</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x2 unidades)</small></span>
+      <button class="add-to-cart" data-name="Tiras Acidas Fresa" data-price="1" data-img="images/tira.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-gomitas">
+      <div class="product-badge new-badge">🔥 Nuevo</div>
+      <img src="images/ewas.png"><h4>Gomitas Preparadas bolsita</h4>
+      <p class="prod-desc">Mezcla especial Con chamoy y mas</p>
+      <span>Q3</span>
+      <button class="add-to-cart" data-name="Gomitas Preparadas bolsita" data-price="3" data-img="images/ewas.png">Agregar 🛒</button>
+    </div>
+
+    <!-- ✅ VASITO → SIN STOCK -->
+    <div class="product cat-gomitas">
+      <div class="product-badge new-badge">🔥 Nuevo</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/vasokw.png"><h4>Gomitas Preparadas vasito</h4>
+      <p class="prod-desc">Mezcla especial de chamoy en vasito</p>
+      <span>Q6</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
   </div>
 
+  <!-- ===== DULCES ===== -->
   <div class="products tab-content" id="dulces">
     <div class="product cat-dulces">
-      <img src="images/1.png"><h4>Chicle</h4>
-      <p class="prod-desc">Sabor intenso que dura horas</p><span>Q2</span>
-      <button class="add-to-cart" data-name="Chicle" data-price="2" data-img="images/1.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-dulces">
-      <img src="images/ca.png"><h4>Caramelo</h4>
-      <p class="prod-desc">Suave y dulce, sabor clásico</p><span>Q3</span>
-      <button class="add-to-cart" data-name="Caramelo" data-price="3" data-img="images/ca.png">Agregar 🛒</button>
-    </div>
-    <div class="product cat-dulces">
       <div class="product-badge">⭐ Popular</div>
+      <img src="images/lengua.png"><h4>Cachetadas</h4>
+      <p class="prod-desc">Arma tu propia paleta¡</p>
+      <span>Q1 <small style="color:#aaa;font-size:0.7rem">(x1 unidades)</small></span>
+      <button class="add-to-cart" data-name="Cachetadas" data-price="1" data-img="images/lengua.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-dulces">
+      
+      <img src="images/dulduldul.png"><h4>Dulce cremoso </h4>
+      <p class="prod-desc">Suave y dulce, sabor clásico</p><span>Q1</span>
+      <button class="add-to-cart" data-name="Dulce cremoso" data-price="1" data-img="images/dulduldul.png">Agregar 🛒</button>
+    </div>
+    <div class="product cat-dulces">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
       <img src="images/image-removebg-preview (4).png"><h4>Paleta</h4>
-      <p class="prod-desc">Paleta de sabores tropicales</p><span>Q3</span>
-      <button class="add-to-cart" data-name="Paleta" data-price="3" data-img="images/image-removebg-preview (4).png">Agregar 🛒</button>
+      <p class="prod-desc">Paleta de sabores tropicales</p><span>Q1</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-dulces">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
       <img src="images/image-removebg-preview (3).png"><h4>Bonbon</h4>
-      <p class="prod-desc">Relleno de fruta con cubierta azucarada</p><span>Q4</span>
-      <button class="add-to-cart" data-name="Bonbon" data-price="4" data-img="images/image-removebg-preview (3).png">Agregar 🛒</button>
+      <p class="prod-desc">Relleno de fruta con cubierta azucarada</p><span>Q1</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-dulces">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
       <img src="images/ca.png"><h4>Caramelo Leche</h4>
-      <p class="prod-desc">Cremoso y suave, sabor a leche</p><span>Q2</span>
-      <button class="add-to-cart" data-name="Caramelo Leche" data-price="2" data-img="images/ca.png">Agregar 🛒</button>
+      <p class="prod-desc">Cremoso y suave, sabor a leche</p><span>Q1</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
   </div>
 
+  <!-- ===== CHOCOLATES ===== -->
   <div class="products tab-content" id="chocolates">
     <div class="product cat-chocolates">
       <div class="product-badge">⭐ Popular</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
       <img src="images/choco 1 .png"><h4>Kit Kat</h4>
-      <p class="prod-desc">Chocolate suave con leche entera</p><span>Q2</span>
-      <button class="add-to-cart" data-name="Kit Kat" data-price="2" data-img="images/choco 1 .png">Agregar 🛒</button>
+      <p class="prod-desc">Chocolate suave con leche entera</p><span>Q10</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-chocolates">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
       <img src="images/choco 2 .png"><h4>M&M Milk chocolate</h4>
-      <p class="prod-desc">Explosión de sabor, chocolate premium</p><span>Q5</span>
-      <button class="add-to-cart" data-name="M&M Milk chocolate" data-price="5" data-img="images/choco 2 .png">Agregar 🛒</button>
+      <p class="prod-desc">Explosión de sabor, botonetas de chocolate premium</p><span>Q15</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-chocolates">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
       <img src="images/choco 3 .png"><h4>Reese´s</h4>
-      <p class="prod-desc">Intenso y amargo, para los valientes</p><span>Q4</span>
-      <button class="add-to-cart" data-name="Reese´s" data-price="4" data-img="images/choco 3 .png">Agregar 🛒</button>
+      <p class="prod-desc">Intenso y delicioso</p><span>Q14.50</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-chocolates">
+      <div class="badge-sin-stock">📦 Sin Stock</div>
       <img src="images/image-removebg-preview (2).png"><h4>Chocolate Granada</h4>
-      <p class="prod-desc">Dulce y cremoso, irresistible</p><span>Q4</span>
-      <button class="add-to-cart" data-name="Chocolate Granada" data-price="4" data-img="images/image-removebg-preview (2).png">Agregar 🛒</button>
+      <p class="prod-desc">Dulce y cremoso, irresistible</p><span>Q1.50</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-chocolates">
       <div class="product-badge new-badge">🔥 Premium</div>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
       <img src="images/choco 5 .png"><h4>Hershey´s milk chocolate</h4>
-      <p class="prod-desc">El chocolate mas premium que tenemos</p><span>Q6</span>
-      <button class="add-to-cart" data-name="Hersheys milk chocolate" data-price="6" data-img="images/choco 5 .png">Agregar 🛒</button>
+      <p class="prod-desc">El chocolate mas premium que tenemos</p><span>Q15</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
   </div>
 
+  <!-- ===== COMBOS ===== -->
   <div class="products tab-content" id="combos">
     <div class="product cat-combo">
       <div class="product-badge combo-badge">🎁 Combo</div>
-      <img src="images/osos.png"><h4>Combo Pequeño</h4>
-      <p class="prod-desc">2 gomitas + 1 dulce</p><span>Q5</span>
-      <button class="add-to-cart" data-name="Combo Pequeño" data-price="5" data-img="images/osos.png">Agregar 🛒</button>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm.png"><h4>Combo Regular</h4>
+      <p class="prod-desc"></p><span>Q19</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-combo">
       <div class="product-badge combo-badge">🔥 Popular</div>
-      <img src="images/image-removebg-preview.png"><h4>Combo Recreo</h4>
-      <p class="prod-desc">Gomita + Dulce + Chocolate</p><span>Q7</span>
-      <button class="add-to-cart" data-name="Combo Recreo" data-price="7" data-img="images/image-removebg-preview.png">Agregar 🛒</button>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm2.png"><h4>Combo Recreo</h4>
+      <p class="prod-desc"></p><span>Q16</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-combo">
       <div class="product-badge combo-badge">🎉 Fiesta</div>
-      <img src="images/osos.png"><h4>Combo Fiesta</h4>
-      <p class="prod-desc">Todo surtido para compartir</p><span>Q15</span>
-      <button class="add-to-cart" data-name="Combo Fiesta" data-price="15" data-img="images/osos.png">Agregar 🛒</button>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm3.png"><h4>Combo Fiesta</h4>
+      <p class="prod-desc"></p><span>Q18</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-combo">
       <div class="product-badge combo-badge">⭐ Surtido</div>
-      <img src="images/x.png"><h4>Combo Surtido</h4>
-      <p class="prod-desc">Un poco de todo, la mejor opción</p><span>Q10</span>
-      <button class="add-to-cart" data-name="Combo Surtido" data-price="10" data-img="images/x.png">Agregar 🛒</button>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm4.png"><h4>Combo Especial</h4>
+      <p class="prod-desc"></p><span>Q47</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
     <div class="product cat-combo">
       <div class="product-badge combo-badge">⭐ Surtido</div>
-      <img src="images/x.png"><h4>Combo Surtido</h4>
-      <p class="prod-desc">Un poco de todo, la mejor opción</p><span>Q10</span>
-      <button class="add-to-cart" data-name="Combo Surtido" data-price="10" data-img="images/x.png">Agregar 🛒</button>
+      <div class="badge-sin-stock">📦 Sin Stock</div>
+      <img src="images/cm5.png"><h4>Combo Surtido</h4>
+      <p class="prod-desc"></p><span>Q21</span>
+      <button class="add-to-cart sin-stock" disabled>Sin Stock ❌</button>
     </div>
   </div>
+
 </section>
 
 <footer class="footer container">
@@ -288,73 +300,58 @@
 <div id="modelosModal" class="modal-publicistas-overlay">
   <div class="modal-publicistas-box" style="max-width:400px; padding:0; overflow:hidden;">
     <button class="modal-publicistas-close" onclick="document.getElementById('modelosModal').style.display='none'">✖</button>
-    <h2 class="modal-pub-titulo" style="padding-top:20px;">📸 Nuestras Publicistas</h2>
+    <h2 class="modal-pub-titulo" style="padding-top:20px;">📸 Nuestros Publicistas</h2>
     <p class="modal-pub-sub">El equipo que hace posible Party Perilingüe 💪</p>
-
     <div class="pub-carousel">
       <div class="pub-carousel-wrap" style="position:relative;">
         <div class="pub-carousel-track" id="pubTrack">
-
-          <!-- PUBLICISTA 1 -->
           <div class="pub-slide">
             <div class="pub-foto-wrap">
               <img src="images/vm.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
               <div class="pub-placeholder">👩</div>
             </div>
             <div class="pub-info">
-              <div class="pub-nombre">Nombre 1</div>
+              <div class="pub-nombre">Yuri⭐</div>
               <div class="pub-rol">⭐ Party Perilingüe</div>
             </div>
           </div>
-
-          <!-- PUBLICISTA 2 -->
           <div class="pub-slide">
             <div class="pub-foto-wrap">
               <img src="images/bbe.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
               <div class="pub-placeholder">👩‍🦱</div>
             </div>
             <div class="pub-info">
-              <div class="pub-nombre">Nombre 2</div>
+              <div class="pub-nombre">Emilio ⭐</div>
               <div class="pub-rol">⭐ Party Perilingüe</div>
             </div>
           </div>
-
-          <!-- PUBLICISTA 3 -->
           <div class="pub-slide">
             <div class="pub-foto-wrap">
               <img src="images/ca.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
               <div class="pub-placeholder">👩‍🦰</div>
             </div>
             <div class="pub-info">
-              <div class="pub-nombre">Nombre 3</div>
+              <div class="pub-nombre">Analy ⭐</div>
               <div class="pub-rol">⭐ Party Perilingüe</div>
             </div>
           </div>
-
-          <!-- PUBLICISTA 4 -->
           <div class="pub-slide">
             <div class="pub-foto-wrap">
-              <img src="images/jaja.png" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <img src="images/logdog.jpeg" class="pub-foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
               <div class="pub-placeholder">👩‍🦳</div>
             </div>
             <div class="pub-info">
-              <div class="pub-nombre">Nombre 4</div>
+              <div class="pub-nombre">Nuestro equipo ⭐</div>
               <div class="pub-rol">⭐ Party Perilingüe</div>
             </div>
           </div>
-
         </div>
-
-        <!-- BOTONES ENCIMA DE LA FOTO A LOS LADOS -->
         <button class="pub-btn pub-btn-prev" id="pubPrev">◀</button>
         <button class="pub-btn pub-btn-next" id="pubNext">▶</button>
-
       </div>
-
       <div class="pub-dots" id="pubDots"></div>
-      <div class="pub-counter" id="pubCounter">1 / 6</div>
+      <div class="pub-counter" id="pubCounter">1 / 4</div>
     </div>
-
   </div>
 </div>
 
