@@ -47,12 +47,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (l<=25) return {speed:315, sv:82, int:0.23, max:30, w:53};
     return {speed:330+(l-25)*3, sv:88, int:Math.max(0.15,0.20-(l-25)*0.004), max:32+Math.floor((l-25)/2), w:58};
   }
-
-  function getSpikeDepth(l) {
-    if (l<10) return 0;
-    const e=l-10;
-    return Math.min(52, 6+e*2+Math.pow(e,1.2)*0.45);
-  }
+function getSpikeDepth(l) {
+  if (l < 10) return 0;
+  return 6; // tamaño fijo como nivel 10
+}
 
   function initState() {
     player={x:CW/2,y:CH/2,r:14,tx:CW/2,ty:CH/2,hitFlash:0};
