@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey            : "AIzaSyD7HAFjgYC_9Ly4BcosgUpPP2wYk7ZJubY",
@@ -13,6 +13,19 @@ const firebaseConfig = {
 
 const db = getDatabase(initializeApp(firebaseConfig));
 window._db = db;
+
+/* ===== CHEQUEO DE MANTENIMIENTO ===== */
+onValue(ref(db, "config/mantenimiento"), (snap) => {
+  const enMantenimiento = snap.val();
+  const enPaginaMant    = window.location.pathname.includes("mantenimiento.html");
+
+  if (enMantenimiento && !enPaginaMant) {
+    window.location.href = "mantenimiento.html";
+  }
+  if (!enMantenimiento && enPaginaMant) {
+    window.location.href = "index.html";
+  }
+});
 
 /* ===== NIVELES COMPRAS ===== */
 function calcularNivel(puntos) {
