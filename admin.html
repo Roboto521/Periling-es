@@ -4,288 +4,571 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Party Perilingües</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
-
 body { background:#fdf6f0; min-height:100vh; }
 
-/* LOGIN ADMIN */
+/* ─── LOGIN ─── */
 #login-admin {
   display:flex; align-items:center; justify-content:center; height:100vh;
+  background:linear-gradient(135deg,#fff0f8,#fff5ee);
 }
 .login-box {
-  background:white; padding:40px; border-radius:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.15); width:300px; text-align:center;
+  background:white; padding:44px 36px; border-radius:24px;
+  box-shadow:0 16px 48px rgba(255,102,196,0.15); width:320px; text-align:center;
 }
-.login-box h2 { margin-bottom:20px; color:#ff4d6d; }
+.login-logo { font-size:2.5rem; margin-bottom:6px; }
+.login-box h2 { color:#ff4d6d; font-size:1.2rem; font-weight:700; margin-bottom:4px; }
+.login-box p.sub { color:#bbb; font-size:0.8rem; margin-bottom:24px; }
 .login-box input {
-  width:100%; padding:12px; margin:8px 0; border-radius:10px;
-  border:2px solid #eee; outline:none; font-size:14px;
+  width:100%; padding:13px 16px; margin:8px 0; border-radius:12px;
+  border:2px solid #f0f0f0; outline:none; font-size:14px;
+  font-family:'Poppins',sans-serif; transition:border-color .2s;
 }
 .login-box input:focus { border-color:#ff66c4; }
 .login-box button {
-  width:100%; padding:12px; margin-top:10px; border:none;
-  border-radius:10px; background:linear-gradient(45deg,#ff66c4,#ff8c42);
+  width:100%; padding:13px; margin-top:14px; border:none;
+  border-radius:12px; background:linear-gradient(45deg,#ff66c4,#ff8c42);
   color:white; font-weight:700; font-size:15px; cursor:pointer;
+  transition:opacity .2s, transform .1s;
 }
-#login-error { color:red; font-size:13px; margin-top:8px; display:none; }
+.login-box button:hover  { opacity:.9; }
+.login-box button:active { transform:scale(.98); }
+#login-error { color:#ff4d6d; font-size:12px; margin-top:10px; display:none; }
 
-/* PANEL ADMIN */
+/* ─── PANEL ─── */
 #panel { display:none; }
-
 .topbar {
   background:linear-gradient(45deg,#ff66c4,#ff8c42);
-  color:white; padding:16px 24px;
+  color:white; padding:16px 20px;
   display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
 }
-.topbar h1 { font-size:1.2rem; }
+.topbar h1 { font-size:1rem; font-weight:700; }
 .topbar button {
   background:rgba(255,255,255,0.25); border:none; color:white;
-  padding:8px 16px; border-radius:20px; cursor:pointer; font-weight:600;
+  padding:8px 18px; border-radius:20px; cursor:pointer; font-weight:600; font-size:13px;
 }
 
+/* ─── STATS ─── */
 .stats {
-  display:flex; gap:16px; flex-wrap:wrap;
-  padding:20px 24px;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+  padding:18px 18px 0;
 }
+@media(max-width:480px){ .stats { grid-template-columns:repeat(2,1fr); } }
 .stat-card {
-  background:white; border-radius:16px; padding:16px 24px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.08); flex:1; min-width:120px; text-align:center;
+  background:white; border-radius:16px; padding:14px 16px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.07); text-align:center;
 }
-.stat-card span { font-size:2rem; font-weight:700; color:#ff4d6d; display:block; }
-.stat-card p { color:#888; font-size:0.8rem; margin-top:4px; }
+.stat-card span { font-size:1.8rem; font-weight:700; color:#ff4d6d; display:block; }
+.stat-card p { color:#aaa; font-size:0.72rem; margin-top:3px; }
 
-.section { padding:0 24px 30px; }
-.section h2 { font-size:1.1rem; color:#333; margin-bottom:14px; }
+/* ─── SECTION TABS ─── */
+.section-tabs { display:flex; gap:8px; padding:18px 18px 0; }
+.section-tab {
+  padding:9px 22px; border:2px solid #f0f0f0; border-radius:20px;
+  cursor:pointer; background:white; color:#aaa;
+  font-weight:600; font-size:13px; transition:all .2s;
+  font-family:'Poppins',sans-serif;
+}
+.section-tab:hover { border-color:#ff66c4; color:#ff66c4; }
+.section-tab.active {
+  background:linear-gradient(45deg,#ff66c4,#ff8c42);
+  color:white; border-color:transparent;
+}
 
-/* Tarjetas de pedido */
+/* ─── BUSCADOR ─── */
+.search-wrap { padding:14px 18px 8px; }
+.search-box {
+  display:flex; align-items:center; gap:10px;
+  background:white; border:2px solid #f0f0f0;
+  border-radius:14px; padding:11px 14px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+  transition:border-color .2s;
+}
+.search-box:focus-within { border-color:#ff66c4; }
+.search-box input {
+  border:none; outline:none; flex:1;
+  font-size:13px; font-family:'Poppins',sans-serif;
+  color:#333; background:transparent;
+}
+.search-box input::placeholder { color:#ccc; }
+.clear-btn {
+  background:none; border:none; cursor:pointer;
+  color:#ccc; font-size:18px; line-height:1;
+  padding:0; display:none; transition:color .15s;
+}
+.clear-btn:hover { color:#ff4d6d; }
+.result-info { padding:0 18px 4px; font-size:11px; color:#bbb; min-height:16px; }
+
+/* ─── TABS ESTADO ─── */
+.tabs {
+  display:flex; gap:7px; padding:0 18px 14px;
+  overflow-x:auto; scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar { display:none; }
+.tab {
+  padding:7px 16px; border:2px solid #f0f0f0; border-radius:20px;
+  cursor:pointer; background:white; color:#aaa;
+  font-weight:600; font-size:12px; white-space:nowrap;
+  transition:all .2s; font-family:'Poppins',sans-serif;
+}
+.tab:hover { border-color:#ff66c4; color:#ff66c4; }
+.tab.active {
+  background:linear-gradient(45deg,#ff66c4,#ff8c42);
+  color:white; border-color:transparent;
+}
+
+/* ─── TARJETA PEDIDO ─── */
+.lista-wrap { padding:0 18px 30px; }
 .pedido-card {
-  background:white; border-radius:16px; padding:16px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.08); margin-bottom:12px;
+  background:white; border-radius:18px; padding:16px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.07); margin-bottom:12px;
+  animation:fadeIn .25s ease;
 }
-.pedido-header {
-  display:flex; align-items:center; justify-content:space-between;
-  flex-wrap:wrap; gap:8px; margin-bottom:10px;
-}
-.pedido-nombre { font-weight:700; color:#333; font-size:0.95rem; }
-.pedido-grado  { font-size:0.78rem; color:#aaa; }
-.pedido-fecha  { font-size:0.75rem; color:#bbb; }
-.pedido-items  { font-size:0.82rem; color:#555; margin-bottom:10px; line-height:1.8; }
-.pedido-total  { font-weight:700; color:#ff4d6d; font-size:1rem; margin-bottom:12px; }
-.pedido-puntos { font-size:0.82rem; color:#888; margin-bottom:12px; }
+@keyframes fadeIn{ from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
 
+/* cabecera del usuario dentro del pedido */
+.usuario-header {
+  display:flex; align-items:center; gap:10px; margin-bottom:12px;
+  padding-bottom:12px; border-bottom:2px solid #fdf0f5;
+}
+.avatar {
+  border-radius:50%; display:flex; align-items:center;
+  justify-content:center; font-weight:700; color:white; flex-shrink:0;
+}
+.usuario-info { flex:1; min-width:0; }
+.usuario-nombre  { font-weight:700; color:#333; font-size:0.95rem; }
+.usuario-carrera { font-size:0.72rem; color:#aaa; margin-top:1px; }
+.pts-badge {
+  font-size:0.72rem; color:#ff66c4; font-weight:600;
+  background:#fff0f8; padding:4px 10px; border-radius:20px; flex-shrink:0;
+}
+.pedido-fecha { font-size:0.72rem; color:#ccc; white-space:nowrap; }
+.pedido-items {
+  font-size:0.8rem; color:#666; line-height:1.9; margin-bottom:10px;
+  background:#fdf6f0; border-radius:10px; padding:8px 12px;
+}
+.pedido-total  { font-weight:700; color:#ff4d6d; font-size:0.95rem; margin-bottom:4px; }
+.pedido-puntos { font-size:0.78rem; color:#bbb; margin-bottom:12px; }
 .pedido-btns { display:flex; gap:8px; }
 .btn-aprobar {
-  flex:1; padding:10px; border:none; border-radius:10px;
+  flex:1; padding:10px; border:none; border-radius:12px;
   background:linear-gradient(45deg,#3ddc97,#00b894);
-  color:white; font-weight:700; cursor:pointer; font-size:0.9rem;
+  color:white; font-weight:700; cursor:pointer; font-size:0.85rem;
+  transition:opacity .2s,transform .1s; font-family:'Poppins',sans-serif;
 }
 .btn-rechazar {
-  flex:1; padding:10px; border:none; border-radius:10px;
+  flex:1; padding:10px; border:none; border-radius:12px;
   background:linear-gradient(45deg,#ff4d6d,#ff6b6b);
-  color:white; font-weight:700; cursor:pointer; font-size:0.9rem;
+  color:white; font-weight:700; cursor:pointer; font-size:0.85rem;
+  transition:opacity .2s,transform .1s; font-family:'Poppins',sans-serif;
 }
-.btn-aprobar:hover { opacity:0.9; }
-.btn-rechazar:hover { opacity:0.9; }
-
+.btn-aprobar:hover,.btn-rechazar:hover { opacity:.88; }
+.btn-aprobar:active,.btn-rechazar:active { transform:scale(.97); }
 .badge-aprobado {
-  display:inline-block; padding:4px 12px; border-radius:999px;
-  background:#3ddc9720; color:#00b894; font-weight:700; font-size:0.8rem;
+  display:inline-block; padding:5px 14px; border-radius:999px;
+  background:#e6faf3; color:#00b894; font-weight:700; font-size:0.78rem;
 }
 .badge-rechazado {
-  display:inline-block; padding:4px 12px; border-radius:999px;
-  background:#ff4d6d20; color:#ff4d6d; font-weight:700; font-size:0.8rem;
+  display:inline-block; padding:5px 14px; border-radius:999px;
+  background:#fff0f2; color:#ff4d6d; font-weight:700; font-size:0.78rem;
 }
 
-.empty { text-align:center; color:#aaa; padding:40px 0; font-size:0.9rem; }
-
-/* Tabs */
-.tabs-admin { display:flex; gap:8px; margin-bottom:16px; }
-.tab-admin {
-  padding:8px 20px; border:none; border-radius:20px; cursor:pointer;
-  background:#f0f0f0; color:#888; font-weight:600; font-size:0.85rem;
+/* ─── TARJETA USUARIO ─── */
+.usuarios-lista { padding:0 18px 30px; }
+.usuario-card {
+  background:white; border-radius:16px; padding:14px 16px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.07); margin-bottom:10px;
+  display:flex; align-items:center; gap:12px; animation:fadeIn .25s ease;
 }
-.tab-admin.active { background:linear-gradient(45deg,#ff66c4,#ff8c42); color:white; }
+.usuario-card-info { flex:1; min-width:0; }
+.usuario-card-nombre  { font-weight:700; color:#333; font-size:0.9rem; }
+.usuario-card-carrera { font-size:0.72rem; color:#aaa; }
+.usuario-card-email   { font-size:0.72rem; color:#bbb; margin-top:1px; }
+.uid-chip {
+  display:inline-block; margin-top:4px;
+  font-size:0.62rem; color:#ccc; font-family:monospace;
+  background:#f8f8f8; border-radius:6px; padding:2px 8px;
+  cursor:pointer; max-width:200px; overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap; vertical-align:middle;
+}
+.uid-chip:hover { color:#ff66c4; background:#fff0f8; }
+.pts-col { text-align:right; flex-shrink:0; }
+.pts-col .pts-compras { font-weight:700; color:#ff4d6d; font-size:0.95rem; }
+.pts-col .pts-juego   { font-size:0.72rem; color:#9d6bff; margin-top:2px; }
+
+.empty {
+  text-align:center; color:#ccc; padding:50px 0; font-size:0.88rem; line-height:2;
+}
+.empty span { font-size:2.5rem; display:block; margin-bottom:8px; }
+mark { background:#fff3a0; color:inherit; border-radius:3px; padding:0 2px; font-weight:600; }
+
+/* ─── TOAST ─── */
+.toast {
+  position:fixed; bottom:24px; left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:#333; color:white; padding:12px 24px;
+  border-radius:20px; font-size:13px; font-weight:600;
+  z-index:999; transition:transform .35s cubic-bezier(.34,1.56,.64,1), opacity .35s;
+  opacity:0; pointer-events:none; white-space:nowrap;
+}
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ─── LOGIN ─── -->
 <div id="login-admin">
   <div class="login-box">
-    <h2>🍬 Admin Panel</h2>
-    <input type="password" id="admin-pass" placeholder="Contraseña">
-    <button onclick="verificarAdmin()">Entrar</button>
-    <p id="login-error">Contraseña incorrecta</p>
+    <div class="login-logo">🍬</div>
+    <h2>Panel de Administración</h2>
+    <p class="sub">Party Perilingues</p>
+    <input type="password" id="admin-pass" placeholder="Contraseña"
+      onkeydown="if(event.key==='Enter') verificarAdmin()">
+    <button onclick="verificarAdmin()">Entrar al panel</button>
+    <p id="login-error">❌ Contraseña incorrecta</p>
   </div>
 </div>
 
-<!-- PANEL -->
+<!-- ─── PANEL ─── -->
 <div id="panel">
 
   <div class="topbar">
-    <h1>🍬 Party Perilingües — Admin</h1>
+    <h1>🍬 Party Perilingues — Admin</h1>
     <button onclick="cerrarAdmin()">Salir</button>
   </div>
 
+  <!-- Stats -->
   <div class="stats">
     <div class="stat-card"><span id="stat-pendientes">0</span><p>Pendientes</p></div>
     <div class="stat-card"><span id="stat-aprobados">0</span><p>Aprobados</p></div>
     <div class="stat-card"><span id="stat-rechazados">0</span><p>Rechazados</p></div>
-    <div class="stat-card"><span id="stat-total">Q0</span><p>Total vendido</p></div>
+    <div class="stat-card"><span id="stat-total" style="font-size:1.3rem">Q0</span><p>Total vendido</p></div>
   </div>
 
-  <div class="section">
-    <div class="tabs-admin">
-      <button class="tab-admin active" onclick="filtrar('pendiente', this)">⏳ Pendientes</button>
-      <button class="tab-admin" onclick="filtrar('aprobado', this)">✅ Aprobados</button>
-      <button class="tab-admin" onclick="filtrar('rechazado', this)">❌ Rechazados</button>
-      <button class="tab-admin" onclick="filtrar('todos', this)">📋 Todos</button>
+  <!-- Tabs de sección -->
+  <div class="section-tabs">
+    <button class="section-tab active" onclick="cambiarSeccion('pedidos',this)">🛒 Pedidos</button>
+    <button class="section-tab" onclick="cambiarSeccion('usuarios',this)">👥 Usuarios</button>
+  </div>
+
+  <!-- ══ PEDIDOS ══ -->
+  <div id="seccion-pedidos">
+    <div class="search-wrap">
+      <div class="search-box">
+        <span style="font-size:16px;flex-shrink:0">🔍</span>
+        <input type="text" id="buscador"
+          placeholder="Buscar por nombre, carrera o producto..."
+          oninput="onBuscar(this.value)">
+        <button class="clear-btn" id="clear-btn" onclick="limpiarBusqueda()">✕</button>
+      </div>
     </div>
-    <div id="pedidos-lista"></div>
+    <div class="result-info" id="result-info"></div>
+    <div class="tabs">
+      <button class="tab active" onclick="filtrar('pendiente',this)">⏳ Pendientes</button>
+      <button class="tab" onclick="filtrar('aprobado',this)">✅ Aprobados</button>
+      <button class="tab" onclick="filtrar('rechazado',this)">❌ Rechazados</button>
+      <button class="tab" onclick="filtrar('todos',this)">📋 Todos</button>
+    </div>
+    <div class="lista-wrap"><div id="pedidos-lista"></div></div>
+  </div>
+
+  <!-- ══ USUARIOS ══ -->
+  <div id="seccion-usuarios" style="display:none">
+    <div class="search-wrap">
+      <div class="search-box">
+        <span style="font-size:16px;flex-shrink:0">🔍</span>
+        <input type="text" id="buscador-usuarios"
+          placeholder="Buscar por nombre, carrera o correo..."
+          oninput="onBuscarUsuarios(this.value)">
+        <button class="clear-btn" id="clear-btn-u" onclick="limpiarBusquedaU()">✕</button>
+      </div>
+    </div>
+    <div class="result-info" id="result-info-u"></div>
+    <div class="usuarios-lista"><div id="usuarios-lista"></div></div>
   </div>
 
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+import { initializeApp }   from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase, ref, get, update }
+  from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD7HAFjgYC_9Ly4BcosgUpPP2wYk7ZJubY",
-  authDomain: "gomas-2530d.firebaseapp.com",
-  databaseURL: "https://gomas-2530d-default-rtdb.firebaseio.com",
-  projectId: "gomas-2530d",
-  storageBucket: "gomas-2530d.appspot.com",
-  messagingSenderId: "856600921569",
-  appId: "1:856600921569:web:3e57244a3f29db5a35fea0"
+  apiKey:"AIzaSyD7HAFjgYC_9Ly4BcosgUpPP2wYk7ZJubY",
+  authDomain:"gomas-2530d.firebaseapp.com",
+  databaseURL:"https://gomas-2530d-default-rtdb.firebaseio.com",
+  projectId:"gomas-2530d",
+  storageBucket:"gomas-2530d.appspot.com",
+  messagingSenderId:"856600921569",
+  appId:"1:856600921569:web:3e57244a3f29db5a35fea0"
 };
-
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
-// 🔑 CAMBIA ESTA CONTRASEÑA POR LA TUYA
-const ADMIN_PASSWORD = "perilingues2024";
+const ADMIN_PASSWORD = "roboto561";
 
-let todosPedidos = {};
-let filtroActual = "pendiente";
+let todosPedidos  = {};
+let todosUsuarios = {};
+let filtroActual  = "pendiente";
+let qPedidos = "", qUsuarios = "";
 
-// Si ya estaba logueado en esta sesión, entrar directo
-if (sessionStorage.getItem("adminOk") === "true") {
-  document.getElementById("login-admin").style.display = "none";
-  document.getElementById("panel").style.display = "block";
-  cargarPedidos();
+const COLORES = ["#ff6b6b","#ffa07a","#ffd93d","#3ddc97","#9d6bff","#ff66c4","#4ecdc4","#54a0ff"];
+function colorAvatar(n){ return COLORES[(n||"?").charCodeAt(0) % COLORES.length]; }
+function avatarEl(nombre, foto, sz=40){
+  if(foto) return `<img src="${foto}" style="width:${sz}px;height:${sz}px;border-radius:50%;object-fit:cover;flex-shrink:0" alt="">`;
+  return `<div class="avatar" style="width:${sz}px;height:${sz}px;font-size:${Math.round(sz*.4)}px;background:${colorAvatar(nombre)};flex-shrink:0">${(nombre||"?").charAt(0).toUpperCase()}</div>`;
 }
 
-window.verificarAdmin = function() {
-  const pass = document.getElementById("admin-pass").value;
-  if (pass === ADMIN_PASSWORD) {
-    sessionStorage.setItem("adminOk", "true");
-    document.getElementById("login-admin").style.display = "none";
-    document.getElementById("panel").style.display = "block";
-    cargarPedidos();
+/* auto-login */
+if(sessionStorage.getItem("adminOk")==="true"){
+  document.getElementById("login-admin").style.display="none";
+  document.getElementById("panel").style.display="block";
+  cargarTodo();
+}
+
+window.verificarAdmin = function(){
+  if(document.getElementById("admin-pass").value === ADMIN_PASSWORD){
+    sessionStorage.setItem("adminOk","true");
+    document.getElementById("login-admin").style.display="none";
+    document.getElementById("panel").style.display="block";
+    cargarTodo();
   } else {
-    document.getElementById("login-error").style.display = "block";
+    const e=document.getElementById("login-error");
+    e.style.display="block";
+    document.getElementById("admin-pass").value="";
+    setTimeout(()=>e.style.display="none",3000);
   }
 };
 
-window.cerrarAdmin = function() {
-  document.getElementById("panel").style.display = "none";
-  document.getElementById("login-admin").style.display = "flex";
-  document.getElementById("admin-pass").value = "";
+window.cerrarAdmin = function(){
+  sessionStorage.removeItem("adminOk");
+  document.getElementById("panel").style.display="none";
+  document.getElementById("login-admin").style.display="flex";
+  document.getElementById("admin-pass").value="";
 };
 
-async function cargarPedidos() {
-  const snap = await get(ref(db, 'pedidos'));
-  todosPedidos = snap.exists() ? snap.val() : {};
-  actualizarStats();
-  renderPedidos(filtroActual);
-}
-
-function actualizarStats() {
-  const lista = Object.values(todosPedidos);
-  document.getElementById("stat-pendientes").textContent  = lista.filter(p => p.estado === "pendiente").length;
-  document.getElementById("stat-aprobados").textContent   = lista.filter(p => p.estado === "aprobado").length;
-  document.getElementById("stat-rechazados").textContent  = lista.filter(p => p.estado === "rechazado").length;
-  const totalVendido = lista.filter(p => p.estado === "aprobado").reduce((s, p) => s + (p.total || 0), 0);
-  document.getElementById("stat-total").textContent = `Q${totalVendido.toFixed(2)}`;
-}
-
-function renderPedidos(filtro) {
-  const lista  = document.getElementById("pedidos-lista");
-  const entries = Object.entries(todosPedidos)
-    .filter(([, p]) => filtro === "todos" || p.estado === filtro)
-    .sort(([a], [b]) => b - a); // más recientes primero
-
-  if (entries.length === 0) {
-    lista.innerHTML = `<p class="empty">No hay pedidos ${filtro === "todos" ? "" : filtro + "s"} 🍬</p>`;
-    return;
-  }
-
-  lista.innerHTML = entries.map(([id, p]) => {
-    const itemsHTML = (p.items || []).map(i => `• ${i.name} x${i.quantity} — Q${(i.price * i.quantity).toFixed(2)}`).join("<br>");
-    const botonesHTML = p.estado === "pendiente" ? `
-      <div class="pedido-btns">
-        <button class="btn-aprobar"  onclick="aprobar('${id}', '${p.uid}', ${p.puntos})">✅ Aprobar (+${p.puntos} pts)</button>
-        <button class="btn-rechazar" onclick="rechazar('${id}')">❌ Rechazar</button>
-      </div>` :
-      `<span class="${p.estado === 'aprobado' ? 'badge-aprobado' : 'badge-rechazado'}">
-        ${p.estado === 'aprobado' ? '✅ Aprobado' : '❌ Rechazado'}
-      </span>`;
-
-    return `
-      <div class="pedido-card">
-        <div class="pedido-header">
-          <div>
-            <div class="pedido-nombre">${p.nombre}</div>
-            <div class="pedido-grado">${p.grado}</div>
-          </div>
-          <div class="pedido-fecha">${p.fecha || ""}</div>
-        </div>
-        <div class="pedido-items">${itemsHTML}</div>
-        <div class="pedido-total">💰 Total: Q${parseFloat(p.total || 0).toFixed(2)}</div>
-        <div class="pedido-puntos">⭐ Puntos a otorgar: ${p.puntos}</div>
-        ${botonesHTML}
-      </div>`;
-  }).join("");
-}
-
-window.aprobar = async function(pedidoId, uid, puntos) {
-  // Marcar pedido como aprobado
-  await update(ref(db, 'pedidos/' + pedidoId), { estado: "aprobado" });
-
-  // Sumar puntos al usuario
-  const userSnap = await get(ref(db, 'usuarios/' + uid));
-  if (userSnap.exists()) {
-    const puntosActuales = userSnap.val().puntos || 0;
-    await update(ref(db, 'usuarios/' + uid), { puntos: puntosActuales + puntos });
-  }
-
-  todosPedidos[pedidoId].estado = "aprobado";
-
-  // ⭐ Contar gomitas compradas por este usuario en pedidos aprobados
-  const totalGomitas = Object.values(todosPedidos)
-    .filter(p => p.uid === uid && p.estado === "aprobado")
-    .reduce((sum, p) => sum + (p.items || []).reduce((s, i) => s + i.quantity, 0), 0);
-
-
-  actualizarStats();
-  renderPedidos(filtroActual);
+window.cambiarSeccion = function(sec, btn){
+  document.querySelectorAll(".section-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("seccion-pedidos").style.display  = sec==="pedidos"  ? "block":"none";
+  document.getElementById("seccion-usuarios").style.display = sec==="usuarios" ? "block":"none";
+  if(sec==="usuarios") renderUsuarios();
 };
 
-window.rechazar = async function(pedidoId) {
-  await update(ref(db, 'pedidos/' + pedidoId), { estado: "rechazado" });
-  todosPedidos[pedidoId].estado = "rechazado";
-  actualizarStats();
+window.onBuscar = function(v){
+  qPedidos=v.trim();
+  document.getElementById("clear-btn").style.display=v?"block":"none";
   renderPedidos(filtroActual);
 };
-
-window.filtrar = function(filtro, btn) {
-  filtroActual = filtro;
-  document.querySelectorAll(".tab-admin").forEach(b => b.classList.remove("active"));
+window.limpiarBusqueda = function(){
+  document.getElementById("buscador").value=""; qPedidos="";
+  document.getElementById("clear-btn").style.display="none";
+  renderPedidos(filtroActual);
+};
+window.onBuscarUsuarios = function(v){
+  qUsuarios=v.trim();
+  document.getElementById("clear-btn-u").style.display=v?"block":"none";
+  renderUsuarios();
+};
+window.limpiarBusquedaU = function(){
+  document.getElementById("buscador-usuarios").value=""; qUsuarios="";
+  document.getElementById("clear-btn-u").style.display="none";
+  renderUsuarios();
+};
+window.filtrar = function(filtro, btn){
+  filtroActual=filtro;
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
   renderPedidos(filtro);
 };
+
+/* ── CARGA SIMULTÁNEA de usuarios y pedidos ── */
+async function cargarTodo(){
+  const [sU, sP] = await Promise.all([
+    get(ref(db,"usuarios")),
+    get(ref(db,"pedidos"))
+  ]);
+  todosUsuarios = sU.exists() ? sU.val() : {};
+  todosPedidos  = sP.exists() ? sP.val() : {};
+  actualizarStats();
+  renderPedidos(filtroActual);
+}
+
+function actualizarStats(){
+  const lista=Object.values(todosPedidos);
+  document.getElementById("stat-pendientes").textContent = lista.filter(p=>p.estado==="pendiente").length;
+  document.getElementById("stat-aprobados").textContent  = lista.filter(p=>p.estado==="aprobado").length;
+  document.getElementById("stat-rechazados").textContent = lista.filter(p=>p.estado==="rechazado").length;
+  const tv = lista.filter(p=>p.estado==="aprobado").reduce((s,p)=>s+(p.total||0),0);
+  document.getElementById("stat-total").textContent=`Q${tv.toFixed(2)}`;
+}
+
+function hl(txt,q){
+  if(!q||!txt) return txt||"";
+  const s=q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  return String(txt).replace(new RegExp(`(${s})`,"gi"),"<mark>$1</mark>");
+}
+
+/* ══════════════════════════════════════════════
+   RENDER PEDIDOS
+   Fix principal: cruzamos p.uid con todosUsuarios
+   para obtener el nombre REAL de la BD de usuarios
+   ══════════════════════════════════════════════ */
+function renderPedidos(filtro){
+  const q=qPedidos.toLowerCase();
+  const contenedor=document.getElementById("pedidos-lista");
+
+  const entries=Object.entries(todosPedidos)
+    .map(([id,p])=>{
+      // ← AQUÍ ESTÁ EL FIX: buscar en la tabla de usuarios por uid
+      const u = todosUsuarios[p.uid] || {};
+      return [id, {
+        ...p,
+        nombreMostrar  : u.nombre  || p.nombre  || "Sin nombre",
+        carreraMostrar : u.carrera || p.grado   || "Sin carrera",
+        puntosTotales  : u.puntos  || 0,
+        fotoMostrar    : u.foto    || ""
+      }];
+    })
+    .filter(([,p])=>{
+      if(filtro!=="todos" && p.estado!==filtro) return false;
+      if(!q) return true;
+      return (
+        p.nombreMostrar.toLowerCase().includes(q) ||
+        p.carreraMostrar.toLowerCase().includes(q) ||
+        (p.items||[]).some(i=>i.name?.toLowerCase().includes(q))
+      );
+    })
+    .sort(([a],[b])=>b-a);
+
+  const info=document.getElementById("result-info");
+  info.textContent = q
+    ? `${entries.length} resultado${entries.length!==1?"s":""} para "${qPedidos}"`
+    : "";
+
+  if(entries.length===0){
+    contenedor.innerHTML=`<div class="empty"><span>${q?"🔍":"🍬"}</span>
+      ${q?`Sin resultados para "<b>${qPedidos}</b>"`:`No hay pedidos ${filtro==="todos"?"":filtro+"s"}`}
+    </div>`;
+    return;
+  }
+
+  contenedor.innerHTML=entries.map(([id,p])=>{
+    const itemsHTML=(p.items||[])
+      .map(i=>`• ${hl(i.name,qPedidos)} x${i.quantity} — Q${(i.price*i.quantity).toFixed(2)}`)
+      .join("<br>");
+
+    const btns = p.estado==="pendiente"
+      ? `<div class="pedido-btns">
+           <button class="btn-aprobar" onclick="aprobar('${id}','${p.uid}',${p.puntos})">✅ Aprobar (+${p.puntos} pts)</button>
+           <button class="btn-rechazar" onclick="rechazar('${id}')">❌ Rechazar</button>
+         </div>`
+      : `<span class="${p.estado==="aprobado"?"badge-aprobado":"badge-rechazado"}">
+           ${p.estado==="aprobado"?"✅ Aprobado":"❌ Rechazado"}
+         </span>`;
+
+    return `<div class="pedido-card">
+      <div class="usuario-header">
+        ${avatarEl(p.nombreMostrar, p.fotoMostrar, 40)}
+        <div class="usuario-info">
+          <div class="usuario-nombre">${hl(p.nombreMostrar, qPedidos)}</div>
+          <div class="usuario-carrera">${hl(p.carreraMostrar, qPedidos)}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div class="pedido-fecha">${p.fecha||""}</div>
+          <div class="pts-badge">⭐ ${p.puntosTotales} pts</div>
+        </div>
+      </div>
+      <div class="pedido-items">${itemsHTML}</div>
+      <div class="pedido-total">💰 Total: Q${parseFloat(p.total||0).toFixed(2)}</div>
+      <div class="pedido-puntos">⭐ Puntos a otorgar: ${p.puntos}</div>
+      ${btns}
+    </div>`;
+  }).join("");
+}
+
+/* ── RENDER USUARIOS ── */
+function renderUsuarios(){
+  const q=qUsuarios.toLowerCase();
+  const contenedor=document.getElementById("usuarios-lista");
+
+  const entries=Object.entries(todosUsuarios)
+    .filter(([,u])=>u && typeof u==="object")
+    .filter(([,u])=>{
+      if(!q) return true;
+      return (
+        (u.nombre||"").toLowerCase().includes(q) ||
+        (u.carrera||"").toLowerCase().includes(q) ||
+        (u.email||"").toLowerCase().includes(q)
+      );
+    })
+    .sort(([,a],[,b])=>(b.puntos||0)-(a.puntos||0));
+
+  const info=document.getElementById("result-info-u");
+  info.textContent = q
+    ? `${entries.length} usuario${entries.length!==1?"s":""} para "${qUsuarios}"`
+    : `${entries.length} usuario${entries.length!==1?"s":""}`;
+
+  if(entries.length===0){
+    contenedor.innerHTML=`<div class="empty"><span>👥</span>No hay usuarios</div>`;
+    return;
+  }
+
+  contenedor.innerHTML=entries.map(([uid,u])=>{
+    const nombre=u.nombre||"Sin nombre";
+    return `<div class="usuario-card">
+      ${avatarEl(nombre, u.foto||"", 44)}
+      <div class="usuario-card-info">
+        <div class="usuario-card-nombre">${hl(nombre,qUsuarios)}</div>
+        <div class="usuario-card-carrera">${hl(u.carrera||"Sin carrera",qUsuarios)}</div>
+        <div class="usuario-card-email">${hl(u.email||"",qUsuarios)}</div>
+        <span class="uid-chip" title="Clic para copiar UID" onclick="copiarUID('${uid}')">🔑 ${uid}</span>
+      </div>
+      <div class="pts-col">
+        <div class="pts-compras">⭐ ${u.puntos||0}</div>
+        <div class="pts-juego">🎮 ${u.puntosJuego||0}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+window.copiarUID = function(uid){
+  navigator.clipboard.writeText(uid).then(()=>mostrarToast("📋 UID copiado al portapapeles"));
+};
+
+window.aprobar = async function(pedidoId, uid, puntos){
+  await update(ref(db,"pedidos/"+pedidoId),{estado:"aprobado"});
+  const snap=await get(ref(db,"usuarios/"+uid));
+  if(snap.exists()){
+    const nuevo=(snap.val().puntos||0)+puntos;
+    await update(ref(db,"usuarios/"+uid),{puntos:nuevo});
+    if(todosUsuarios[uid]) todosUsuarios[uid].puntos=nuevo;
+  }
+  todosPedidos[pedidoId].estado="aprobado";
+  actualizarStats();
+  renderPedidos(filtroActual);
+  mostrarToast(`✅ Aprobado — +${puntos} pts sumados`);
+};
+
+window.rechazar = async function(pedidoId){
+  await update(ref(db,"pedidos/"+pedidoId),{estado:"rechazado"});
+  todosPedidos[pedidoId].estado="rechazado";
+  actualizarStats();
+  renderPedidos(filtroActual);
+  mostrarToast("❌ Pedido rechazado");
+};
+
+function mostrarToast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2800);
+}
 </script>
 </body>
 </html>
