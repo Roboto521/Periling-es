@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Party Perilingüe</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+
+body{
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#fdfbfb,#ffecd2,#fcb69f,#a1c4fd,#c2e9fb,#d4fc79,#96e6a1,#e0c3fc,#f9c5d1);
+  background-size:500% 500%;
+  animation:fondo 20s ease infinite;
+  padding:20px;
+}
+@keyframes fondo{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+.card{
+  background:white;
+  border-radius:28px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.15), 0 0 40px rgba(255,102,196,0.2);
+  width:100%; max-width:400px;
+  padding:44px 32px 40px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute; top:-60px; right:-60px;
+  width:160px; height:160px; border-radius:50%;
+  background:linear-gradient(135deg,rgba(255,102,196,0.1),rgba(157,107,255,0.1));
+}
+.card::after{
+  content:"";
+  position:absolute; bottom:-50px; left:-50px;
+  width:130px; height:130px; border-radius:50%;
+  background:linear-gradient(135deg,rgba(255,217,61,0.1),rgba(61,220,151,0.1));
+}
+.card *{ position:relative; z-index:1; }
+
+.logo{ width:110px; height:auto; margin-bottom:8px; }
+
+.gomita-wrap{
+  font-size:80px;
+  animation:bounce 1.2s ease-in-out infinite;
+  display:block;
+  margin:8px 0 6px;
+  line-height:1;
+}
+@keyframes bounce{
+  0%,100%{ transform:translateY(0) rotate(-5deg); }
+  50%{ transform:translateY(-16px) rotate(5deg); }
+}
+
+.titulo{
+  font-size:26px; font-weight:700;
+  background:linear-gradient(90deg,#ff4d6d,#ffd93d,#3ddc97,#9d6bff);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin:12px 0 8px; line-height:1.25;
+}
+
+.subtitulo{
+  font-size:13.5px; color:#aaa; margin-bottom:24px; line-height:1.7;
+}
+
+.tag{
+  display:inline-block;
+  background:linear-gradient(45deg,#ff66c4,#ff8c42);
+  color:white; font-size:11px; font-weight:700;
+  padding:5px 16px; border-radius:999px;
+  margin-bottom:28px;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{ 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
+
+.info-box{
+  background:linear-gradient(135deg,#fff5fa,#fff8f0);
+  border:1.5px solid #ffd6f0;
+  border-radius:16px;
+  padding:18px 20px;
+}
+.info-row{
+  display:flex; align-items:center; gap:10px;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,102,196,0.1);
+  font-size:13px; color:#666;
+}
+.info-row:last-child{ border-bottom:none; padding-bottom:0; }
+.info-icon{ font-size:18px; flex-shrink:0; }
+.info-txt{ text-align:left; }
+.info-txt strong{ color:#ff4d6d; font-weight:600; display:block; font-size:11.5px; margin-bottom:1px; }
+
+.footer-txt{
+  margin-top:26px; font-size:11.5px; color:#ccc;
+}
+.footer-txt span{ color:#ff66c4; font-weight:600; }
+
+.dots{
+  display:flex; justify-content:center; gap:7px; margin:16px 0 0;
+}
+.dot{
+  width:8px; height:8px; border-radius:50%;
+  background:linear-gradient(45deg,#ff66c4,#ff8c42);
+  animation:dotbounce 1.4s ease-in-out infinite;
+}
+.dot:nth-child(2){ animation-delay:0.2s; }
+.dot:nth-child(3){ animation-delay:0.4s; }
+@keyframes dotbounce{
+  0%,80%,100%{ transform:scale(0.6); opacity:0.5; }
+  40%{ transform:scale(1); opacity:1; }
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <img src="images/pt.png" class="logo" alt="Party Perilingüe" onerror="this.style.display='none'">
+
+  <span class="gomita-wrap">🍬</span>
+
+  <h1 class="titulo">¡Oops! Tenemos<br>un problema técnico 😅</h1>
+  <p class="subtitulo">La página está temporalmente fuera de servicio.<br>Estamos trabajando para volver muy pronto.<br>¡Gracias por tu paciencia! 💕</p>
+
+  <div class="tag">⚙️ En mantenimiento</div>
+
+  <div class="info-box">
+    <div class="info-row">
+      <span class="info-icon">🔧</span>
+      <div class="info-txt">
+        <strong>¿Qué pasó?</strong>
+        Estamos haciendo mejoras en el sistema
+      </div>
+    </div>
+    <div class="info-row">
+      <span class="info-icon">⏰</span>
+      <div class="info-txt">
+        <strong>¿Cuándo vuelve?</strong>
+        Muy pronto, prometido 🍬
+      </div>
+    </div>
+    <div class="info-row">
+      <span class="info-icon">💪</span>
+      <div class="info-txt">
+        <strong>¿Qué hago mientras?</strong>
+        Espera a que volvamos con más dulces
+      </div>
+    </div>
+  </div>
+
+  <p class="footer-txt">
+    🍬 <span>Party Perilingüe</span> — Hecho con amor por Dylan
+  </p>
+
+  <div class="dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+</div>
+
+</body>
+</html>
