@@ -1,4 +1,4 @@
-/* game.js — Evita las Bolas · Party Perilingüe */
+/* game.js — Evita las Bolas · Party Perilingüe · OPTIMIZADO */
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -9,31 +9,66 @@ document.addEventListener('DOMContentLoaded', function () {
     NIVEL_CADA_S     : 7,
     STAR_INTERVAL    : 8,
     STAR_PTS         : 100,
-    STREAK_STEP      : 20,  /* segundos sin golpe para subir un nivel de racha */
-    STREAK_MAX_MULT  : 4,   /* multiplicador máximo x4 */
+    STREAK_STEP      : 20,
+    STREAK_MAX_MULT  : 4,
   };
 
   const canvas = document.getElementById('gameCanvas');
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  const ctx = canvas.getContext('2d', { alpha: false }); // alpha:false = más rápido
   let CW = 360, CH = 414;
   let inputBound = false;
   let touchX = null, touchY = null;
 
-  const IS_LOW_END = navigator.hardwareConcurrency <= 4 || (window.screen.width < 400 && DPR > 1);
+  /* ===== DETECCIÓN MEJORADA DE GAMA BAJA ===== */
+  let IS_LOW_END = false;
+  (function detectLowEnd() {
+    const mem  = navigator.deviceMemory;          // RAM en GB (no en iPhone)
+    const cpus = navigator.hardwareConcurrency;
+    const w    = window.screen.width;
+    const dpr  = window.devicePixelRatio || 1;
+
+    // RAM menor a 3GB → gama baja
+    if (mem && mem < 3) { IS_LOW_END = true; return; }
+    // Menos de 4 núcleos → gama baja
+    if (cpus && cpus <= 4) { IS_LOW_END = true; return; }
+    // Pantalla pequeña + DPR alto = teléfono barato escaleado
+    if (w < 390 && dpr >= 2.5) { IS_LOW_END = true; return; }
+    // Benchmark rápido de canvas (~16ms = 60fps, si tarda más → lento)
+    const t0 = performance.now();
+    for (let i = 0; i < 200; i++) {
+      ctx.fillStyle = '#ff' + i.toString(16).padStart(4,'0');
+      ctx.fillRect(0, 0, 10, 10);
+    }
+    if (performance.now() - t0 > 8) IS_LOW_END = true;
+  })();
+
+  /* Límites según gama */
+  const PARTICLE_MAX  = IS_LOW_END ? 20  : 60;
+  const PARTICLE_SPAWN= IS_LOW_END ? 5   : 12;
+  const FTEXT_MAX     = IS_LOW_END ? 3   : 8;
+  const DPR_USE       = IS_LOW_END ? 1   : Math.min(window.devicePixelRatio || 1, 2);
+  const GLOW          = !IS_LOW_END;
+
+  /* roundRect seguro (no soportado en Android viejos) */
+  function safeRoundRect(x, y, w, h, r) {
+    if (ctx.roundRect) {
+      ctx.roundRect(x, y, w, h, r);
+    } else {
+      ctx.rect(x, y, w, h);
+    }
+  }
 
   function resizeCanvas() {
     const box = document.getElementById('gameBox');
     CW = Math.min(box ? box.offsetWidth : 360, 400);
     CH = Math.round(CW * 1.15);
-    const d = IS_LOW_END ? 1 : DPR;
-    canvas.width  = CW * d;
-    canvas.height = CH * d;
+    canvas.width  = CW * DPR_USE;
+    canvas.height = CH * DPR_USE;
     canvas.style.width  = CW + 'px';
     canvas.style.height = CH + 'px';
     ctx.setTransform(1,0,0,1,0,0);
-    ctx.scale(d, d);
+    ctx.scale(DPR_USE, DPR_USE);
   }
 
   const BCOLS = ['#ff4d6d','#ff66c4','#9d6bff','#3ddc97','#ff8c42','#ffd93d'];
@@ -42,6 +77,15 @@ document.addEventListener('DOMContentLoaded', function () {
   let score, elapsed, gameOver, started, frameId, lastTs, ptAcc, lastBonusMark;
   let spawnTimer, heartSpawnTimer, starSpawnTimer, lives;
   let streakTimer, streakActive, streakFlash, streakMult;
+
+  /* Pool de objetos para evitar GC (reuso de partículas) */
+  const particlePool = [];
+  function getParticle() {
+    return particlePool.pop() || {};
+  }
+  function recycleParticle(p) {
+    if (particlePool.length < 80) particlePool.push(p);
+  }
 
   function getLevelConfig(l) {
     if (l<=2)  return {speed:130, sv:35,  int:0.95, max:5,  w:10};
@@ -53,15 +97,18 @@ document.addEventListener('DOMContentLoaded', function () {
     if (l<=14) return {speed:336, sv:82,  int:0.29, max:23, w:40};
     if (l<=16) return {speed:358, sv:86,  int:0.25, max:26, w:45};
     if (l<=20) return {speed:375, sv:90,  int:0.21, max:28, w:49};
-     return {speed:420, sv:100, int:0.14, max:35, w:60};
+    return {speed:420, sv:100, int:0.14, max:35, w:60};
   }
 
   function getSpikeDepth(l) { return l < 10 ? 0 : 6; }
 
   function initState() {
     player        = {x:CW/2, y:CH/2, r:14, tx:CW/2, ty:CH/2, hitFlash:0};
-    balls         = []; particles = []; heartItems = [];
-    starItems     = []; floatingTexts = [];
+    balls         = []; 
+    // Reciclar partículas viejas al pool
+    if (particles) particles.forEach(p => recycleParticle(p));
+    particles     = [];
+    heartItems    = []; starItems = []; floatingTexts = [];
     score         = 0; elapsed = 0; ptAcc = 0; lastBonusMark = 0;
     spawnTimer    = 0; heartSpawnTimer = 0; starSpawnTimer = 0;
     streakTimer   = 0; streakActive = false; streakFlash = 0; streakMult = 1;
@@ -145,14 +192,24 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function addFloatingText(x, y, text, color) {
+    if (floatingTexts.length >= FTEXT_MAX) floatingTexts.shift(); // límite duro
     floatingTexts.push({x, y, text, color, life:1.2, vy:-60});
   }
 
-  function addParticles(x, y, color, n=12) {
-    const count = IS_LOW_END ? Math.floor(n/2) : n;
-    for (let i = 0; i < count; i++) {
-      const a = (Math.PI*2/count)*i+Math.random()*0.5, sp = 60+Math.random()*90;
-      particles.push({x, y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp, r:3+Math.random()*4, life:1, color});
+  function addParticles(x, y, color, n) {
+    const count = IS_LOW_END ? Math.min(n, PARTICLE_SPAWN) : Math.min(n, 14);
+    // Si ya hay demasiadas, no agregar
+    if (particles.length >= PARTICLE_MAX) return;
+    const toAdd = Math.min(count, PARTICLE_MAX - particles.length);
+    for (let i = 0; i < toAdd; i++) {
+      const a = (Math.PI*2/toAdd)*i + Math.random()*0.5;
+      const sp = 60 + Math.random()*90;
+      const p = getParticle();
+      p.x = x; p.y = y;
+      p.vx = Math.cos(a)*sp; p.vy = Math.sin(a)*sp;
+      p.r = 3 + Math.random()*4;
+      p.life = 1; p.color = color;
+      particles.push(p);
     }
   }
 
@@ -160,16 +217,19 @@ document.addEventListener('DOMContentLoaded', function () {
     if (sd <= 0) return;
     const sz = 20, p = 1+Math.sin(elapsed*4)*0.07;
     ctx.fillStyle = '#ff2244';
+    // Dibujar todos los spikes en un solo path = más eficiente
+    ctx.beginPath();
     for (let i = -1; i < Math.ceil(CH/sz)+2; i++) {
       const y = i*sz;
-      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(sd*p,y+sz/2); ctx.lineTo(0,y+sz); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(CW,y); ctx.lineTo(CW-sd*p,y+sz/2); ctx.lineTo(CW,y+sz); ctx.closePath(); ctx.fill();
+      ctx.moveTo(0,y); ctx.lineTo(sd*p,y+sz/2); ctx.lineTo(0,y+sz);
+      ctx.moveTo(CW,y); ctx.lineTo(CW-sd*p,y+sz/2); ctx.lineTo(CW,y+sz);
     }
     for (let i = -1; i < Math.ceil(CW/sz)+2; i++) {
       const x = i*sz;
-      ctx.beginPath(); ctx.moveTo(x,CH); ctx.lineTo(x+sz/2,CH-sd*p); ctx.lineTo(x+sz,CH); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(x,0);  ctx.lineTo(x+sz/2,sd*p);    ctx.lineTo(x+sz,0);  ctx.closePath(); ctx.fill();
+      ctx.moveTo(x,CH); ctx.lineTo(x+sz/2,CH-sd*p); ctx.lineTo(x+sz,CH);
+      ctx.moveTo(x,0);  ctx.lineTo(x+sz/2,sd*p);    ctx.lineTo(x+sz,0);
     }
+    ctx.fill();
   }
 
   function checkSpike(sd) {
@@ -180,55 +240,60 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function loseLife() {
     lives--; refreshHUD(); player.hitFlash = 1.2;
-    /* Resetear racha al recibir golpe */
     if (streakActive) {
       addFloatingText(player.x, player.y-30, '🔥 Racha perdida', '#ff4d6d');
       streakActive = false;
     }
     streakTimer = 0; streakMult = 1;
-    addParticles(player.x, player.y, '#ff4d6d', 14);
+    addParticles(player.x, player.y, '#ff4d6d', IS_LOW_END ? 5 : 14);
     if (lives <= 0) endGame();
   }
+
+  /* Cache de nivel para no recalcular cada frame */
+  let _lastLevelCalc = -1, _cachedLevel = 1, _cachedCfg, _cachedSd;
 
   function loop(ts) {
     const dt = Math.min((ts-lastTs)/1000, 0.05);
     lastTs = ts; elapsed += dt;
 
     const level = 1 + Math.floor(elapsed / CFG.NIVEL_CADA_S);
-    const cfg   = getLevelConfig(level);
-    const sd    = getSpikeDepth(level);
-const lvEl = document.getElementById('g-lv');
+    // Solo recalcular config si cambió de nivel
+    if (level !== _lastLevelCalc) {
+      _lastLevelCalc = level;
+      _cachedCfg = getLevelConfig(level);
+      _cachedSd  = getSpikeDepth(level);
+    }
+    const cfg = _cachedCfg, sd = _cachedSd;
+
+    const lvEl = document.getElementById('g-lv');
     if (lvEl) lvEl.textContent = Math.min(level, 25);
+
     if (player.hitFlash > 0) player.hitFlash -= dt;
     if (streakFlash > 0) streakFlash -= dt;
 
-    /* ===== RACHA ACUMULABLE x2 → x3 → x4 ===== */
+    /* Racha */
     streakTimer += dt;
     const newMult = Math.min(1 + Math.floor(streakTimer / CFG.STREAK_STEP), CFG.STREAK_MAX_MULT);
     if (newMult > streakMult) {
-      streakMult  = newMult;
-      streakActive = true;
-      streakFlash  = 1.5;
+      streakMult = newMult; streakActive = true; streakFlash = 1.5;
       const multColors = {2:'#ff9900', 3:'#ff5500', 4:'#ff0000'};
       addFloatingText(CW/2, CH/2-50, `🔥 ¡RACHA x${streakMult}!`, multColors[streakMult]||'#ff9900');
-      addParticles(player.x, player.y, multColors[streakMult]||'#ff9900', 20);
+      addParticles(player.x, player.y, multColors[streakMult]||'#ff9900', IS_LOW_END ? 6 : 20);
     }
     const mult = streakMult;
 
-    /* Barra de racha en HUD */
     const scEl = document.getElementById('g-sc');
     if (scEl) scEl.textContent = (streakActive ? `🔥 x${mult}  ` : '') + Math.round(score);
 
     /* Mover jugador */
-    const sL = player.r, sR = CW-player.r, sT = player.r, sB = CH-player.r;
     if (touchX !== null) {
-      player.tx = Math.max(sL, Math.min(sR, touchX));
-      player.ty = Math.max(sT, Math.min(sB, touchY || player.ty));
+      player.tx = Math.max(player.r, Math.min(CW-player.r, touchX));
+      player.ty = Math.max(player.r, Math.min(CH-player.r, touchY || player.ty));
     }
     player.x += (player.tx-player.x)*0.35;
     player.y += (player.ty-player.y)*0.35;
-    player.x = Math.max(sL, Math.min(sR, player.x));
-    player.y = Math.max(sT, Math.min(sB, player.y));
+    player.x = Math.max(player.r, Math.min(CW-player.r, player.x));
+    player.y = Math.max(player.r, Math.min(CH-player.r, player.y));
 
     if (checkSpike(sd) && player.hitFlash <= 0) { loseLife(); if (gameOver) return; }
 
@@ -240,14 +305,16 @@ const lvEl = document.getElementById('g-lv');
     starSpawnTimer += dt;
     if (starSpawnTimer >= CFG.STAR_INTERVAL) { spawnStar(sd); starSpawnTimer = 0; }
 
-    /* Bolas */
+    /* Bolas — iterar al revés para splice seguro */
+    const pr = player.r, px = player.x, py = player.y;
     for (let i = balls.length-1; i >= 0; i--) {
       const b = balls[i];
       b.wobble += b.wobbleSpeed*dt;
-      b.x += (b.vx+Math.sin(b.wobble)*b.wobbleAmp)*dt; b.y += b.vy*dt;
-      if (b.y-b.r>CH+20||b.x<-50||b.x>CW+50) { balls.splice(i,1); continue; }
-      const dx=player.x-b.x, dy=player.y-b.y;
-      if (Math.sqrt(dx*dx+dy*dy)<player.r+b.r-2 && player.hitFlash<=0) {
+      b.x += (b.vx+Math.sin(b.wobble)*b.wobbleAmp)*dt;
+      b.y += b.vy*dt;
+      if (b.y-b.r>CH+20 || b.x<-50 || b.x>CW+50) { balls.splice(i,1); continue; }
+      const dx=px-b.x, dy=py-b.y;
+      if (dx*dx+dy*dy < (pr+b.r-2)*(pr+b.r-2) && player.hitFlash<=0) {
         balls.splice(i,1); loseLife(); if (gameOver) return;
       }
     }
@@ -256,10 +323,10 @@ const lvEl = document.getElementById('g-lv');
     for (let i = heartItems.length-1; i >= 0; i--) {
       const h = heartItems[i]; h.y += h.vy*dt;
       if (h.y-h.r>CH+10) { heartItems.splice(i,1); continue; }
-      const dx=player.x-h.x, dy=player.y-h.y;
-      if (Math.sqrt(dx*dx+dy*dy)<player.r+h.r) {
+      const dx=px-h.x, dy=py-h.y;
+      if (dx*dx+dy*dy < (pr+h.r)*(pr+h.r)) {
         lives=Math.min(CFG.MAX_VIDAS,lives+1); refreshHUD();
-        addParticles(h.x,h.y,'#ff4d6d',8);
+        addParticles(h.x,h.y,'#ff4d6d', IS_LOW_END ? 4 : 8);
         addFloatingText(h.x,h.y,'+❤️','#ff4d6d');
         heartItems.splice(i,1);
       }
@@ -270,34 +337,32 @@ const lvEl = document.getElementById('g-lv');
       const s = starItems[i];
       s.y += s.vy*dt; s.rot += s.rotSpeed*dt;
       if (s.y-s.r>CH+10) { starItems.splice(i,1); continue; }
-      const dx=player.x-s.x, dy=player.y-s.y;
-      if (Math.sqrt(dx*dx+dy*dy)<player.r+s.r) {
+      const dx=px-s.x, dy=py-s.y;
+      if (dx*dx+dy*dy < (pr+s.r)*(pr+s.r)) {
         const gained = CFG.STAR_PTS * mult;
         score += gained;
-        addParticles(s.x,s.y,'#ffd93d',16);
+        addParticles(s.x,s.y,'#ffd93d', IS_LOW_END ? 6 : 16);
         addFloatingText(s.x,s.y-20, (mult>1?`🔥 x${mult} `:'')+'+'+ gained,'#ffd93d');
         starItems.splice(i,1);
       }
     }
 
-    /* Puntos por tiempo (multiplicados por racha) */
+    /* Puntos por tiempo */
     ptAcc += CFG.PTS_POR_SEGUNDO * mult * dt;
     if (ptAcc >= 1) { const p=Math.floor(ptAcc); score+=p; ptAcc-=p; }
 
-    /* Bonus cada 5s (multiplicado por racha) */
     const bm = Math.floor(elapsed/5);
     if (bm > lastBonusMark) {
       score += CFG.BONUS_CADA_5S * mult; lastBonusMark = bm;
-      addParticles(player.x,player.y-30,'#ffd93d',8);
+      addParticles(player.x, player.y-30, '#ffd93d', IS_LOW_END ? 4 : 8);
     }
 
-    /* Partículas */
+    /* Partículas con pool */
     for (let i = particles.length-1; i >= 0; i--) {
       const p=particles[i];
       p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=120*dt; p.life-=dt*1.5;
-      if (p.life<=0) particles.splice(i,1);
+      if (p.life<=0) { recycleParticle(particles.splice(i,1)[0]); }
     }
-    if (particles.length>60) particles.splice(0,particles.length-60);
 
     /* Textos flotantes */
     for (let i = floatingTexts.length-1; i >= 0; i--) {
@@ -317,21 +382,38 @@ const lvEl = document.getElementById('g-lv');
     return '#000';
   }
 
-  function drawHeart(x, y, sz, color) {
-    ctx.fillStyle=color;
-    ctx.beginPath(); ctx.moveTo(x,y+sz*0.3);
-    ctx.bezierCurveTo(x,y,x-sz,y,x-sz,y+sz*0.4);
-    ctx.bezierCurveTo(x-sz,y+sz*0.9,x,y+sz*1.3,x,y+sz*1.5);
-    ctx.bezierCurveTo(x,y+sz*1.3,x+sz,y+sz*0.9,x+sz,y+sz*0.4);
-    ctx.bezierCurveTo(x+sz,y,x,y,x,y+sz*0.3);
-    ctx.closePath(); ctx.fill();
+  /* Cache de corazón (offscreen canvas) */
+  let heartCache = null, heartCacheSize = 0;
+  function getHeartCache(sz) {
+    if (heartCache && heartCacheSize === sz) return heartCache;
+    heartCacheSize = sz;
+    heartCache = document.createElement('canvas');
+    heartCache.width = sz*3; heartCache.height = sz*3;
+    const hc = heartCache.getContext('2d');
+    const x=sz*1.5, y=sz*0.8;
+    hc.fillStyle='#ff4d6d';
+    hc.beginPath(); hc.moveTo(x,y+sz*0.3);
+    hc.bezierCurveTo(x,y,x-sz,y,x-sz,y+sz*0.4);
+    hc.bezierCurveTo(x-sz,y+sz*0.9,x,y+sz*1.3,x,y+sz*1.5);
+    hc.bezierCurveTo(x,y+sz*1.3,x+sz,y+sz*0.9,x+sz,y+sz*0.4);
+    hc.bezierCurveTo(x+sz,y,x,y,x,y+sz*0.3);
+    hc.closePath(); hc.fill();
+    return heartCache;
+  }
+
+  function drawHeart(x, y, sz) {
+    const cache = getHeartCache(Math.round(sz));
+    const cw = cache.width;
+    ctx.drawImage(cache, x - cw/2, y - cw*0.4, cw, cw);
   }
 
   function drawStar(x, y, r, rot, color) {
     const spikes=5, outerR=r, innerR=r*0.45;
     ctx.save(); ctx.translate(x,y); ctx.rotate(rot);
-    ctx.beginPath(); ctx.arc(0,0,outerR+4,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,220,50,0.25)'; ctx.fill();
+    if (GLOW) {
+      ctx.beginPath(); ctx.arc(0,0,outerR+4,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,220,50,0.25)'; ctx.fill();
+    }
     ctx.beginPath();
     for (let i=0;i<spikes*2;i++) {
       const angle=(Math.PI/spikes)*i-Math.PI/2, rad=i%2===0?outerR:innerR;
@@ -340,8 +422,10 @@ const lvEl = document.getElementById('g-lv');
     }
     ctx.closePath(); ctx.fillStyle=color||'#ffd93d'; ctx.fill();
     ctx.strokeStyle='#ffaa00'; ctx.lineWidth=1.5; ctx.stroke();
-    ctx.beginPath(); ctx.arc(-outerR*0.2,-outerR*0.25,outerR*0.18,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.fill();
+    if (GLOW) {
+      ctx.beginPath(); ctx.arc(-outerR*0.2,-outerR*0.25,outerR*0.18,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.fill();
+    }
     ctx.restore();
   }
 
@@ -352,97 +436,97 @@ const lvEl = document.getElementById('g-lv');
     return '#ffd93d';
   }
 
-  /* Barra de progreso de racha */
   function drawStreakBar(mult) {
-    const barW = CW - 20, barH = 5, barX = 10, barY = CH - 12;
-
-    /* Progreso dentro del step actual (o llena si es máximo) */
+    const barW=CW-20, barH=5, barX=10, barY=CH-12;
     const stepProgress = mult >= CFG.STREAK_MAX_MULT
-      ? 1
-      : (streakTimer % CFG.STREAK_STEP) / CFG.STREAK_STEP;
+      ? 1 : (streakTimer % CFG.STREAK_STEP) / CFG.STREAK_STEP;
 
-    /* Fondo */
-    ctx.fillStyle = 'rgba(255,255,255,0.15)';
-    ctx.beginPath(); ctx.roundRect(barX, barY, barW, barH, 3); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.15)';
+    ctx.beginPath(); safeRoundRect(barX,barY,barW,barH,3); ctx.fill();
 
-    /* Relleno */
-    const barColor = getStreakColor(mult);
-    ctx.fillStyle = barColor;
-    ctx.beginPath(); ctx.roundRect(barX, barY, barW * stepProgress, barH, 3); ctx.fill();
+    const barColor=getStreakColor(mult);
+    ctx.fillStyle=barColor;
+    ctx.beginPath(); safeRoundRect(barX,barY,barW*stepProgress,barH,3); ctx.fill();
 
-    /* Texto */
     if (streakActive) {
-      const pulse = 0.85 + Math.sin(elapsed*6)*0.15;
-      ctx.globalAlpha = pulse;
-      ctx.fillStyle   = barColor;
-      ctx.font        = 'bold 11px Poppins,sans-serif';
-      ctx.textAlign   = 'center';
-      ctx.textBaseline= 'middle';
+      const pulse=0.85+Math.sin(elapsed*6)*0.15;
+      ctx.globalAlpha=pulse;
+      ctx.fillStyle=barColor;
+      ctx.font='bold 11px Poppins,sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
       const label = mult >= CFG.STREAK_MAX_MULT
         ? `🔥 RACHA x${mult} — ¡MÁXIMO!`
-        : `🔥 RACHA x${mult} — próximo x${mult+1} en ${Math.ceil(CFG.STREAK_STEP - (streakTimer % CFG.STREAK_STEP))}s`;
-      ctx.fillText(label, CW/2, barY - 8);
-      ctx.globalAlpha = 1;
+        : `🔥 RACHA x${mult} — próximo x${mult+1} en ${Math.ceil(CFG.STREAK_STEP-(streakTimer%CFG.STREAK_STEP))}s`;
+      ctx.fillText(label,CW/2,barY-8);
+      ctx.globalAlpha=1;
     } else {
-      const segsLeft = Math.ceil(CFG.STREAK_STEP - streakTimer);
-      ctx.fillStyle   = 'rgba(255,255,255,0.45)';
-      ctx.font        = '10px Poppins,sans-serif';
-      ctx.textAlign   = 'center';
-      ctx.textBaseline= 'middle';
-      ctx.fillText(`🔥 x2 en ${segsLeft}s`, CW/2, barY - 8);
+      const segsLeft=Math.ceil(CFG.STREAK_STEP-streakTimer);
+      ctx.fillStyle='rgba(255,255,255,0.45)';
+      ctx.font='10px Poppins,sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(`🔥 x2 en ${segsLeft}s`,CW/2,barY-8);
     }
   }
 
   function draw(level, sd, mult) {
-    ctx.fillStyle = getBg(level||1);
+    /* Fondo sólido (alpha:false hace esto más rápido) */
+    ctx.fillStyle=getBg(level||1);
     ctx.fillRect(0,0,CW,CH);
 
-    /* Flash de racha activada */
+    /* Flash de racha */
     if (streakFlash > 0) {
-      ctx.fillStyle = `rgba(255,153,0,${streakFlash*0.12})`;
+      ctx.fillStyle=`rgba(255,153,0,${streakFlash*0.12})`;
       ctx.fillRect(0,0,CW,CH);
     }
 
-    if (!IS_LOW_END) {
-      ctx.fillStyle = level>=6?'rgba(255,77,109,0.10)':'rgba(255,102,196,0.06)';
-      const lvShow = Math.min(level, 25);
-ctx.font=`bold ${Math.min(180,80+lvShow*7)}px Poppins,sans-serif`;
-ctx.textAlign='center'; ctx.textBaseline='middle';
-ctx.fillText(lvShow,CW/2,CH/2);
+    /* Número de nivel de fondo — solo en gama alta */
+    if (GLOW) {
+      ctx.fillStyle=level>=6?'rgba(255,77,109,0.10)':'rgba(255,102,196,0.06)';
+      const lvShow=Math.min(level,25);
+      ctx.font=`bold ${Math.min(180,80+lvShow*7)}px Poppins,sans-serif`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(lvShow,CW/2,CH/2);
     }
 
     drawSpikes(sd);
-    heartItems.forEach(h=>drawHeart(h.x,h.y-h.r,h.r*0.9,'#ff4d6d'));
-    starItems.forEach(s=>drawStar(s.x,s.y,s.r,s.rot,'#ffd93d'));
 
-    ctx.shadowBlur=0;
-    balls.forEach(b=>{
+    /* Corazones */
+    heartItems.forEach(h => drawHeart(h.x, h.y, h.r*0.9));
+
+    /* Estrellas */
+    starItems.forEach(s => drawStar(s.x,s.y,s.r,s.rot,'#ffd93d'));
+
+    /* Bolas — un solo fillStyle por color para agrupar */
+    balls.forEach(b => {
       ctx.fillStyle=b.color;
       ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
-      if (!IS_LOW_END) {
+      if (GLOW) {
         ctx.fillStyle='rgba(255,255,255,0.28)';
         ctx.beginPath(); ctx.arc(b.x-b.r*0.3,b.y-b.r*0.3,b.r*0.3,0,Math.PI*2); ctx.fill();
       }
     });
 
-    particles.forEach(p=>{
+    /* Partículas */
+    for (let i=0; i<particles.length; i++) {
+      const p=particles[i];
       ctx.globalAlpha=Math.max(0,p.life);
       ctx.fillStyle=p.color;
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2); ctx.fill();
-    });
+      ctx.beginPath(); ctx.arc(p.x,p.y,Math.max(0.1,p.r*p.life),0,Math.PI*2); ctx.fill();
+    }
     ctx.globalAlpha=1;
 
-    floatingTexts.forEach(t=>{
+    /* Textos flotantes */
+    ctx.font='bold 18px Poppins,sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    floatingTexts.forEach(t => {
       ctx.globalAlpha=Math.max(0,t.life);
       ctx.fillStyle=t.color;
-      ctx.font='bold 18px Poppins,sans-serif';
-      ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillText(t.text,t.x,t.y);
     });
     ctx.globalAlpha=1;
 
-    /* Jugador — borde según nivel de racha */
-    const isHit = player.hitFlash>0 && Math.floor(player.hitFlash*8)%2===0;
+    /* Jugador */
+    const isHit=player.hitFlash>0 && Math.floor(player.hitFlash*8)%2===0;
     if (!isHit) {
       if (streakActive) {
         ctx.strokeStyle=getStreakColor(mult); ctx.lineWidth=3;
@@ -450,26 +534,26 @@ ctx.fillText(lvShow,CW/2,CH/2);
       }
       ctx.fillStyle='#ff4d6d';
       ctx.beginPath(); ctx.arc(player.x,player.y,player.r,0,Math.PI*2); ctx.fill();
-      if (!IS_LOW_END) {
+      if (GLOW) {
         ctx.fillStyle='rgba(255,255,255,0.45)';
         ctx.beginPath(); ctx.arc(player.x-4,player.y-4,4,0,Math.PI*2); ctx.fill();
       }
     }
 
-    /* Línea guía */
-    if (touchX!==null) {
+    /* Línea guía — solo gama alta */
+    if (GLOW && touchX!==null) {
       ctx.strokeStyle='rgba(255,77,109,0.2)'; ctx.lineWidth=1.5; ctx.setLineDash([4,4]);
       ctx.beginPath(); ctx.moveTo(player.x,player.y); ctx.lineTo(touchX,touchY||player.y); ctx.stroke();
       ctx.setLineDash([]);
     }
 
-    /* Barra de racha */
+    /* Barra racha */
     if (started && !gameOver) drawStreakBar(mult);
 
     /* Pantalla inicio */
     if (!started) {
       ctx.fillStyle='rgba(255,77,109,0.93)';
-      ctx.beginPath(); ctx.roundRect(CW/2-130,CH/2-65,260,130,14); ctx.fill();
+      ctx.beginPath(); safeRoundRect(CW/2-130,CH/2-65,260,130,14); ctx.fill();
       ctx.fillStyle='white'; ctx.font='bold 18px Poppins,sans-serif';
       ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillText('Evita las Bolas',CW/2,CH/2-36);
@@ -479,7 +563,7 @@ ctx.fillText(lvShow,CW/2,CH/2);
       ctx.fillText('⭐ Estrellas = +100 pts',CW/2,CH/2+4);
       ctx.fillText('❤️ Corazones = +vida',CW/2,CH/2+20);
       ctx.fillText('🔥 20s sin golpe = x2 → x3 → x4',CW/2,CH/2+36);
-      ctx.fillText('Nivel 10+ pinchos ',CW/2,CH/2+52);
+      ctx.fillText('Nivel 10+ pinchos',CW/2,CH/2+52);
     }
   }
 
