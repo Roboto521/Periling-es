@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (firstMatchTab) activateTab(firstMatchTab);
   });
 
-  /* ===== CERRAR TODOS LOS MODALES ===== */
+  /* ===== CERRAR MODALES ===== */
   function cerrarTodosLosModales() {
     ['rankingModal','rankingJuegoModal','gameModal','resultModal','modelosModal','secretariasModal'].forEach(id => {
       const m = document.getElementById(id);
@@ -60,23 +60,44 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     window._cerrarJuego?.();
   }
-
-  /* ===== CERRAR MODAL AL CLICK EN FONDO ===== */
   function cerrarAlFondo(id) {
     document.getElementById(id)?.addEventListener("click", e => {
       if (e.target.id === id) e.target.style.display = "none";
     });
   }
 
-  /* ===== SLIDER — agregar desde header ===== */
+  /* ===== SLIDER ===== */
   window.agregarDesdeSlider = function(name) {
     document.querySelector(`.add-to-cart[data-name="${name}"]`)?.click();
     const dropdown = document.getElementById('cart-dropdown');
     if (dropdown) dropdown.style.display = 'block';
   };
 
+  /* ===== TOAST ===== */
+  function mostrarToast(msg, color = "#ff4d6d") {
+    let toast = document.getElementById("toast-stock");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "toast-stock";
+      toast.style.cssText = `
+        position:fixed; bottom:-100px; left:50%; transform:translateX(-50%);
+        padding:12px 24px; border-radius:999px; font-weight:700; font-size:0.88rem;
+        box-shadow:0 8px 30px rgba(0,0,0,0.3); transition:bottom 0.4s cubic-bezier(.17,.67,.39,1.4);
+        z-index:999999; color:white; text-align:center; max-width:85vw; line-height:1.4;
+      `;
+      document.body.appendChild(toast);
+    }
+    toast.style.background = color;
+    toast.textContent = msg;
+    toast.style.bottom = "30px";
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { toast.style.bottom = "-100px"; }, 3000);
+  }
+
   /* ===== CARRITO ===== */
   let cart = [];
+  const MAX_COMPRA = () => window._MAX_POR_COMPRA || 10;
+
   const cartItemsList = document.getElementById("cart-items");
   const cartTotal     = document.getElementById("cart-total");
   const cartCount     = document.getElementById("cart-count");
@@ -87,72 +108,146 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function agregarAlCarrito(name, price, img) {
-    const existing = cart.find(item => item.name === name);
+    const stock          = window._stockActual || {};
+    const existing       = cart.find(i => i.name === name);
+    const cantidadActual = existing ? existing.quantity : 0;
+    const stockDisp      = stock[name] !== undefined ? stock[name] : Infinity;
+
+    if (cantidadActual >= MAX_COMPRA()) {
+      mostrarToast(`⚠️ Máximo ${MAX_COMPRA()} unidades de "${name}" por compra`, "#ff8c42");
+      return;
+    }
+    if (cantidadActual >= stockDisp) {
+      mostrarToast(`📦 Solo hay ${stockDisp} "${name}" disponibles`, "#9d6bff");
+      return;
+    }
+
     if (existing) existing.quantity++;
     else cart.push({ name, price: parseFloat(price), img, quantity: 1 });
     updateCart();
-    
   }
 
   document.querySelectorAll(".add-to-cart").forEach(btn => {
-    btn.addEventListener("click", () => agregarAlCarrito(btn.dataset.name, btn.dataset.price, btn.dataset.img));
+    btn.addEventListener("click", () => {
+      if (btn.disabled) return;
+      agregarAlCarrito(btn.dataset.name, btn.dataset.price, btn.dataset.img);
+    });
   });
 
   document.addEventListener('agregarProducto', e => {
     agregarAlCarrito(e.detail.name, e.detail.price, e.detail.img);
   });
 
+  /* ===== RENDER CARRITO ===== */
   function updateCart() {
     cartItemsList.innerHTML = "";
     let total = 0, count = 0;
+
     cart.forEach((item, index) => {
       total += item.price * item.quantity;
       count += item.quantity;
+
+      const stock     = window._stockActual || {};
+      const stockDisp = stock[item.name] !== undefined ? stock[item.name] : Infinity;
+      const maxPerm   = Math.min(MAX_COMPRA(), stockDisp);
+      const puedeSubir = item.quantity < maxPerm;
+
       const li = document.createElement("li");
       li.innerHTML = `
-        <img src="${item.img}" width="40">
-        ${item.name} x${item.quantity}
-        <button class="minus" data-index="${index}">➖</button>
-        <button class="remove" data-index="${index}">❌</button>`;
+        <img src="${item.img}" width="40" style="border-radius:8px;object-fit:contain;flex-shrink:0;">
+        <span class="cart-item-nombre">${item.name} <b>x${item.quantity}</b></span>
+        <div class="cart-item-btns">
+          <button class="btn-mas"    data-index="${index}" ${puedeSubir ? "" : "disabled"}>➕</button>
+          <button class="btn-menos"  data-index="${index}">➖</button>
+          <button class="btn-remove" data-index="${index}">❌</button>
+        </div>
+      `;
       cartItemsList.appendChild(li);
     });
+
     cartTotal.textContent = total.toFixed(2);
     cartCount.textContent = count;
-    cartItemsList.querySelectorAll(".minus").forEach(btn => {
+
+    cartItemsList.querySelectorAll(".btn-mas").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const i = parseInt(btn.dataset.index);
+        agregarAlCarrito(cart[i].name, cart[i].price, cart[i].img);
+      });
+    });
+    cartItemsList.querySelectorAll(".btn-menos").forEach(btn => {
       btn.addEventListener("click", () => {
         const i = parseInt(btn.dataset.index);
         if (--cart[i].quantity <= 0) cart.splice(i, 1);
         updateCart();
       });
     });
-    cartItemsList.querySelectorAll(".remove").forEach(btn => {
-      btn.addEventListener("click", () => { cart.splice(parseInt(btn.dataset.index), 1); updateCart(); });
+    cartItemsList.querySelectorAll(".btn-remove").forEach(btn => {
+      btn.addEventListener("click", () => {
+        cart.splice(parseInt(btn.dataset.index), 1);
+        updateCart();
+      });
     });
   }
 
   document.getElementById("clear-cart")?.addEventListener("click", () => { cart = []; updateCart(); });
 
   /* ===== COMPRAR ===== */
-  document.getElementById("buy-cart")?.addEventListener("click", () => {
-    if (cart.length === 0) { alert("Tu carrito está vacío 🍬"); return; }
+  document.getElementById("buy-cart")?.addEventListener("click", async () => {
+    if (cart.length === 0) { mostrarToast("🍬 Tu carrito está vacío", "#ff4d6d"); return; }
+
+    // Validar stock y límite
+    const problemas = window.validarCarritoContraStock?.(cart) || [];
+    if (problemas.length > 0) {
+      const msgs = problemas.map(p =>
+        p.esLimite
+          ? `• ${p.nombre}: máximo ${p.disponible} por compra`
+          : p.disponible === 0
+            ? `• ${p.nombre}: sin stock`
+            : `• ${p.nombre}: solo quedan ${p.disponible}`
+      );
+      mostrarToast("⚠️ " + msgs.join(" | "), "#ff4d6d");
+      problemas.forEach(p => {
+        const item = cart.find(i => i.name === p.nombre);
+        if (!item) return;
+        if (p.disponible === 0) cart = cart.filter(i => i.name !== p.nombre);
+        else item.quantity = p.disponible;
+      });
+      updateCart();
+      return;
+    }
+
     const nombre = localStorage.getItem("userName")  || "No indicado";
     const grado  = localStorage.getItem("userGrado") || "No indicado";
     const uid    = localStorage.getItem("userUID")   || "";
     const total  = parseFloat(cartTotal.textContent);
+
+    // Descontar stock en Firebase
+    const errores = await window.descontarStock?.(cart) || [];
+    if (errores.length > 0) {
+      mostrarToast(`⚠️ Stock insuficiente para: ${errores.join(", ")}`, "#ff8c42");
+      cart = cart.filter(i => !errores.includes(i.name));
+      updateCart();
+      return;
+    }
+
+    // Guardar pedido y sumar puntos
     window.guardarPedido?.({ uid, nombre, grado, items:[...cart], total, puntos:Math.floor(total), fecha:new Date().toLocaleString("es-GT") });
+    window.sumarPuntos?.(uid, Math.floor(total));
+
+    // WhatsApp
     let mensaje = `🍬 Pedido Party Perilingües 🍬\n\n👤 Nombre: ${nombre}\n🎓 Grado/Carrera: ${grado}\n\n`;
-    cart.forEach(item => { mensaje += `• ${item.name} x${item.quantity} — Q${item.price * item.quantity}\n`; });
+    cart.forEach(item => { mensaje += `• ${item.name} x${item.quantity} — Q${(item.price * item.quantity).toFixed(2)}\n`; });
     mensaje += `\n💰 Total: Q${total.toFixed(2)}`;
+
     cart = []; updateCart();
     window.location.href = `https://wa.me/50239411839?text=${encodeURIComponent(mensaje)}`;
   });
 
-  /* ===== MODAL RESULTADO ===== */
+  /* ===== RESTO DE MODALES ===== */
   document.getElementById("closeResult")?.addEventListener("click", () => {
     document.getElementById("resultModal").style.display = "none";
   });
 
-  /* ===== RANKING COMPRAS ===== */
   document.getElementById("ranking-btn")?.addEventListener("click", () => {
     cerrarTodosLosModales();
     document.getElementById("rankingModal").style.display = "flex";
@@ -163,7 +258,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   cerrarAlFondo("rankingModal");
 
-  /* ===== RANKING JUEGO ===== */
   document.getElementById("ranking-juego-btn")?.addEventListener("click", () => {
     cerrarTodosLosModales();
     document.getElementById("rankingJuegoModal").style.display = "flex";
@@ -174,14 +268,12 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   cerrarAlFondo("rankingJuegoModal");
 
-  /* ===== PUBLICISTAS ===== */
   document.getElementById("publicistas-btn")?.addEventListener("click", () => {
     cerrarTodosLosModales();
     document.getElementById("modelosModal").style.display = "flex";
   });
   cerrarAlFondo("modelosModal");
 
-  /* ===== SECRETARIAS ===== */
   document.getElementById("secretarias-btn")?.addEventListener("click", () => {
     cerrarTodosLosModales();
     document.getElementById("secretariasModal").style.display = "flex";
@@ -213,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* ===== PUBLICIDAD AUTO ===== */
+  /* ===== PUBLICIDAD ===== */
   const ad      = document.getElementById("adModal");
   const closeAd = document.getElementById("closeAd");
   if (ad && closeAd) {
@@ -225,14 +317,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* ===== LOGOUT ===== */
-  // ✅ FIX: cierra sesión de Firebase Auth correctamente además de limpiar localStorage
   document.getElementById("logout-btn")?.addEventListener("click", async () => {
     try {
       const { getAuth, signOut } = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js");
       await signOut(getAuth());
-    } catch(e) {
-      console.error("Error al cerrar sesión:", e);
-    }
+    } catch(e) { console.error("Error al cerrar sesión:", e); }
     localStorage.clear();
     window.location.href = "index.html";
   });
@@ -241,12 +330,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ===== CARRUSEL PUBLICISTAS =====
 (function(){
-  const track = document.getElementById('pubTrack');
+  const track    = document.getElementById('pubTrack');
   if(!track) return;
   const dotsWrap = document.getElementById('pubDots');
-  const counter = document.getElementById('pubCounter');
+  const counter  = document.getElementById('pubCounter');
   const modalBox = document.querySelector('#modelosModal .modal-publicistas-box');
-  const slides = track.querySelectorAll('.pub-slide');
+  const slides   = track.querySelectorAll('.pub-slide');
   let cur = 0;
 
   const colores = [
