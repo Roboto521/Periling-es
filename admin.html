@@ -129,7 +129,6 @@ body { background:#fdf6f0; min-height:100vh; }
 }
 @keyframes fadeIn{ from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
 
-/* cabecera del usuario dentro del pedido */
 .usuario-header {
   display:flex; align-items:center; gap:10px; margin-bottom:12px;
   padding-bottom:12px; border-bottom:2px solid #fdf0f5;
@@ -150,8 +149,27 @@ body { background:#fdf6f0; min-height:100vh; }
   font-size:0.8rem; color:#666; line-height:1.9; margin-bottom:10px;
   background:#fdf6f0; border-radius:10px; padding:8px 12px;
 }
-.pedido-total  { font-weight:700; color:#ff4d6d; font-size:0.95rem; margin-bottom:4px; }
-.pedido-puntos { font-size:0.78rem; color:#bbb; margin-bottom:12px; }
+.pedido-total  { font-weight:700; color:#ff4d6d; font-size:0.95rem; margin-bottom:10px; }
+
+/* ─── AJUSTE DE PUNTOS ─── */
+.pts-ajuste {
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  background:#fff0f8; border-radius:14px; padding:10px 14px; margin-bottom:10px;
+}
+.pts-ajuste-label { font-size:0.78rem; color:#aaa; font-weight:600; }
+.pts-ajuste-valor { font-weight:700; color:#ff4d6d; font-size:1.1rem; min-width:60px; text-align:center; }
+.btn-pts {
+  width:34px; height:34px; border:none; border-radius:50%;
+  font-size:20px; font-weight:700; cursor:pointer; color:white;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .1s, opacity .2s; line-height:1;
+  font-family:'Poppins',sans-serif;
+}
+.btn-pts:active { transform:scale(.9); }
+.btn-pts-menos { background:linear-gradient(45deg,#ff4d6d,#ff6b6b); }
+.btn-pts-mas   { background:linear-gradient(45deg,#3ddc97,#00b894); }
+.btn-pts:disabled { opacity:.4; cursor:not-allowed; }
+
 .pedido-btns { display:flex; gap:8px; }
 .btn-aprobar {
   flex:1; padding:10px; border:none; border-radius:12px;
@@ -240,7 +258,6 @@ mark { background:#fff3a0; color:inherit; border-radius:3px; padding:0 2px; font
     <button onclick="cerrarAdmin()">Salir</button>
   </div>
 
-  <!-- Stats -->
   <div class="stats">
     <div class="stat-card"><span id="stat-pendientes">0</span><p>Pendientes</p></div>
     <div class="stat-card"><span id="stat-aprobados">0</span><p>Aprobados</p></div>
@@ -248,7 +265,6 @@ mark { background:#fff3a0; color:inherit; border-radius:3px; padding:0 2px; font
     <div class="stat-card"><span id="stat-total" style="font-size:1.3rem">Q0</span><p>Total vendido</p></div>
   </div>
 
-  <!-- Tabs de sección -->
   <div class="section-tabs">
     <button class="section-tab active" onclick="cambiarSeccion('pedidos',this)">🛒 Pedidos</button>
     <button class="section-tab" onclick="cambiarSeccion('usuarios',this)">👥 Usuarios</button>
@@ -388,7 +404,6 @@ window.filtrar = function(filtro, btn){
   renderPedidos(filtro);
 };
 
-/* ── CARGA SIMULTÁNEA de usuarios y pedidos ── */
 async function cargarTodo(){
   const [sU, sP] = await Promise.all([
     get(ref(db,"usuarios")),
@@ -415,18 +430,12 @@ function hl(txt,q){
   return String(txt).replace(new RegExp(`(${s})`,"gi"),"<mark>$1</mark>");
 }
 
-/* ══════════════════════════════════════════════
-   RENDER PEDIDOS
-   Fix principal: cruzamos p.uid con todosUsuarios
-   para obtener el nombre REAL de la BD de usuarios
-   ══════════════════════════════════════════════ */
 function renderPedidos(filtro){
   const q=qPedidos.toLowerCase();
   const contenedor=document.getElementById("pedidos-lista");
 
   const entries=Object.entries(todosPedidos)
     .map(([id,p])=>{
-      // ← AQUÍ ESTÁ EL FIX: buscar en la tabla de usuarios por uid
       const u = todosUsuarios[p.uid] || {};
       return [id, {
         ...p,
@@ -465,10 +474,19 @@ function renderPedidos(filtro){
       .join("<br>");
 
     const btns = p.estado==="pendiente"
-      ? `<div class="pedido-btns">
-           <button class="btn-aprobar" onclick="aprobar('${id}','${p.uid}',${p.puntos})">✅ Aprobar (+${p.puntos} pts)</button>
-           <button class="btn-rechazar" onclick="rechazar('${id}')">❌ Rechazar</button>
-         </div>`
+      ? `
+        <!-- Ajustador de puntos -->
+        <div class="pts-ajuste">
+          <span class="pts-ajuste-label">⭐ Puntos a otorgar:</span>
+          <button class="btn-pts btn-pts-menos" onclick="cambiarPuntos('${id}',-1)">−</button>
+          <span class="pts-ajuste-valor" id="pts-${id}">${p.puntos}</span>
+          <button class="btn-pts btn-pts-mas" onclick="cambiarPuntos('${id}',+1)">+</button>
+        </div>
+        <!-- Botones aprobar/rechazar -->
+        <div class="pedido-btns">
+          <button class="btn-aprobar" onclick="aprobar('${id}','${p.uid}')">✅ Aprobar</button>
+          <button class="btn-rechazar" onclick="rechazar('${id}')">❌ Rechazar</button>
+        </div>`
       : `<span class="${p.estado==="aprobado"?"badge-aprobado":"badge-rechazado"}">
            ${p.estado==="aprobado"?"✅ Aprobado":"❌ Rechazado"}
          </span>`;
@@ -482,16 +500,51 @@ function renderPedidos(filtro){
         </div>
         <div style="text-align:right;flex-shrink:0">
           <div class="pedido-fecha">${p.fecha||""}</div>
-          <div class="pts-badge">⭐ ${p.puntosTotales} pts</div>
+          <div class="pts-badge">⭐ ${p.puntosTotales} pts totales</div>
         </div>
       </div>
       <div class="pedido-items">${itemsHTML}</div>
       <div class="pedido-total">💰 Total: Q${parseFloat(p.total||0).toFixed(2)}</div>
-      <div class="pedido-puntos">⭐ Puntos a otorgar: ${p.puntos}</div>
       ${btns}
     </div>`;
   }).join("");
 }
+
+/* ── Cambiar puntos con botones +/- ── */
+window.cambiarPuntos = function(id, delta){
+  const el = document.getElementById("pts-" + id);
+  if (!el) return;
+  const nuevo = Math.max(0, parseInt(el.textContent) + delta);
+  el.textContent = nuevo;
+};
+
+/* ── Aprobar — toma los puntos del ajustador ── */
+window.aprobar = async function(pedidoId, uid){
+  const el = document.getElementById("pts-" + pedidoId);
+  const puntos = el ? parseInt(el.textContent) : 0;
+
+  await update(ref(db,"pedidos/"+pedidoId),{estado:"aprobado"});
+  if(puntos > 0){
+    const snap=await get(ref(db,"usuarios/"+uid));
+    if(snap.exists()){
+      const nuevo=(snap.val().puntos||0)+puntos;
+      await update(ref(db,"usuarios/"+uid),{puntos:nuevo});
+      if(todosUsuarios[uid]) todosUsuarios[uid].puntos=nuevo;
+    }
+  }
+  todosPedidos[pedidoId].estado="aprobado";
+  actualizarStats();
+  renderPedidos(filtroActual);
+  mostrarToast(puntos > 0 ? `✅ Aprobado — +${puntos} pts sumados` : `✅ Aprobado — sin puntos`);
+};
+
+window.rechazar = async function(pedidoId){
+  await update(ref(db,"pedidos/"+pedidoId),{estado:"rechazado"});
+  todosPedidos[pedidoId].estado="rechazado";
+  actualizarStats();
+  renderPedidos(filtroActual);
+  mostrarToast("❌ Pedido rechazado");
+};
 
 /* ── RENDER USUARIOS ── */
 function renderUsuarios(){
@@ -540,28 +593,6 @@ function renderUsuarios(){
 
 window.copiarUID = function(uid){
   navigator.clipboard.writeText(uid).then(()=>mostrarToast("📋 UID copiado al portapapeles"));
-};
-
-window.aprobar = async function(pedidoId, uid, puntos){
-  await update(ref(db,"pedidos/"+pedidoId),{estado:"aprobado"});
-  const snap=await get(ref(db,"usuarios/"+uid));
-  if(snap.exists()){
-    const nuevo=(snap.val().puntos||0)+puntos;
-    await update(ref(db,"usuarios/"+uid),{puntos:nuevo});
-    if(todosUsuarios[uid]) todosUsuarios[uid].puntos=nuevo;
-  }
-  todosPedidos[pedidoId].estado="aprobado";
-  actualizarStats();
-  renderPedidos(filtroActual);
-  mostrarToast(`✅ Aprobado — +${puntos} pts sumados`);
-};
-
-window.rechazar = async function(pedidoId){
-  await update(ref(db,"pedidos/"+pedidoId),{estado:"rechazado"});
-  todosPedidos[pedidoId].estado="rechazado";
-  actualizarStats();
-  renderPedidos(filtroActual);
-  mostrarToast("❌ Pedido rechazado");
 };
 
 function mostrarToast(msg){
