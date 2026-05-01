@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Guardar pedido y sumar puntos
     window.guardarPedido?.({ uid, nombre, grado, items:[...cart], total, puntos:Math.floor(total), fecha:new Date().toLocaleString("es-GT") });
-    window.sumarPuntos?.(uid, Math.floor(total));
+   
 
     // WhatsApp
     let mensaje = `🍬 Pedido Party Perilingües 🍬\n\n👤 Nombre: ${nombre}\n🎓 Grado/Carrera: ${grado}\n\n`;
