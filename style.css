@@ -516,3 +516,24 @@ header *{ position:relative; z-index:1; }
   overflow: visible !important;
   text-overflow: unset !important;
 }
+
+/* ===== TOP 3 GOMITAS ===== */
+.ranking-top3-compras { border: 1.5px solid #EF9F27 !important; background: #FAEEDA !important; }
+.ranking-top3-juego   { border: 1.5px solid #7F77DD !important; background: #EEEDFE !important; }
+.gomita-tag           { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #EF9F27; color: #412402; flex-shrink: 0; }
+.gomita-tag.juego     { background: #7F77DD; color: #EEEDFE; }
+
+
+#rankingBox .sub-premio {
+  color: #ffb86b;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+#rankingJuegoBox .sub-premio {
+  color: #a78bfa;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
