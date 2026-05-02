@@ -2,20 +2,22 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
+  const ES_MOVIL = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
   const CFG = {
-    PTS_POR_SEGUNDO  : 20,
-    BONUS_CADA_5S    : 30,
-    MAX_VIDAS        : 3,
-    NIVEL_CADA_S     : 7,
-    STAR_INTERVAL    : 8,
-    STAR_PTS         : 100,
-    STREAK_STEP      : 20,
+    PTS_POR_SEGUNDO  : ES_MOVIL ? 25  : 20,
+    BONUS_CADA_5S    : ES_MOVIL ? 40  : 30,
+    MAX_VIDAS        : ES_MOVIL ? 5   : 3,
+    NIVEL_CADA_S     : ES_MOVIL ? 10  : 7,
+    STAR_INTERVAL    : ES_MOVIL ? 5   : 8,
+    STAR_PTS         : ES_MOVIL ? 150 : 100,
+    STREAK_STEP      : ES_MOVIL ? 15  : 20,
     STREAK_MAX_MULT  : 4,
   };
 
   const canvas = document.getElementById('gameCanvas');
   if (!canvas) return;
-  const ctx = canvas.getContext('2d', { alpha: false }); // alpha:false = más rápido
+  const ctx = canvas.getContext('2d', { alpha: false });
   let CW = 360, CH = 414;
   let inputBound = false;
   let touchX = null, touchY = null;
@@ -23,18 +25,13 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ===== DETECCIÓN MEJORADA DE GAMA BAJA ===== */
   let IS_LOW_END = false;
   (function detectLowEnd() {
-    const mem  = navigator.deviceMemory;          // RAM en GB (no en iPhone)
+    const mem  = navigator.deviceMemory;
     const cpus = navigator.hardwareConcurrency;
     const w    = window.screen.width;
     const dpr  = window.devicePixelRatio || 1;
-
-    // RAM menor a 3GB → gama baja
     if (mem && mem < 3) { IS_LOW_END = true; return; }
-    // Menos de 4 núcleos → gama baja
     if (cpus && cpus <= 4) { IS_LOW_END = true; return; }
-    // Pantalla pequeña + DPR alto = teléfono barato escaleado
     if (w < 390 && dpr >= 2.5) { IS_LOW_END = true; return; }
-    // Benchmark rápido de canvas (~16ms = 60fps, si tarda más → lento)
     const t0 = performance.now();
     for (let i = 0; i < 200; i++) {
       ctx.fillStyle = '#ff' + i.toString(16).padStart(4,'0');
@@ -43,20 +40,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (performance.now() - t0 > 8) IS_LOW_END = true;
   })();
 
-  /* Límites según gama */
-  const PARTICLE_MAX  = IS_LOW_END ? 20  : 60;
-  const PARTICLE_SPAWN= IS_LOW_END ? 5   : 12;
-  const FTEXT_MAX     = IS_LOW_END ? 3   : 8;
-  const DPR_USE       = IS_LOW_END ? 1   : Math.min(window.devicePixelRatio || 1, 2);
-  const GLOW          = !IS_LOW_END;
+  const PARTICLE_MAX   = IS_LOW_END ? 20  : 60;
+  const PARTICLE_SPAWN = IS_LOW_END ? 5   : 12;
+  const FTEXT_MAX      = IS_LOW_END ? 3   : 8;
+  const DPR_USE        = IS_LOW_END ? 1   : Math.min(window.devicePixelRatio || 1, 2);
+  const GLOW           = !IS_LOW_END;
 
-  /* roundRect seguro (no soportado en Android viejos) */
   function safeRoundRect(x, y, w, h, r) {
-    if (ctx.roundRect) {
-      ctx.roundRect(x, y, w, h, r);
-    } else {
-      ctx.rect(x, y, w, h);
-    }
+    if (ctx.roundRect) ctx.roundRect(x, y, w, h, r);
+    else ctx.rect(x, y, w, h);
   }
 
   function resizeCanvas() {
@@ -78,34 +70,38 @@ document.addEventListener('DOMContentLoaded', function () {
   let spawnTimer, heartSpawnTimer, starSpawnTimer, lives;
   let streakTimer, streakActive, streakFlash, streakMult;
 
-  /* Pool de objetos para evitar GC (reuso de partículas) */
   const particlePool = [];
-  function getParticle() {
-    return particlePool.pop() || {};
-  }
-  function recycleParticle(p) {
-    if (particlePool.length < 80) particlePool.push(p);
-  }
+  function getParticle() { return particlePool.pop() || {}; }
+  function recycleParticle(p) { if (particlePool.length < 80) particlePool.push(p); }
 
   function getLevelConfig(l) {
-    if (l<=2)  return {speed:130, sv:35,  int:0.95, max:5,  w:10};
-    if (l<=4)  return {speed:165, sv:45,  int:0.78, max:8,  w:14};
-    if (l<=6)  return {speed:205, sv:55,  int:0.62, max:11, w:19};
-    if (l<=8)  return {speed:245, sv:65,  int:0.50, max:14, w:25};
-    if (l<=10) return {speed:280, sv:72,  int:0.41, max:17, w:30};
-    if (l<=12) return {speed:310, sv:78,  int:0.34, max:20, w:35};
-    if (l<=14) return {speed:336, sv:82,  int:0.29, max:23, w:40};
-    if (l<=16) return {speed:358, sv:86,  int:0.25, max:26, w:45};
-    if (l<=20) return {speed:375, sv:90,  int:0.21, max:28, w:49};
-    return {speed:420, sv:100, int:0.14, max:35, w:60};
+    // Congelar dificultad en nivel 28 — nivel visual sigue subiendo, bolas no
+    if (l > 28) l = 28;
+
+    // Mismo para PC y móvil — arranca movido, nivel 28 es un reto serio
+    if (l<=2)  return {speed:220, sv:50,  int:0.90, max:5,  w:18};
+    if (l<=4)  return {speed:270, sv:60,  int:0.75, max:7,  w:22};
+    if (l<=6)  return {speed:320, sv:70,  int:0.62, max:9,  w:27};
+    if (l<=8)  return {speed:370, sv:75,  int:0.52, max:11, w:32};
+    if (l<=10) return {speed:410, sv:80,  int:0.44, max:13, w:36};
+    if (l<=12) return {speed:445, sv:85,  int:0.38, max:15, w:40};
+    if (l<=14) return {speed:475, sv:88,  int:0.34, max:16, w:43};
+    if (l<=16) return {speed:500, sv:90,  int:0.31, max:17, w:45};
+    if (l<=18) return {speed:520, sv:92,  int:0.29, max:18, w:47};
+    if (l<=20) return {speed:535, sv:93,  int:0.27, max:19, w:48};
+    if (l<=22) return {speed:548, sv:94,  int:0.26, max:20, w:49};
+    if (l<=24) return {speed:558, sv:95,  int:0.25, max:21, w:50};
+    if (l<=26) return {speed:565, sv:96,  int:0.24, max:21, w:51};
+    // TECHO NIVEL 28 — difícil pero posible con práctica
+    return           {speed:572, sv:97,  int:0.23, max:22, w:52};
   }
 
-  function getSpikeDepth(l) { return l < 10 ? 0 : 6; }
+  // Pinchos aparecen en nivel 12
+  function getSpikeDepth(l) { return l < 12 ? 0 : 6; }
 
   function initState() {
     player        = {x:CW/2, y:CH/2, r:14, tx:CW/2, ty:CH/2, hitFlash:0};
-    balls         = []; 
-    // Reciclar partículas viejas al pool
+    balls         = [];
     if (particles) particles.forEach(p => recycleParticle(p));
     particles     = [];
     heartItems    = []; starItems = []; floatingTexts = [];
@@ -156,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function startGame() {
     initState(); started = true; lastTs = performance.now();
     cancelAnimationFrame(frameId);
-    setMsg('⭐ Agarra estrellas · ❤️ Corazones · 🔥 20s sin golpe = x2→x3→x4');
+    setMsg('⭐ Agarra estrellas · ❤️ Corazones · 🔥 ' + CFG.STREAK_STEP + 's sin golpe = x2→x3→x4');
     frameId = requestAnimationFrame(loop);
   }
 
@@ -192,13 +188,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function addFloatingText(x, y, text, color) {
-    if (floatingTexts.length >= FTEXT_MAX) floatingTexts.shift(); // límite duro
+    if (floatingTexts.length >= FTEXT_MAX) floatingTexts.shift();
     floatingTexts.push({x, y, text, color, life:1.2, vy:-60});
   }
 
   function addParticles(x, y, color, n) {
     const count = IS_LOW_END ? Math.min(n, PARTICLE_SPAWN) : Math.min(n, 14);
-    // Si ya hay demasiadas, no agregar
     if (particles.length >= PARTICLE_MAX) return;
     const toAdd = Math.min(count, PARTICLE_MAX - particles.length);
     for (let i = 0; i < toAdd; i++) {
@@ -217,7 +212,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (sd <= 0) return;
     const sz = 20, p = 1+Math.sin(elapsed*4)*0.07;
     ctx.fillStyle = '#ff2244';
-    // Dibujar todos los spikes en un solo path = más eficiente
     ctx.beginPath();
     for (let i = -1; i < Math.ceil(CH/sz)+2; i++) {
       const y = i*sz;
@@ -249,7 +243,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (lives <= 0) endGame();
   }
 
-  /* Cache de nivel para no recalcular cada frame */
   let _lastLevelCalc = -1, _cachedLevel = 1, _cachedCfg, _cachedSd;
 
   function loop(ts) {
@@ -257,7 +250,6 @@ document.addEventListener('DOMContentLoaded', function () {
     lastTs = ts; elapsed += dt;
 
     const level = 1 + Math.floor(elapsed / CFG.NIVEL_CADA_S);
-    // Solo recalcular config si cambió de nivel
     if (level !== _lastLevelCalc) {
       _lastLevelCalc = level;
       _cachedCfg = getLevelConfig(level);
@@ -266,12 +258,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const cfg = _cachedCfg, sd = _cachedSd;
 
     const lvEl = document.getElementById('g-lv');
-    if (lvEl) lvEl.textContent = Math.min(level, 25);
+    if (lvEl) lvEl.textContent = level;
 
     if (player.hitFlash > 0) player.hitFlash -= dt;
     if (streakFlash > 0) streakFlash -= dt;
 
-    /* Racha */
     streakTimer += dt;
     const newMult = Math.min(1 + Math.floor(streakTimer / CFG.STREAK_STEP), CFG.STREAK_MAX_MULT);
     if (newMult > streakMult) {
@@ -285,27 +276,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const scEl = document.getElementById('g-sc');
     if (scEl) scEl.textContent = (streakActive ? `🔥 x${mult}  ` : '') + Math.round(score);
 
-    /* Mover jugador */
+    const smooth = ES_MOVIL ? 0.45 : 0.35;
     if (touchX !== null) {
       player.tx = Math.max(player.r, Math.min(CW-player.r, touchX));
       player.ty = Math.max(player.r, Math.min(CH-player.r, touchY || player.ty));
     }
-    player.x += (player.tx-player.x)*0.35;
-    player.y += (player.ty-player.y)*0.35;
+    player.x += (player.tx-player.x)*smooth;
+    player.y += (player.ty-player.y)*smooth;
     player.x = Math.max(player.r, Math.min(CW-player.r, player.x));
     player.y = Math.max(player.r, Math.min(CH-player.r, player.y));
 
     if (checkSpike(sd) && player.hitFlash <= 0) { loseLife(); if (gameOver) return; }
 
-    /* Spawn */
     spawnTimer += dt;
     if (spawnTimer >= cfg.int && balls.length < Math.floor(cfg.max)) { spawnBall(cfg,sd); spawnTimer = 0; }
     heartSpawnTimer += dt;
-    if (heartSpawnTimer >= 15) { spawnHeart(sd); heartSpawnTimer = 0; }
+    if (heartSpawnTimer >= (ES_MOVIL ? 10 : 15)) { spawnHeart(sd); heartSpawnTimer = 0; }
     starSpawnTimer += dt;
     if (starSpawnTimer >= CFG.STAR_INTERVAL) { spawnStar(sd); starSpawnTimer = 0; }
 
-    /* Bolas — iterar al revés para splice seguro */
     const pr = player.r, px = player.x, py = player.y;
     for (let i = balls.length-1; i >= 0; i--) {
       const b = balls[i];
@@ -319,7 +308,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    /* Corazones */
     for (let i = heartItems.length-1; i >= 0; i--) {
       const h = heartItems[i]; h.y += h.vy*dt;
       if (h.y-h.r>CH+10) { heartItems.splice(i,1); continue; }
@@ -332,7 +320,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    /* Estrellas */
     for (let i = starItems.length-1; i >= 0; i--) {
       const s = starItems[i];
       s.y += s.vy*dt; s.rot += s.rotSpeed*dt;
@@ -347,7 +334,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    /* Puntos por tiempo */
     ptAcc += CFG.PTS_POR_SEGUNDO * mult * dt;
     if (ptAcc >= 1) { const p=Math.floor(ptAcc); score+=p; ptAcc-=p; }
 
@@ -357,14 +343,12 @@ document.addEventListener('DOMContentLoaded', function () {
       addParticles(player.x, player.y-30, '#ffd93d', IS_LOW_END ? 4 : 8);
     }
 
-    /* Partículas con pool */
     for (let i = particles.length-1; i >= 0; i--) {
       const p=particles[i];
       p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=120*dt; p.life-=dt*1.5;
       if (p.life<=0) { recycleParticle(particles.splice(i,1)[0]); }
     }
 
-    /* Textos flotantes */
     for (let i = floatingTexts.length-1; i >= 0; i--) {
       const t=floatingTexts[i]; t.y+=t.vy*dt; t.life-=dt*1.2;
       if (t.life<=0) floatingTexts.splice(i,1);
@@ -382,7 +366,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return '#000';
   }
 
-  /* Cache de corazón (offscreen canvas) */
   let heartCache = null, heartCacheSize = 0;
   function getHeartCache(sz) {
     if (heartCache && heartCacheSize === sz) return heartCache;
@@ -469,34 +452,26 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function draw(level, sd, mult) {
-    /* Fondo sólido (alpha:false hace esto más rápido) */
     ctx.fillStyle=getBg(level||1);
     ctx.fillRect(0,0,CW,CH);
 
-    /* Flash de racha */
     if (streakFlash > 0) {
       ctx.fillStyle=`rgba(255,153,0,${streakFlash*0.12})`;
       ctx.fillRect(0,0,CW,CH);
     }
 
-    /* Número de nivel de fondo — solo en gama alta */
     if (GLOW) {
       ctx.fillStyle=level>=6?'rgba(255,77,109,0.10)':'rgba(255,102,196,0.06)';
-      const lvShow=Math.min(level,25);
-      ctx.font=`bold ${Math.min(180,80+lvShow*7)}px Poppins,sans-serif`;
+      const lvShow = level;
+      ctx.font=`bold ${Math.min(180,80+Math.min(lvShow,28)*7)}px Poppins,sans-serif`;
       ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillText(lvShow,CW/2,CH/2);
     }
 
     drawSpikes(sd);
-
-    /* Corazones */
     heartItems.forEach(h => drawHeart(h.x, h.y, h.r*0.9));
-
-    /* Estrellas */
     starItems.forEach(s => drawStar(s.x,s.y,s.r,s.rot,'#ffd93d'));
 
-    /* Bolas — un solo fillStyle por color para agrupar */
     balls.forEach(b => {
       ctx.fillStyle=b.color;
       ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
@@ -506,7 +481,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-    /* Partículas */
     for (let i=0; i<particles.length; i++) {
       const p=particles[i];
       ctx.globalAlpha=Math.max(0,p.life);
@@ -515,7 +489,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     ctx.globalAlpha=1;
 
-    /* Textos flotantes */
     ctx.font='bold 18px Poppins,sans-serif';
     ctx.textAlign='center'; ctx.textBaseline='middle';
     floatingTexts.forEach(t => {
@@ -525,7 +498,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     ctx.globalAlpha=1;
 
-    /* Jugador */
     const isHit=player.hitFlash>0 && Math.floor(player.hitFlash*8)%2===0;
     if (!isHit) {
       if (streakActive) {
@@ -540,17 +512,14 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    /* Línea guía — solo gama alta */
     if (GLOW && touchX!==null) {
       ctx.strokeStyle='rgba(255,77,109,0.2)'; ctx.lineWidth=1.5; ctx.setLineDash([4,4]);
       ctx.beginPath(); ctx.moveTo(player.x,player.y); ctx.lineTo(touchX,touchY||player.y); ctx.stroke();
       ctx.setLineDash([]);
     }
 
-    /* Barra racha */
     if (started && !gameOver) drawStreakBar(mult);
 
-    /* Pantalla inicio */
     if (!started) {
       ctx.fillStyle='rgba(255,77,109,0.93)';
       ctx.beginPath(); safeRoundRect(CW/2-130,CH/2-65,260,130,14); ctx.fill();
@@ -560,10 +529,10 @@ document.addEventListener('DOMContentLoaded', function () {
       ctx.font='12px Poppins,sans-serif';
       ctx.fillText('Mueve el dedo para esquivar',CW/2,CH/2-16);
       ctx.font='11px Poppins,sans-serif'; ctx.fillStyle='rgba(255,255,255,0.9)';
-      ctx.fillText('⭐ Estrellas = +100 pts',CW/2,CH/2+4);
-      ctx.fillText('❤️ Corazones = +vida',CW/2,CH/2+20);
-      ctx.fillText('🔥 20s sin golpe = x2 → x3 → x4',CW/2,CH/2+36);
-      ctx.fillText('Nivel 10+ pinchos',CW/2,CH/2+52);
+      ctx.fillText('⭐ Estrellas = +' + CFG.STAR_PTS + ' pts',CW/2,CH/2+4);
+      ctx.fillText('❤️ Corazones = +vida  (' + CFG.MAX_VIDAS + ' vidas)',CW/2,CH/2+20);
+      ctx.fillText('🔥 ' + CFG.STREAK_STEP + 's sin golpe = x2 → x3 → x4',CW/2,CH/2+36);
+      ctx.fillText('Nivel 12+ pinchos',CW/2,CH/2+52);
     }
   }
 
@@ -583,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ctx.font='bold 22px Poppins,sans-serif'; ctx.fillStyle='#ffd93d';
     ctx.fillText('+'+gained+' puntos',CW/2,CH/2+2);
     ctx.font='13px Poppins,sans-serif'; ctx.fillStyle='rgba(255,255,255,0.75)';
-    ctx.fillText('Nivel alcanzado: '+Math.min(level,25),CW/2,CH/2+28);
+    ctx.fillText('Nivel alcanzado: '+level,CW/2,CH/2+28);
     ctx.fillText('Toca para volver a jugar',CW/2,CH/2+50);
     refreshHUD();
   }
