@@ -23,25 +23,22 @@ onValue(ref(db, "config/mantenimiento"), (snap) => {
 });
 
 /* ===== STOCK EN TIEMPO REAL ===== */
-const MAX_POR_COMPRA = 10; // límite máximo por producto por compra
+const MAX_POR_COMPRA = 10;
 
 onValue(ref(db, "stock"), (snap) => {
   const stockData = snap.val() || {};
   window._stockActual = stockData;
 
-  // Actualizar todos los botones de agregar según stock
   document.querySelectorAll(".add-to-cart:not(.sin-stock-fijo)").forEach(btn => {
-    const nombre = btn.dataset.name;
+    const nombre   = btn.dataset.name;
     if (!nombre) return;
     const cantidad = stockData[nombre];
 
     if (cantidad !== undefined && cantidad <= 0) {
-      // Sin stock → desactivar
       btn.disabled = true;
       btn.textContent = "Sin Stock ❌";
       btn.classList.add("sin-stock");
 
-      // Mostrar badge sin stock en la tarjeta
       const card = btn.closest(".product");
       if (card && !card.querySelector(".badge-sin-stock-dinamico")) {
         const badge = document.createElement("div");
@@ -50,16 +47,13 @@ onValue(ref(db, "stock"), (snap) => {
         card.appendChild(badge);
       }
     } else {
-      // Con stock → activar
       btn.disabled = false;
       btn.textContent = "Agregar 🛒";
       btn.classList.remove("sin-stock");
 
-      // Quitar badge si existe
       const card = btn.closest(".product");
       card?.querySelector(".badge-sin-stock-dinamico")?.remove();
 
-      // Mostrar stock bajo si quedan pocos (≤5)
       if (cantidad !== undefined && cantidad <= 5 && cantidad > 0) {
         let stockLabel = card?.querySelector(".stock-bajo-label");
         if (!stockLabel) {
@@ -75,11 +69,10 @@ onValue(ref(db, "stock"), (snap) => {
   });
 });
 
-/* ===== INICIALIZAR STOCK (solo si no existe en Firebase) ===== */
+/* ===== INICIALIZAR STOCK ===== */
 window.inicializarStock = async function() {
   const snap = await get(ref(db, "stock"));
   if (!snap.exists()) {
-    // Stock inicial — ajusta estas cantidades a lo que tienes
     await set(ref(db, "stock"), {
       "Ositos"                    : 30,
       "Gusanos"                   : 30,
@@ -98,51 +91,34 @@ window.inicializarStock();
 /* ===== DESCONTAR STOCK AL COMPRAR ===== */
 window.descontarStock = async function(items) {
   const errores = [];
-
   for (const item of items) {
     const nombre   = item.name;
     const cantidad = item.quantity;
     const stockRef = ref(db, "stock/" + nombre);
-
     try {
       const result = await runTransaction(stockRef, (stockActual) => {
-        // Si no hay entrada de stock para este producto, ignorar
         if (stockActual === null) return stockActual;
-
-        // Verificar que haya suficiente
-        if (stockActual < cantidad) {
-          // Abortar transacción
-          return undefined;
-        }
+        if (stockActual < cantidad) return undefined;
         return stockActual - cantidad;
       });
-
-      if (!result.committed) {
-        errores.push(nombre);
-      }
+      if (!result.committed) errores.push(nombre);
     } catch(e) {
       console.error("Error descontando stock de " + nombre, e);
       errores.push(nombre);
     }
   }
-
-  return errores; // retorna productos que fallaron (sin stock suficiente)
+  return errores;
 };
 
-/* ===== VALIDAR CARRITO CONTRA STOCK ACTUAL ===== */
+/* ===== VALIDAR CARRITO CONTRA STOCK ===== */
 window.validarCarritoContraStock = function(cart) {
   const stock = window._stockActual || {};
   const problemas = [];
-
   for (const item of cart) {
     const nombre = item.name;
-    // Si el producto tiene stock definido en Firebase
-    if (stock[nombre] !== undefined) {
-      if (stock[nombre] < item.quantity) {
-        problemas.push({ nombre, disponible: stock[nombre], pedido: item.quantity });
-      }
+    if (stock[nombre] !== undefined && stock[nombre] < item.quantity) {
+      problemas.push({ nombre, disponible: stock[nombre], pedido: item.quantity });
     }
-    // Límite máximo por compra
     if (item.quantity > MAX_POR_COMPRA) {
       problemas.push({ nombre, disponible: MAX_POR_COMPRA, pedido: item.quantity, esLimite: true });
     }
@@ -238,10 +214,16 @@ function avatarHTML(nombre, foto) {
 const MEDALLAS = ["🥇","🥈","🥉"];
 
 function buildRow(u, i, uidActual, icono, nivel, campo) {
-  const esYo = u.uid === uidActual;
-  const med  = i < 3 ? MEDALLAS[i] : `#${i + 1}`;
-  const pts  = u[campo];
-  return `<div class="ranking-row ${esYo ? "ranking-yo" : ""} ${i < 3 ? "ranking-top" : ""}">
+  const esYo    = u.uid === uidActual;
+  const esTop3  = i < 3;
+  const med     = esTop3 ? MEDALLAS[i] : `#${i + 1}`;
+  const pts     = u[campo];
+
+  const claseTop = esTop3
+    ? (campo === "puntos" ? "ranking-top3-compras" : "ranking-top3-juego")
+    : "";
+
+  return `<div class="ranking-row ${esYo ? "ranking-yo" : ""} ${claseTop}">
     <span class="rank-pos">${med}</span>
     ${avatarHTML(u.nombre, u.foto)}
     <div class="rank-info">
