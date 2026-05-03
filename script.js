@@ -295,7 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const volumenes = [
   0.15,  // Milky
-  0.50,   // My Talking Tom
+  1.0,   // My Talking Tom
   0.50,   // Sweet Sweet Canyon
   0.50,   // Animal Crossing
 ];
