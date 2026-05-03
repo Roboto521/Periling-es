@@ -40,12 +40,14 @@ onValue(ref(db, "stock"), (snap) => {
       btn.classList.add("sin-stock");
 
       const card = btn.closest(".product");
+      card?.querySelector(".stock-bajo-label")?.remove();
       if (card && !card.querySelector(".badge-sin-stock-dinamico")) {
         const badge = document.createElement("div");
         badge.className = "badge-sin-stock badge-sin-stock-dinamico";
         badge.textContent = "📦 Sin Stock";
         card.appendChild(badge);
       }
+
     } else {
       btn.disabled = false;
       btn.textContent = "Agregar 🛒";
@@ -71,19 +73,36 @@ onValue(ref(db, "stock"), (snap) => {
 
 /* ===== INICIALIZAR STOCK ===== */
 window.inicializarStock = async function() {
+  const todosLosProductos = {
+    "Ositos"                    : 30,
+    "Gusanos"                   : 30,
+    "Aros"                      : 30,
+    "Regaliz de franbuesa"      : 30,
+    "Tiras Ácidas de frambuesa" : 30,
+    "Gomitas Preparadas bolsita": 15,
+    "Cachetadas"                : 30,
+    "Dulce cremoso"             : 30,
+    "Ositos coloridos"          : 30,
+    "Pelon pelo rico"           : 30,
+    "Pulparindo"                : 30
+  };
+
   const snap = await get(ref(db, "stock"));
-  if (!snap.exists()) {
-    await set(ref(db, "stock"), {
-      "Ositos"                    : 30,
-      "Gusanos"                   : 30,
-      "Aros"                      : 30,
-      "Regaliz"                   : 30,
-      "Tiras Acidas Fresa"        : 30,
-      "Gomitas Preparadas bolsita": 15,
-      "Cachetadas"                : 30,
-      "Dulce cremoso"             : 30
-    });
-    console.log("✅ Stock inicializado en Firebase");
+  const stockActual = snap.val() || {};
+
+  // Solo agrega los que NO existen todavía, sin tocar los demás
+  const nuevos = {};
+  for (const [nombre, cantidad] of Object.entries(todosLosProductos)) {
+    if (stockActual[nombre] === undefined) {
+      nuevos[nombre] = cantidad;
+    }
+  }
+
+  if (Object.keys(nuevos).length > 0) {
+    await update(ref(db, "stock"), nuevos);
+    console.log("✅ Productos nuevos agregados al stock:", nuevos);
+  } else {
+    console.log("✅ Stock ya estaba completo");
   }
 };
 window.inicializarStock();
