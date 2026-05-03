@@ -195,7 +195,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("buy-cart")?.addEventListener("click", async () => {
     if (cart.length === 0) { mostrarToast("🍬 Tu carrito está vacío", "#ff4d6d"); return; }
 
-    // Validar stock y límite
     const problemas = window.validarCarritoContraStock?.(cart) || [];
     if (problemas.length > 0) {
       const msgs = problemas.map(p =>
@@ -221,7 +220,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const uid    = localStorage.getItem("userUID")   || "";
     const total  = parseFloat(cartTotal.textContent);
 
-    // Descontar stock en Firebase
     const errores = await window.descontarStock?.(cart) || [];
     if (errores.length > 0) {
       mostrarToast(`⚠️ Stock insuficiente para: ${errores.join(", ")}`, "#ff8c42");
@@ -230,11 +228,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Guardar pedido y sumar puntos
     window.guardarPedido?.({ uid, nombre, grado, items:[...cart], total, puntos:Math.floor(total), fecha:new Date().toLocaleString("es-GT") });
-   
 
-    // WhatsApp
     let mensaje = `🍬 Pedido Party Perilingües 🍬\n\n👤 Nombre: ${nombre}\n🎓 Grado/Carrera: ${grado}\n\n`;
     cart.forEach(item => { mensaje += `• ${item.name} x${item.quantity} — Q${(item.price * item.quantity).toFixed(2)}\n`; });
     mensaje += `\n💰 Total: Q${total.toFixed(2)}`;
@@ -280,20 +275,68 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   cerrarAlFondo("secretariasModal");
 
-  /* ===== MÚSICA ===== */
+  /* ===== MÚSICA CON PROGRESO GUARDADO ===== */
   const music    = document.getElementById("bg-music");
   const musicBtn = document.getElementById("music-btn");
+
+  const playlist = [
+    "musica/Milky - Just The Way You Are (Sub. Español  Lyrics)  Pibble Song.mp3",
+    "musica/MY TALKING TOM - CAKE TOWER SOUNDTRACK OST.mp3",
+    "musica/Sweet Sweet Canyon - Mario Kart 8 OST.mp3",
+    "musica/Animal Crossing - Bubblegum K.K. [Remix].mp3"
+  ];
+
+  // Recuperar progreso guardado
+  let trackActual = parseInt(localStorage.getItem("musicTrack")) || 0;
+  let tiempoGuardado = parseFloat(localStorage.getItem("musicTiempo")) || 0;
+
+  // Validar que el track guardado sea válido
+  if (trackActual >= playlist.length) trackActual = 0;
+
+  const volumenes = [
+  0.15,  // Milky
+  0.50,   // My Talking Tom
+  0.50,   // Sweet Sweet Canyon
+  0.50,   // Animal Crossing
+];
+
+function cargarCancion(index, desde = 0) {
+    music.src = playlist[index];
+    music.volume = volumenes[index];
+    music.load();
+    music.addEventListener("canplay", () => {
+      if (desde > 0) music.currentTime = desde;
+      music.play().catch(()=>{});
+    }, { once: true });
+}
+  // Guardar progreso cada segundo
+  music.addEventListener("timeupdate", () => {
+    localStorage.setItem("musicTrack", trackActual);
+    localStorage.setItem("musicTiempo", music.currentTime);
+  });
+
+  // Al terminar canción, pasar a la siguiente
+  music.addEventListener("ended", () => {
+    trackActual = (trackActual + 1) % playlist.length;
+    localStorage.setItem("musicTrack", trackActual);
+    localStorage.setItem("musicTiempo", 0);
+    cargarCancion(trackActual, 0);
+  });
+
   if (music && musicBtn) {
     musicBtn.classList.add("muted");
+
+    // Al primer click carga desde donde quedó
     document.addEventListener("click", () => {
-      music.muted = false; music.play().catch(()=>{});
+      music.muted = false;
+      cargarCancion(trackActual, tiempoGuardado);
       musicBtn.textContent = "🔊";
       musicBtn.classList.replace("muted", "playing");
     }, { once: true });
+
     musicBtn.addEventListener("click", e => {
       e.stopPropagation();
-      const silenciado = music.muted || music.paused;
-      if (silenciado) {
+      if (music.muted || music.paused) {
         music.muted = false; music.play().catch(()=>{});
         musicBtn.textContent = "🔊";
         musicBtn.classList.replace("muted", "playing");
