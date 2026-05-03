@@ -77,7 +77,7 @@ window.inicializarStock = async function() {
     "Ositos"                    : 30,
     "Gusanos"                   : 30,
     "Aros"                      : 30,
-    "Regaliz de franbuesa"      : 30,
+    "Regaliz de frambuesa"      : 30,
     "Tiras Ácidas de frambuesa" : 30,
     "Gomitas Preparadas bolsita": 15,
     "Cachetadas"                : 30,
